@@ -1,0 +1,12 @@
+logging:
+  file:
+    name: log/prettier_homes.log
+  pattern:
+    file: "%d %-5level [%thread] %logger:%msg%n"
+  level:
+    org:
+      springframework:
+        web: WARN
+      hibernate: INFO
+    com.tpe: INFO
+  encoding: UTF-8

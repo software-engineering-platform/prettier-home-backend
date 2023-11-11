@@ -1,0 +1,20 @@
+
+server:
+  port: 8080
+  error:
+    #    include-stacktrace: never
+    include-binding-errors: always
+    include-message: always
+
+spring:
+  messages:
+    basename: messages
+    encoding: UTF-8
+    cache-duration: -1
+    fallback-to-system-locale: true
+  profiles:
+    include:
+      - security
+      - data
+      - logging
+      - mail
