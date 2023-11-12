@@ -28,6 +28,8 @@ public class User extends Entry implements Serializable, UserDetails {
     private String firstName;
     private String lastName;
     private String email;
+
+    @Column(unique = true, nullable = false, length = 30)
     private String phone;
     private String passwordHash;
     private String resetPasswordCode;
