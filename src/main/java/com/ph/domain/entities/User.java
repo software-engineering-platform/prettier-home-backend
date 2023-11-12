@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -25,13 +26,18 @@ public class User extends Entry implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 30)
     private String firstName;
+    @Column(nullable = false, length = 30)
     private String lastName;
+    @Column(nullable = false, unique = true, length = 80)
     private String email;
 
-    @Column(unique = true, nullable = false, length = 30)
+    @Column(nullable = false, unique = true, length = 30)
     private String phone;
+    @Column(nullable = false)
     private String passwordHash;
+    @Column(nullable = true)
     private String resetPasswordCode;
     private boolean builtIn;
 
@@ -110,6 +116,32 @@ public class User extends Entry implements Serializable, UserDetails {
     /**
      * Equals and HashCode - ToString methods start
      */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", resetPasswordCode='" + resetPasswordCode + '\'' +
+                ", builtIn=" + builtIn +
+                '}';
+    }
 
     /**
      * Equals and HashCode - ToString methods end
