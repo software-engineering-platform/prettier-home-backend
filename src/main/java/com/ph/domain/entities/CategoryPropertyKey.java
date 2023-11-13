@@ -1,11 +1,14 @@
 package com.ph.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -21,6 +24,8 @@ public class CategoryPropertyKey implements Serializable {
     private Long id;
 
     private String name;
+
+    @Column(name = "built_in")
     private boolean builtIn;
 
     /**
@@ -28,9 +33,9 @@ public class CategoryPropertyKey implements Serializable {
      */
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
     private Category category;
 
+    //TODO: OneToOne olacak gibi mantık kuramadık
     @OneToMany(mappedBy = "categoryPropertyKey", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CategoryPropertyValue> categoryPropertyValues;
     /**
@@ -40,6 +45,27 @@ public class CategoryPropertyKey implements Serializable {
     /**
      * Equals and HashCode - ToString methods start
      */
+    @Override
+    public String toString() {
+        return "CategoryPropertyKey{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", builtIn=" + builtIn +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CategoryPropertyKey that = (CategoryPropertyKey) o;
+        return builtIn == that.builtIn && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(category, that.category) && Objects.equals(categoryPropertyValues, that.categoryPropertyValues);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, builtIn, category, categoryPropertyValues);
+    }
 
     /**
      * Equals and HashCode - ToString methods end

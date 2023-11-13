@@ -1,6 +1,8 @@
 package com.ph.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
@@ -18,6 +20,7 @@ public class CategoryPropertyValue implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 100)
     private String value;
 
     /**
@@ -25,11 +28,9 @@ public class CategoryPropertyValue implements Serializable {
      */
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_property_key_id")
     private CategoryPropertyKey categoryPropertyKey;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "advert_id")
     private Advert advert;
     /**
      * Entity relationships end
