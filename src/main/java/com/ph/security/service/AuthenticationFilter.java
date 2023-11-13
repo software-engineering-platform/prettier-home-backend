@@ -32,10 +32,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             @NotNull HttpServletResponse response,
             @NotNull FilterChain filterChain
     ) throws ServletException, IOException {
-        if (request.getServletPath().contains("/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+
+// Not: auth endpointlerinde problem olasturacagindan bu kısım kaldırıldı
+
+//        if (request.getServletPath().contains("/auth")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String token;
         final String userEmail;

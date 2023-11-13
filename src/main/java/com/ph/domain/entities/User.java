@@ -76,7 +76,8 @@ public class User extends Entry implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map((role) -> new SimpleGrantedAuthority("ROLE_" + role.getRoleName())).toList();
+        //Not: "ROLE_" tanimi kaldirildi.
+        return this.roles.stream().map((role) -> new SimpleGrantedAuthority(  role.getRoleName())).toList();
     }
 
     @Override

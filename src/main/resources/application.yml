@@ -16,5 +16,4 @@ spring:
     include:
       - security
       - data
-      - logging
       - mail
