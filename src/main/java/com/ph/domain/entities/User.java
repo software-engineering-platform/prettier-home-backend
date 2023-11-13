@@ -37,8 +37,10 @@ public class User extends Entry implements Serializable, UserDetails {
     private String phone;
     @Column(nullable = false)
     private String passwordHash;
+
     @Column(nullable = true)
     private String resetPasswordCode;
+
     private boolean builtIn;
 
     /**
