@@ -20,7 +20,7 @@ public class CategoryPropertyKey implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
     @Column(name = "built_in")
@@ -31,10 +31,10 @@ public class CategoryPropertyKey implements Serializable {
      */
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @JoinColumn(nullable = false) // Every category property key must have a category
     private Category category;
 
-    //TODO: OneToOne olacak gibi mantık kuramadık
+
     @OneToMany(mappedBy = "categoryPropertyKey", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CategoryPropertyValue> categoryPropertyValues;
     /**

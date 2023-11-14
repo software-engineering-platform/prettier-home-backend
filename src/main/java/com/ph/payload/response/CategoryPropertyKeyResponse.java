@@ -9,8 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 public class CategoryPropertyKeyResponse {
+
     private Long id;
     private String name;
     private Boolean builtIn;
-    private Category category;
+    private CategoryResponse categoryResponse;
 }

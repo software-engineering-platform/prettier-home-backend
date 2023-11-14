@@ -26,8 +26,6 @@ public class CategoryPropertyKeyRequest implements Supplier<CategoryPropertyKey>
 
     private boolean builtIn;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Category category;
 
 
     @Override
@@ -37,4 +35,5 @@ public class CategoryPropertyKeyRequest implements Supplier<CategoryPropertyKey>
                 .builtIn(isBuiltIn())
                 .build();
     }
+
 }

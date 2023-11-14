@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/categories")
@@ -22,9 +19,8 @@ public class CategoryPropertyKeyController {
     // NOT: save() ************************************************************C08
     @PostMapping("/{categoryId}/properties") // http://localhost:8080/categories/1/properties
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public ResponseEntity<CategoryPropertyKeyResponse> save(@Valid @RequestBody
-                                                            CategoryPropertyKeyRequest propertyKeyRequest) {
-        return propertyKeyService.save(propertyKeyRequest);
+    public ResponseEntity<?> save(@Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest, @PathVariable Long categoryId) {
+        return propertyKeyService.save(propertyKeyRequest, categoryId);
     }
 
 }

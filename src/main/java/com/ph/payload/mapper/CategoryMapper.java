@@ -15,8 +15,23 @@ public class CategoryMapper {
                         .icon(category.getIcon())
                         .seq(category.getSeq())
                         .builtIn(category.isBuiltIn())
-                        .active(category.isActive()) // TODO:isActive olanları active yaptım
+                        .active(category.isActive()) // !!!isActive changed to active
                         .build();
     }
+
+    public CategoryResponse mapToCategoryResponsewithPropertyKeys(Category category){
+        return CategoryResponse.builder()
+                        .id(category.getId())
+                        .title(category.getTitle())
+                        .slug(category.getSlug())
+                        .icon(category.getIcon())
+                        .seq(category.getSeq())
+                        .builtIn(category.isBuiltIn())
+                        .active(category.isActive())
+                        .categoryPropertyKeys(category.getCategoryPropertyKeys())
+                        .build();
+    }
+
+
 
 }

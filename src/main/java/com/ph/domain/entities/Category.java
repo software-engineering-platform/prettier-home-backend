@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,25 +18,25 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "categories")
-@ToString(callSuper = true) // toString de bazen iliskili tablolarda recursive yapiya giriyor bunuda JsonIgnore ile cozuyoruz.
+//@ToString(callSuper = true) // toString de bazen iliskili tablolarda recursive yapiya giriyor bunuda JsonIgnore ile cozuyoruz.
 public class Category extends Entry implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true,length = 150, nullable = false)
+    @Column(nullable = false, unique = true,length = 150)
     private String title;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 200)
     private String slug;
 
     @Column(nullable = false, length = 50)
     private String icon;
 
-    @Column(name = "seq")
+    @Column(name = "seq", nullable = false)
     private int seq;
 
-    @Column(name = "built_in")
+    @Column(name = "built_in", nullable = false)
     private boolean builtIn;
 
     //Soru: wrapper mi primitive mi olarak ayarlanmalı?
@@ -44,23 +45,34 @@ public class Category extends Entry implements Serializable {
     /**
      * Entity relationships start
      */
-    @JsonIgnore
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Advert> adverts;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CategoryPropertyKey> categoryPropertyKeys;
     /**
      * Entity relationships end
      */
+
+
     /**
      * Equals and HashCode - ToString methods start
      */
-    //Not: ToString Lombok'tan gelen anotasyon ile yazildi.
 
-
-    // TODO:isActive olanları active yaptım
+    @Override
+    public String toString() {
+        return "Category{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", slug='" + slug + '\'' +
+                ", icon='" + icon + '\'' +
+                ", seq=" + seq +
+                ", builtIn=" + builtIn +
+                ", active=" + active +
+                '}';
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,6 +85,7 @@ public class Category extends Entry implements Serializable {
     public int hashCode() {
         return Objects.hash(id, title, slug, icon, seq, builtIn, active, adverts, categoryPropertyKeys);
     }
+
 
     /**
      * Equals and HashCode - ToString methods end

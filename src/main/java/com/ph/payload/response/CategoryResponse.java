@@ -3,6 +3,7 @@ package com.ph.payload.response;
 import com.ph.domain.entities.CategoryPropertyKey;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -18,6 +19,6 @@ public class CategoryResponse {
     private String icon;
     private int seq;
     private boolean builtIn;
-    private boolean active; //TODO:isActive olanları active yaptım
-    private Set<CategoryPropertyKey> properties;
+    private boolean active;
+    private List<CategoryPropertyKey> categoryPropertyKeys;
 }
