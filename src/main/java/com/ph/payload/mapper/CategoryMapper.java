@@ -15,7 +15,7 @@ public class CategoryMapper {
                         .icon(category.getIcon())
                         .seq(category.getSeq())
                         .builtIn(category.isBuiltIn())
-                        .isActive(category.isActive())
+                        .active(category.isActive()) // TODO:isActive olanları active yaptım
                         .build();
     }
 

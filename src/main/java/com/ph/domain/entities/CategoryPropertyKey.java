@@ -1,10 +1,7 @@
 package com.ph.domain.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,6 +20,7 @@ public class CategoryPropertyKey implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @Column(name = "built_in")
@@ -33,10 +31,11 @@ public class CategoryPropertyKey implements Serializable {
      */
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private Category category;
 
     //TODO: OneToOne olacak gibi mantık kuramadık
-    @OneToMany(mappedBy = "categoryPropertyKey", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "categoryPropertyKey", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CategoryPropertyValue> categoryPropertyValues;
     /**
      * Entity relationships end

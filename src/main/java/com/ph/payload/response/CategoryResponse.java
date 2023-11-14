@@ -18,6 +18,6 @@ public class CategoryResponse {
     private String icon;
     private int seq;
     private boolean builtIn;
-    private boolean isActive;
+    private boolean active; //TODO:isActive olanları active yaptım
     private Set<CategoryPropertyKey> properties;
 }

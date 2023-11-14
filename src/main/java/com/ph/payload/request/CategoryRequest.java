@@ -1,11 +1,13 @@
 package com.ph.payload.request;
 
 import com.ph.domain.entities.Category;
+import com.ph.domain.entities.CategoryPropertyKey;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.function.Supplier;
 
 @Getter
@@ -36,6 +38,7 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
     @NotNull(message = "Is Active cannot be null")
     private boolean isActive;
 
+
     @Override
     public Category get() {
         return Category.builder()
@@ -43,8 +46,8 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
                 .slug(getTitle().replaceAll(" ", "-").toLowerCase())
                 .icon(getIcon())
                 .seq(getSeq())
-                .builtIn((isBuiltIn()))
-                .isActive(isActive())
+                .builtIn(isBuiltIn())
+                .active(isActive()) // TODO:isActive olanları active yaptım
                 .build();
     }
 }

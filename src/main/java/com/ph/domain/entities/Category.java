@@ -40,15 +40,16 @@ public class Category extends Entry implements Serializable {
 
     //Soru: wrapper mi primitive mi olarak ayarlanmalı?
     @Column(name = "is_active")
-    private boolean isActive;
+    private boolean active;  // TODO: isActive getter methodunda sorun oluşturdugundan active olarak değiştirildi.
     /**
      * Entity relationships start
      */
     @JsonIgnore
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Advert> adverts;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<CategoryPropertyKey> categoryPropertyKeys;
     /**
      * Entity relationships end
@@ -58,17 +59,19 @@ public class Category extends Entry implements Serializable {
      */
     //Not: ToString Lombok'tan gelen anotasyon ile yazildi.
 
+
+    // TODO:isActive olanları active yaptım
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return seq == category.seq && builtIn == category.builtIn && isActive == category.isActive && Objects.equals(id, category.id) && Objects.equals(title, category.title) && Objects.equals(slug, category.slug) && Objects.equals(icon, category.icon) && Objects.equals(adverts, category.adverts) && Objects.equals(categoryPropertyKeys, category.categoryPropertyKeys);
+        return seq == category.seq && builtIn == category.builtIn && active == category.active && Objects.equals(id, category.id) && Objects.equals(title, category.title) && Objects.equals(slug, category.slug) && Objects.equals(icon, category.icon) && Objects.equals(adverts, category.adverts) && Objects.equals(categoryPropertyKeys, category.categoryPropertyKeys);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, slug, icon, seq, builtIn, isActive, adverts, categoryPropertyKeys);
+        return Objects.hash(id, title, slug, icon, seq, builtIn, active, adverts, categoryPropertyKeys);
     }
 
     /**
