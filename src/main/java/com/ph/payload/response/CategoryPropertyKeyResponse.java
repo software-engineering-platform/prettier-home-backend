@@ -13,5 +13,5 @@ public class CategoryPropertyKeyResponse {
     private Long id;
     private String name;
     private Boolean builtIn;
-    private CategoryResponse categoryResponse;
+
 }

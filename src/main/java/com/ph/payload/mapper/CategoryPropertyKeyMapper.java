@@ -13,7 +13,6 @@ public class CategoryPropertyKeyMapper {
                 .id(categoryPropertyKey.getId())
                 .name(categoryPropertyKey.getName())
                 .builtIn(categoryPropertyKey.isBuiltIn())
-                .category(categoryPropertyKey.getCategory())
                 .build();
     }
 

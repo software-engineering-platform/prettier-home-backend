@@ -38,6 +38,8 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
     @NotNull(message = "Is Active cannot be null")
     private boolean isActive;
 
+//    private List<CategoryPropertyKeyRequest> categoryPropertyKeyRequests;
+
 
     @Override
     public Category get() {

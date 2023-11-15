@@ -41,14 +41,15 @@ public class CategoryPropertyKeyService {
         // if there is same name in database then throw ConflictException
         boolean isPropertyKeyExists = propertyKeyRepository.existsByName(categoryPropertyKey.getName());
         if(isPropertyKeyExists){
-           throw new ConflictException("Property key already exists");
+//           throw new ConflictException("Property key already exists");
+            ResponseEntity.status(HttpStatus.CONFLICT).body("Property key already exists");
         }
         // get category by category id from category service
         Category category= categoryService.getCategoryById(categoryId);
-         CategoryResponse categoryResponse = categoryMapper.mapToCategoryResponse(category);
 
-        // set category to category property key
-//        categoryPropertyKey.setCategory(categoryResponse);
+//         set category to category property key
+        categoryPropertyKey.setCategory(category);
+
         // save category property key
         CategoryPropertyKey saved = propertyKeyRepository.save(categoryPropertyKey);
 
@@ -57,6 +58,8 @@ public class CategoryPropertyKeyService {
     }
 
     // Not: getPropertyKeyOfCategory() *********************************************************** C09
+
+    // SORU: bunu klllaninca inceksin dongusu oluyor.??????????????????
 
     /** !!!
      * This method created for getting category property keys of specific category !!! for category service

@@ -51,6 +51,8 @@ public class CategoryService {
         if(isCategoryExists){
             ResponseEntity.status(HttpStatus.CONFLICT).body("Category already exists");
         }
+
+
         Category saved = categoryRepository.save(category);
         return ResponseEntity.ok(categoryMapper.mapToCategoryResponse(saved));
 
@@ -82,6 +84,7 @@ public class CategoryService {
         if(Objects.equals(type, "desc")) {
             pageable = PageRequest.of(page,size,Sort.by(sort).descending());
         }
+
         return categoryRepository.findAll(pageable).map(categoryMapper::mapToCategoryResponse);
     }
 
@@ -90,7 +93,7 @@ public class CategoryService {
     //NOT: deleteCategory  C06
 
     /**
-     * this method created for deleting category
+     * this method created for deleting the category
      * @param categoryId : represent the category id
      * @return : ResponseEntity with deleted category
      */
@@ -130,19 +133,19 @@ public class CategoryService {
      */
     public ResponseEntity<CategoryResponse> getById(Long categoryId) {
 
-        //  check if category exists and return
+//          check if category exists and return
         Category category = categoryRepository.findById(categoryId).orElseThrow(()
                 -> new ResourceNotFoundException("Category not found"));
 
         // we got all category property keys of the category
-        List<CategoryPropertyKey> categoryPropertyKeys =
-                categoryPropertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
+//        List<CategoryPropertyKey> categoryPropertyKeys =
+//                categoryPropertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
 
         // TODO: All category must have at least one category property key??????
-        if (categoryPropertyKeys.size() == 0) {
-            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Category must have at least one category property key");}
+//        if (categoryPropertyKeys.size() == 0) {
+//            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Category must have at least one category property key");}
 
-        category.setCategoryPropertyKeys(categoryPropertyKeys);
+//        category.setCategoryPropertyKeys(categoryPropertyKeys);
 
         return ResponseEntity.ok(categoryMapper.mapToCategoryResponsewithPropertyKeys(category));
     }
