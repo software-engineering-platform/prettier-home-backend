@@ -2,10 +2,13 @@ package com.ph.payload.mapper;
 
 import com.ph.domain.entities.Category;
 import com.ph.payload.response.CategoryResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
+@RequiredArgsConstructor
 @Component
 public class CategoryMapper {
+
+   private final CategoryPropertyKeyMapper propertyKeyMapper;
 
     public CategoryResponse mapToCategoryResponse(Category category){
         return CategoryResponse.builder()
@@ -28,7 +31,8 @@ public class CategoryMapper {
                         .seq(category.getSeq())
                         .builtIn(category.isBuiltIn())
                         .active(category.isActive())
-                        .categoryPropertyKeys(category.getCategoryPropertyKeys())
+                        .categoryPropertyKeysResponse(category.getCategoryPropertyKeys().stream().map(propertyKeyMapper::mapToCategoryPropertyKeyResponse).toList())
+                                                        // we'l get an exception if we set cotegoryPropertyKeys object that's why we usegetCategoryPropertyKeysResponse
                         .build();
     }
 

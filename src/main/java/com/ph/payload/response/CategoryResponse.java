@@ -20,5 +20,5 @@ public class CategoryResponse {
     private int seq;
     private boolean builtIn;
     private boolean active;
-    private List<CategoryPropertyKey> categoryPropertyKeys;
+    private List<CategoryPropertyKeyResponse> categoryPropertyKeysResponse;
 }

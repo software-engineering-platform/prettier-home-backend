@@ -41,8 +41,8 @@ public class CategoryPropertyKeyService {
         // if there is same name in database then throw ConflictException
         boolean isPropertyKeyExists = propertyKeyRepository.existsByName(categoryPropertyKey.getName());
         if(isPropertyKeyExists){
-//           throw new ConflictException("Property key already exists");
-            ResponseEntity.status(HttpStatus.CONFLICT).body("Property key already exists");
+           throw new ConflictException("Property key already exists");
+
         }
         // get category by category id from category service
         Category category= categoryService.getCategoryById(categoryId);
@@ -57,8 +57,48 @@ public class CategoryPropertyKeyService {
 
     }
 
-    // Not: getPropertyKeyOfCategory() *********************************************************** C09
 
+// Not: getPropertyKeysOfCategory() *********************************************************** C09
+    /** !!!
+     * This method created for getting category property keys of specific category
+     * @param categoryId : represent category's id
+     * @return : List of category property key
+     */
+    public ResponseEntity<List<CategoryPropertyKeyResponse>> getPropertyKeysOfCategory(Long categoryId){
+
+          List<CategoryPropertyKey> propertyKeys = propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
+
+       return ResponseEntity.ok(propertyKeys
+                           .stream()
+                           .map(categoryPropertyKeyMapper::mapToCategoryPropertyKeyResponse)
+                           .toList());
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // category service icin yazildi
     // SORU: bunu klllaninca inceksin dongusu oluyor.??????????????????
 
     /** !!!
@@ -66,7 +106,7 @@ public class CategoryPropertyKeyService {
      * @param categoryId : represent category's id
      * @return : List of category property key
      */
-    public List<CategoryPropertyKey> getPropertyKeysOfCategory(Long categoryId){
+    public List<CategoryPropertyKey> getPropertyKeysOfCategoryForCategoryService(Long categoryId){
 
         return propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
 

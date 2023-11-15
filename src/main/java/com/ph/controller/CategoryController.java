@@ -30,10 +30,10 @@ public class CategoryController {
     @GetMapping()  //http://localhost:8080/categories?page=0&size=10&sort=id&type=asc
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'CUSTOMER')")
     public Page<CategoryResponse> getAllCategoryWithPage(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10" ) int size,
-            @RequestParam(value = "sort", defaultValue = "id") String sort,
-            @RequestParam(value = "type", defaultValue = "asc") String type
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false ) int size,
+            @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+            @RequestParam(value = "type", defaultValue = "asc",required = false) String type
     ) {
         return categoryService.getAllCategoryWithPage(page, size, sort, type);
     }

@@ -15,5 +15,4 @@ public class CategoryPropertyKeyMapper {
                 .builtIn(categoryPropertyKey.isBuiltIn())
                 .build();
     }
-
 }

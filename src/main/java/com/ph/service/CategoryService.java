@@ -80,6 +80,7 @@ public class CategoryService {
      * @return : all categories with pageable type
      */
     public Page<CategoryResponse> getAllCategoryWithPage(int page, int size, String sort, String type) {
+
         Pageable pageable = PageRequest.of(page,size, Sort.by(sort).ascending());
         if(Objects.equals(type, "desc")) {
             pageable = PageRequest.of(page,size,Sort.by(sort).descending());
@@ -137,6 +138,8 @@ public class CategoryService {
         Category category = categoryRepository.findById(categoryId).orElseThrow(()
                 -> new ResourceNotFoundException("Category not found"));
 
+
+                category.getCategoryPropertyKeys().forEach(System.out::println);
         // we got all category property keys of the category
 //        List<CategoryPropertyKey> categoryPropertyKeys =
 //                categoryPropertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
@@ -146,6 +149,8 @@ public class CategoryService {
 //            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Category must have at least one category property key");}
 
 //        category.setCategoryPropertyKeys(categoryPropertyKeys);
+
+
 
         return ResponseEntity.ok(categoryMapper.mapToCategoryResponsewithPropertyKeys(category));
     }
