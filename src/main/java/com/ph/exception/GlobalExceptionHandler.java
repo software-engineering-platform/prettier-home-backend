@@ -1,5 +1,9 @@
 package com.ph.exception;
 
+
+import com.ph.exception.customs.ConflictException;
+import com.ph.exception.customs.NonDeletableException;
+import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.exception.customs.*;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +75,11 @@ public class GlobalExceptionHandler {
                     errorResponse.put(fieldName, message);
                 });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(NonDeletableException.class)
+    public ResponseEntity<?> handleNonDeletableException(NonDeletableException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 
 }
