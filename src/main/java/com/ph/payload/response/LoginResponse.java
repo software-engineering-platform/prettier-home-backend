@@ -3,7 +3,6 @@ package com.ph.payload.response;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Setter
 @Getter
@@ -17,5 +16,6 @@ public class LoginResponse implements Serializable {
     private String email;
     private String firstName;
     private String lastName;
-    private List<String> role;
+    private String role;
+
 }

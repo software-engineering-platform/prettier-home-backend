@@ -16,8 +16,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class LoginRequest implements Serializable {
 
-    @NotNull(message = "Email cannot be null")
-    @Email(message = "Email must be a valid email address")
+    @NotNull(message = "{validation.email.null}")
+    @Email(message = "{validation.email.pattern}")
     private String email;
 
     @NotNull(message = "{validation.password.null}")

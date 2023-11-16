@@ -7,14 +7,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForgotPasswordRequest {
+public class ForgotPasswordRequest implements Serializable {
 
-    @NotNull(message = "Email cannot be null")
-    @Email(message = "Email must be a valid email address")
+    @NotNull(message = "{validation.email.null}")
+    @Email(message = "{validation.email.pattern}")
     private String email;
 
 }

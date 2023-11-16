@@ -1,10 +1,8 @@
 package com.ph.payload.response;
 
-import com.ph.domain.entities.Role;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Setter
 @Getter
@@ -18,6 +16,5 @@ public class UserSaveResponse implements Serializable {
     private String lastName;
     private String email;
     private String phone;
-//    private List<Role> roles;
 
 }

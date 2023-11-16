@@ -14,11 +14,17 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(@NonNull String email);
+
+    Optional<User> findByResetPasswordCode(@NonNull String resetPasswordCode);
+
     @Query("""
             select u from User u
-            where upper(u.firstName) like upper(concat('%', ?1, '%')) or upper(u.lastName) like upper(concat('%', ?1, '%')) or upper(u.email) like upper(concat('%', ?1, '%')) or upper(u.phone) like upper(concat('%', ?1, '%'))""")
+            where u.firstName ilike concat('%', ?1, '%') or u.lastName ilike concat('%', ?1, '%') or u.email ilike concat('%', ?1, '%') or u.phone ilike concat('%', ?1, '%')""")
     Page<User> findUserPageableBySearch(@Nullable String q, Pageable pageable);
+
     boolean existsByPhone(@NonNull String phone);
+
     boolean existsByEmail(@NonNull String email);
-    Optional<User> findByEmail(String email);
+
 }

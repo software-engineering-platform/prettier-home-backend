@@ -1,6 +1,7 @@
 package com.ph.domain.entities;
 
 import com.ph.domain.abstracts.Entry;
+import com.ph.security.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -26,22 +27,29 @@ public class User extends Entry implements Serializable, UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 50)
     private String firstName;
-    @Column(nullable = false, length = 30)
+
+    @Column(nullable = false, length = 50)
     private String lastName;
+
     @Column(nullable = false, unique = true, length = 80)
     private String email;
 
     @Column(nullable = false, unique = true, length = 30)
     private String phone;
+
     @Column(nullable = false)
     private String passwordHash;
 
-    @Column(nullable = true)
+    @Column(nullable = true, unique = true)
     private String resetPasswordCode;
 
     private boolean builtIn;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50, nullable = false)
+    private Role role;
 
     /**
      * Entity relationships start
@@ -56,17 +64,11 @@ public class User extends Entry implements Serializable, UserDetails {
     @OneToMany(mappedBy = "guestUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TourRequest> guestTourRequests;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Favorite> favorites;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Log> logs;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles;
 
     /**
      * Entity relationships end
@@ -78,8 +80,7 @@ public class User extends Entry implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //Not: "ROLE_" tanimi kaldirildi.
-        return this.roles.stream().map((role) -> new SimpleGrantedAuthority(  role.getRoleName())).toList();
+        return getRole().getAuthorities();
     }
 
     @Override
@@ -143,6 +144,8 @@ public class User extends Entry implements Serializable, UserDetails {
                 ", passwordHash='" + passwordHash + '\'' +
                 ", resetPasswordCode='" + resetPasswordCode + '\'' +
                 ", builtIn=" + builtIn +
+                ", createdAt=" + super.getCreatedAt() +
+                ", updatedAt=" + super.getUpdatedAt() +
                 '}';
     }
 
