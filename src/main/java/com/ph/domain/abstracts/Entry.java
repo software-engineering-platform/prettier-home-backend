@@ -40,4 +40,12 @@ public abstract class Entry implements Serializable {
         setUpdatedAt(LocalDateTime.now());
     }
 
+
+    @Override
+    public String toString() {
+        return "Entry{" +
+                "createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

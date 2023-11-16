@@ -9,13 +9,13 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse implements Serializable {
+public class UserResponse implements Serializable {
 
-    private String token;
     private Long id;
-    private String email;
     private String firstName;
     private String lastName;
+    private String email;
+    private String phone;
     private String role;
 
 }

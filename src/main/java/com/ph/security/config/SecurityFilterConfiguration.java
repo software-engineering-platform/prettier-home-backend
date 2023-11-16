@@ -66,7 +66,10 @@ public class SecurityFilterConfiguration {
 
     private static final String[] AUTH_WHITE_LIST = {
             "/",
-            "/auth/**",
+            "/users/login",
+            "/users/register",
+            "/users/forgot-password",
+            "/users/reset-password",
             "/index*",
             "/static/**",
             "/*.js",
