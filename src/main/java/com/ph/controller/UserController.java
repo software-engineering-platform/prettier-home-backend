@@ -102,5 +102,14 @@ public class UserController {
         return userService.deleteOneUser(userId, userDetails);
     }
 
+    @PatchMapping("/{userId}/role/admin")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ResponseEntity<?> updateUserRole(
+            @PathVariable(name = "userId") Long userId,
+            @RequestBody @Valid UserRoleUpdateRequest request
+    ) {
+        return userService.updateUserRole(userId, request);
+    }
+
 
 }

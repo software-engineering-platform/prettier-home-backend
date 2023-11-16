@@ -4,10 +4,7 @@ package com.ph.service;
 import com.ph.domain.entities.User;
 import com.ph.exception.customs.*;
 import com.ph.payload.mapper.UserMapper;
-import com.ph.payload.request.ForgotPasswordRequest;
-import com.ph.payload.request.ResetPasswordRequest;
-import com.ph.payload.request.UserSaveRequest;
-import com.ph.payload.request.UserUpdateRequest;
+import com.ph.payload.request.*;
 import com.ph.repository.UserRepository;
 import com.ph.security.role.Role;
 import com.ph.utils.MessageUtil;
@@ -249,6 +246,29 @@ public class UserService {
     }
 
     /**
+     * Update the role of a user.
+     *
+     * @param userId  The ID of the user to update.
+     * @param request The request containing the new role.
+     * @return The updated user with the new role.
+     * @throws BuiltInFieldException If the user is a built-in user.
+     */
+    public ResponseEntity<?> updateUserRole(Long userId, UserRoleUpdateRequest request) {
+        // Get the user by ID
+        User user = getOneUserById(userId);
+        // Check if the user is a built-in user
+        if (user.isBuiltIn()) {
+            throw new BuiltInFieldException(messageUtil.getMessage("error.user.update.built-in"));
+        }
+        // Update the user's role
+        user.setRole(request.getRole());
+        // Save the updated user
+        User updated = userRepository.save(user);
+        // Return the updated user
+        return ResponseEntity.ok(userMapper.toUserResponse(updated));
+    }
+
+    /**
      * This method is a helper method
      * Checks for duplicate phone number and email in the UserRepository.
      * Throws a ConflictException if a duplicate is found.
@@ -328,6 +348,5 @@ public class UserService {
             throw new RelatedFieldException(messageUtil.getMessage("error.user.delete.tou-requests"));
         }
     }
-
 
 }

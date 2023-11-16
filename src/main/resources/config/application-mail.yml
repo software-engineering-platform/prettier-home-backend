@@ -4,9 +4,8 @@ spring:
     default-encoding: UTF-8
     host: smtp.gmail.com
     port: 587
-#    username: prettier-homes-noreply@gmail.com
-    username: noreply.emergency.sevice@gmail.com
-    password: tmwyvgqsejhuihow
+    username: prettier.homes.noreply@gmail.com
+    password: sbdv kchz cldp pfru
     protocol: smtp
     properties:
       mail:
@@ -22,12 +21,10 @@ email:
       template: email-activate-template.ftl
       email-img: activate.png
       text: |
-        <p>Thank you for registering!</p>
-        <p>To activate your account, please click on the following link:</p>
-#        <p><a href="${link}">${link}</a></p>
+        <In this property, you can set the text of the email.>
     forgot:
       subject: Forgot Password
       template: forgot-password-mail.ftl
-      email-img: https://prettyhomelv.com/wp-content/uploads/2022/03/logo_fondo_transparente_Mesa-de-trabajo-1.png
+      email-img: https://i.imgur.com/P5FfKNl.png
       text: |
-        <p>If you forgot your password, please use the code below to reset it:</p>
+        <In this property, you can set the text of the email.>

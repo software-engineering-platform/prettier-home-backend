@@ -20,10 +20,21 @@ public class PrettierhomeApplication implements CommandLineRunner {
         SpringApplication.run(PrettierhomeApplication.class, args);
     }
 
+    /**
+     * This method checks if an admin user exists in the user repository.
+     * If not, it creates a new admin user and saves it in the repository.
+     * This method runs during application startup and ensures that the application has a built-in admin account.
+     *
+     * @param args The command line arguments passed to the application.
+     * @throws Exception If an error occurs during the execution of the method.
+     */
     @Override
     public void run(String... args) throws Exception {
 
+        // Check if an admin user already exists in the user repository
         if (!userRepository.existsByEmail("admin@gmail.com")) {
+
+            // Create a new admin user
             User admin = User.builder()
                     .firstName("John")
                     .lastName("Doe")
@@ -33,8 +44,9 @@ public class PrettierhomeApplication implements CommandLineRunner {
                     .role(Role.ADMIN)
                     .builtIn(true)
                     .build();
+
+            // Save the admin user in the repository
             userRepository.save(admin);
         }
-
     }
 }

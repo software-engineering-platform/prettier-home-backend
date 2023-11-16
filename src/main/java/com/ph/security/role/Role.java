@@ -45,9 +45,6 @@ public enum Role {
                 .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
                 .collect(Collectors.toList());
 
-        // Add the role authority to the list
-//        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-
         return authorities;
     }
 

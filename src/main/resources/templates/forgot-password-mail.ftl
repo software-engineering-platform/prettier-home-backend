@@ -1,29 +1,28 @@
 <html>
 <head>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f8f8;
-        }
 
         .container {
-            background-color: #fff;
+            font-family: Verdana, sans-serif;
+            background-color: #fac769;
             border-radius: 10px;
             margin: 20px auto;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1), 0 2px 5px rgba(0, 0, 0, 0.3);
             width: 80%;
         }
 
         .header {
-            background-color: #ff8c00;
+            background-color: #fac769;
             color: #fff;
             border-radius: 10px 10px 0 0;
             text-align: center;
-            padding: 10px;
+            padding: 20px;
         }
 
         .content {
+            background-color: #F8F8FF;
+            border: 2px solid #fac769;
+
             padding: 20px;
         }
 
@@ -37,8 +36,11 @@
         }
 
         .footer {
+            font-size:14px;
+            background-color: #fac769;
+            border-radius: 0 0 10px 10px;
             text-align: center;
-            margin-top: 20px;
+            padding: 5px;
         }
     </style>
 </head>
@@ -53,7 +55,7 @@
         <p>If you did not request a password reset, please ignore this email.</p>
     </div>
     <div class="footer">
-        <p>© 2023 Your Company. All rights reserved.</p>
+        <p>© 2023 Prettier Homes LLC. All rights reserved.</p>
     </div>
 </div>
 </body>
