@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -34,6 +35,22 @@ public class AdvertType implements Serializable {
     /**
      * Equals and HashCode - ToString methods start
      */
+    @Override
+    public String toString() {
+        return "AdvertType{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                '}';
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        AdvertType other = (AdvertType) obj;
+        return Objects.equals(id, other.id) &&
+                Objects.equals(title, other.title) &&
+                Objects.equals(adverts, other.adverts);
+    }
 
     /**
      * Equals and HashCode - ToString methods end

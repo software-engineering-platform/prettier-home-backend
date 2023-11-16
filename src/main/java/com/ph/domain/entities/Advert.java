@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -18,19 +19,27 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "adverts")
+
 public class Advert extends Entry implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(nullable = false)
     private String title;
-    private String description;
+    @Column(length = 300)
+     private String description;
+    @Column(nullable = false,unique = true)
     private String slug;
+    @Column(nullable = false)
     private Double price;
-    private int status;
+    @Column(nullable = false)
+    private Integer status=0;
+
     private boolean builtIn;
-    private boolean isActive;
-    private int viewCount;
+
+    @Column(nullable = false)
+    private boolean isActive=true;
+    private Integer viewCount=0;
     private String location;
 
     /**
@@ -61,7 +70,7 @@ public class Advert extends Entry implements Serializable {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<CategoryPropertyValue> categoryPropertyValues;
 
     @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -82,6 +91,34 @@ public class Advert extends Entry implements Serializable {
     /**
      * Equals and HashCode - ToString methods start
      */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Advert advert = (Advert) obj;
+        return status == advert.status && builtIn == advert.builtIn && isActive == advert.isActive && viewCount == advert.viewCount && Objects.equals(id, advert.id) && Objects.equals(title, advert.title) && Objects.equals(description, advert.description) && Objects.equals(slug, advert.slug) && Objects.equals(price, advert.price) && Objects.equals(location, advert.location);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, slug, price, status, builtIn, isActive, viewCount, location);
+    }
+
+    @Override
+    public String toString() {
+        return "Advert{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", slug='" + slug + '\'' +
+                ", price=" + price +
+                ", status=" + status +
+                ", builtIn=" + builtIn +
+                ", isActive=" + isActive +
+                ", viewCount=" + viewCount +
+                ", location='" + location + '\'' +
+                "} " + super.toString();
+    }
 
     /**
      * Equals and HashCode - ToString methods end
