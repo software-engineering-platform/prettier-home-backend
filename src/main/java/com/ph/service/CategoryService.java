@@ -3,6 +3,7 @@ package com.ph.service;
 import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.Category;
 import com.ph.domain.entities.CategoryPropertyKey;
+import com.ph.exception.customs.ConflictException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.CategoryMapper;
 import com.ph.payload.request.CategoryRequest;
@@ -11,19 +12,14 @@ import com.ph.repository.AdvertRepository;
 import com.ph.repository.CategoryPropertyKeyRepository;
 import com.ph.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -46,12 +42,19 @@ public class CategoryService {
         Category category = categoryRequest.get();
         //  if there is same slug in database then throw ConflictException
         checkDuplicateForSlug(category.getSlug());
+
+
+        String cleanedTitle = category.getTitle().toLowerCase().replaceAll("[^a-z]", "");
+
+        if (Arrays.asList("house", "apartment", "villa", "office").contains(cleanedTitle)) {
+            throw new ConflictException("The category already exists as a built_in category");
+        }
+
         // check if category exists
         boolean isCategoryExists = categoryRepository.existsByTitle(category.getTitle());
         if(isCategoryExists){
-            ResponseEntity.status(HttpStatus.CONFLICT).body("Category already exists");
+            throw new ConflictException("Category is already exist");
         }
-
 
         Category saved = categoryRepository.save(category);
         return ResponseEntity.ok(categoryMapper.mapToCategoryResponse(saved));
@@ -65,7 +68,7 @@ public class CategoryService {
      */
     public void checkDuplicateForSlug(String slug){
         if(categoryRepository.existsBySlug(slug)) {
-            ResponseEntity.status(HttpStatus.CONFLICT).body("Slug already exists");
+            throw new ConflictException("Slug already exists");
         }
     }
 
@@ -79,16 +82,53 @@ public class CategoryService {
      * @param type : represent type of sort
      * @return : all categories with pageable type
      */
-    public Page<CategoryResponse> getAllCategoryWithPage(int page, int size, String sort, String type) {
+//    public Page<CategoryResponse> getAllCategoryWithPage(int page, int size, String sort, String type) {
+//
+//        Pageable pageable = PageRequest.of(page,size, Sort.by(sort).ascending());
+//        if(Objects.equals(type, "desc")) {
+//            pageable = PageRequest.of(page,size,Sort.by(sort).descending());
+//        }
+//
+//        return categoryRepository.findAll(pageable).map(categoryMapper::mapToCategoryResponse);
+//    }
 
-        Pageable pageable = PageRequest.of(page,size, Sort.by(sort).ascending());
-        if(Objects.equals(type, "desc")) {
-            pageable = PageRequest.of(page,size,Sort.by(sort).descending());
-        }
+    //NOT: getAllCategoryWithList **************************************************C01
+    public ResponseEntity<List<CategoryResponse>> getAllCategory() {
 
-        return categoryRepository.findAll(pageable).map(categoryMapper::mapToCategoryResponse);
+        List<Category> categories = categoryRepository.findAll();
+
+        List<CategoryResponse> categoryResponses = categories
+                .stream()
+                .map(categoryMapper::mapToCategoryResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(categoryResponses);
     }
 
+    //NOT: getAllCategoryWithPageAndWithAdmin **************************************************C02
+    public Page<CategoryResponse> getAllCategoryWithPageAndWithAdmin(int page, int size, String sort, String type, String query) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+        if (type.equals("desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        }
+
+        // if query is null then return all categories
+        if (query == null) {
+            return categoryRepository.findAll(pageable).map(categoryMapper::mapToCategoryResponse);
+        }
+
+        // if query is not null then return list of filtered categories which contains query
+        List<CategoryResponse> categoryResponses = categoryRepository.findAll(pageable)
+                .stream()
+                .filter(category -> category.getTitle().toLowerCase().contains(query))
+                .map(categoryMapper::mapToCategoryResponse)
+                .collect(Collectors.toList());
+
+        // PageImpl structure : PageImpl<T>(List<T>, Pageable, int)
+        // This structure takes pageable and list of categoryResponses and return data with pageable
+        return new PageImpl<>(categoryResponses, pageable, categoryResponses.size());
+    }
 
 
     //NOT: deleteCategory  C06
@@ -150,8 +190,6 @@ public class CategoryService {
 
 //        category.setCategoryPropertyKeys(categoryPropertyKeys);
 
-
-
         return ResponseEntity.ok(categoryMapper.mapToCategoryResponsewithPropertyKeys(category));
     }
 
@@ -182,7 +220,6 @@ public class CategoryService {
         return category;
 
     }
-
 
 
 

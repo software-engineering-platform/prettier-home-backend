@@ -1,10 +1,8 @@
 package com.ph.payload.response;
 
-import com.ph.domain.entities.CategoryPropertyKey;
 import lombok.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter

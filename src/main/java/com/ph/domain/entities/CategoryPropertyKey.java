@@ -36,6 +36,7 @@ public class CategoryPropertyKey implements Serializable {
 
 
     @OneToMany(mappedBy = "categoryPropertyKey", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //TODO: check on the postman whether keys value has been deleted or not
     private List<CategoryPropertyValue> categoryPropertyValues;
     /**
      * Entity relationships end

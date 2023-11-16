@@ -3,19 +3,17 @@ package com.ph.service;
 import com.ph.domain.entities.Category;
 import com.ph.domain.entities.CategoryPropertyKey;
 import com.ph.exception.customs.ConflictException;
+import com.ph.exception.customs.NonDeletableException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.CategoryMapper;
 import com.ph.payload.mapper.CategoryPropertyKeyMapper;
 import com.ph.payload.request.CategoryPropertyKeyRequest;
 import com.ph.payload.response.CategoryPropertyKeyResponse;
-import com.ph.payload.response.CategoryResponse;
 import com.ph.repository.CategoryPropertyKeyRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.naming.ConfigurationException;
 import java.util.List;
 
 @Service
@@ -64,19 +62,34 @@ public class CategoryPropertyKeyService {
      * @param categoryId : represent category's id
      * @return : List of category property key
      */
-    public ResponseEntity<List<CategoryPropertyKeyResponse>> getPropertyKeysOfCategory(Long categoryId){
+    public ResponseEntity<List<CategoryPropertyKeyResponse>> getPropertyKeysOfCategory(Long categoryId) {
 
-          List<CategoryPropertyKey> propertyKeys = propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
+        List<CategoryPropertyKey> propertyKeys = propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
 
-       return ResponseEntity.ok(propertyKeys
-                           .stream()
-                           .map(categoryPropertyKeyMapper::mapToCategoryPropertyKeyResponse)
-                           .toList());
-
+        return ResponseEntity.ok(propertyKeys
+                .stream()
+                .map(categoryPropertyKeyMapper::mapToCategoryPropertyKeyResponse)
+                .toList());
     }
 
 
 
+    // Not: deletePropertyKey() *************************************** C10
+    //Delete related records in category_property_values table
+    //category_property_values olmadığı için bu kontrol saglanamadi
+    public ResponseEntity<CategoryPropertyKeyResponse> deletePropertyKey(Long propertyId) {
+
+        CategoryPropertyKey categoryPropertyKey = propertyKeyRepository.findById(propertyId).orElseThrow(()
+                -> new ResourceNotFoundException("Category property key not found"));
+
+        if(categoryPropertyKey.isBuiltIn()){
+            throw new NonDeletableException("Built-in category property key can not be deleted");
+        }
+
+        propertyKeyRepository.deleteById(propertyId);
+        return ResponseEntity.ok(categoryPropertyKeyMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKey));
+
+    }
 
 
 
@@ -111,8 +124,6 @@ public class CategoryPropertyKeyService {
         return propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
 
     }
-
-
 
 
 }

@@ -32,9 +32,6 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
     @NotNull(message = "Seq cannot be null")
     private int seq;
 
-    @NotNull(message = "BuiltIn cannot be null")
-    private boolean builtIn;
-
     @NotNull(message = "Is Active cannot be null")
     private boolean isActive;
 
@@ -43,13 +40,21 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
 
     @Override
     public Category get() {
+
+        boolean builtInValue = isBuiltInCategory(title);
+
         return Category.builder()
                 .title(getTitle())
-                .slug(getTitle().replaceAll(" ", "-").toLowerCase())
+                .slug(getTitle().replaceAll(" ", "-").toLowerCase()+System.currentTimeMillis())
                 .icon(getIcon())
                 .seq(getSeq())
-                .builtIn(isBuiltIn())
-                .active(isActive()) // TODO:isActive olanları active yaptım
+                .builtIn(builtInValue)
+                .active(isActive())
                 .build();
+    }
+
+    private boolean isBuiltInCategory(String title) {
+
+        return title.equals("House") || title.equals("Villa") || title.equals("Office") || title.equals("Apartment");
     }
 }
