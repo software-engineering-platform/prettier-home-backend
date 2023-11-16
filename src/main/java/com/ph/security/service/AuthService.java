@@ -1,13 +1,17 @@
 package com.ph.security.service;
 
+import com.ph.domain.entities.User;
 import com.ph.exception.customs.ResourceNotFoundException;
-import com.ph.payload.mapper.AuthMapper;
+import com.ph.payload.mapper.UserMapper;
 import com.ph.payload.request.LoginRequest;
 import com.ph.payload.response.LoginResponse;
 import com.ph.service.UserService;
+import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,23 +20,32 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     private final UserService userService;
     private final TokenService tokenService;
-    private final AuthMapper authMapper;
+    private final UserMapper userMapper;
+    private final MessageUtil messageUtil;
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * Authenticates a user login request.
+     *
+     * @param request the login request containing the user's email and password
+     * @return the login response containing the user information and JWT token
+     */
     @Transactional
     public LoginResponse authenticate(LoginRequest request) {
-        authenticationManager.authenticate(
+        // Authenticate the user
+        Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
-        var user = userService
-                .getUserByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        // Get the user details
+        UserDetails userDetails = (UserDetails) authenticate.getPrincipal();
+        User user = (User) userDetails;
+        // Generate JWT token
         var jwtToken = tokenService.generateToken(user);
-
-        return authMapper.toLoginResponse(user, jwtToken);
+        // Map user and JWT token to login response
+        return userMapper.toLoginResponse(user, jwtToken);
     }
 
 }
