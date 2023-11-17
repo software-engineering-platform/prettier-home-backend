@@ -1,10 +1,13 @@
 package com.ph.domain.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -19,6 +22,8 @@ public class Country implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Size(max = 30)
     private String name;
 
     /**
@@ -37,7 +42,27 @@ public class Country implements Serializable {
     /**
      * Equals and HashCode - ToString methods start
      */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Country country)) return false;
+        return getId().equals(country.getId()) && getName().equals(country.getName()) && getAdverts().equals(country.getAdverts()) && getCities().equals(country.getCities());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getAdverts(), getCities());
+    }
+
+    @Override
+    public String toString() {
+        return "Country{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                /* ", adverts=" + adverts +*/
+                ", cities=" + cities +
+                '}';
+    }
     /**
      * Equals and HashCode - ToString methods end
      */

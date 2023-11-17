@@ -12,3 +12,4 @@ spring:
     driverClassName: org.postgresql.Driver
     username: username
     password: password
+    initialization-mode: always
