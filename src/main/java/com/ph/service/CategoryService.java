@@ -2,15 +2,18 @@ package com.ph.service;
 
 import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.Category;
-import com.ph.domain.entities.CategoryPropertyKey;
 import com.ph.exception.customs.ConflictException;
+import com.ph.exception.customs.NonDeletableException;
+import com.ph.exception.customs.NonUpdatableException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.CategoryMapper;
 import com.ph.payload.request.CategoryRequest;
 import com.ph.payload.response.CategoryResponse;
+import com.ph.payload.response.CategoryWithoutPropertiesResponse;
 import com.ph.repository.AdvertRepository;
 import com.ph.repository.CategoryPropertyKeyRepository;
 import com.ph.repository.CategoryRepository;
+import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -30,37 +33,57 @@ public class CategoryService {
     private final CategoryMapper categoryMapper;
     private final AdvertRepository advertRepository;
     private final CategoryPropertyKeyRepository categoryPropertyKeyRepository;
+    private final MessageUtil messageUtil;
 
-    //NOT: saveCategory C04
+    //NOT: saveCategory **************************************************  C04
 
     /**!!!
-     * This method created for category
+     *
+     * This method create an category.
      * @param categoryRequest : represent category containing specific information
      * @return : ResponseEntity with created category
      */
-    public ResponseEntity<CategoryResponse> save(CategoryRequest categoryRequest) {
+    public ResponseEntity<?> save(CategoryRequest categoryRequest) {
+
         Category category = categoryRequest.get();
-        //  if there is same slug in database then throw ConflictException
-        checkDuplicateForSlug(category.getSlug());
+        category.setSlug(slugMaker(category.getTitle()));
+        checkTitle(categoryRequest.getTitle());
 
+        // if there is same slug in database then throw ConflictException
+        checkDuplicateForSlug(category.getSlug());//NOT: is it required to check for duplicate slug???
 
-        String cleanedTitle = category.getTitle().toLowerCase().replaceAll("[^a-z]", "");
-
-        if (Arrays.asList("house", "apartment", "villa", "office").contains(cleanedTitle)) {
-            throw new ConflictException("The category already exists as a built_in category");
-        }
-
-        // check if category exists
-        boolean isCategoryExists = categoryRepository.existsByTitle(category.getTitle());
-        if(isCategoryExists){
-            throw new ConflictException("Category is already exist");
-        }
-
+        // save category in database
         Category saved = categoryRepository.save(category);
+        // return created category
         return ResponseEntity.ok(categoryMapper.mapToCategoryResponse(saved));
 
     }
 
+    public static String slugMaker(String title){
+        return title.toLowerCase().replace(" ", "-")+System.currentTimeMillis();
+    }
+
+
+    /**
+     * this method created for checking title
+     * @param title : represent  title of category
+     */
+    public  void checkTitle( String title){
+
+        // if the title contains character except a-zA-Z then throw ConflictException
+        if(!title.matches("^[a-zA-Z ]+$")) {
+            throw new ConflictException(messageUtil.getMessage("error.category.save.not-alphabetic"));
+        }
+        // get all Title in database
+        List<String> titles = categoryRepository.findAllTitle();
+        // if there is same title in database then throw ConflictException
+        for(String t : titles){
+            if(t.equalsIgnoreCase(title)){
+                throw new ConflictException(messageUtil.getMessage("error.category.save.exist"));
+            }
+        }
+
+    }
 
     /**
      * This method created for check duplicate slug
@@ -68,20 +91,20 @@ public class CategoryService {
      */
     public void checkDuplicateForSlug(String slug){
         if(categoryRepository.existsBySlug(slug)) {
-            throw new ConflictException("Slug already exists");
+            throw new ConflictException(messageUtil.getMessage("error.category.save.duplicate.slug"));
         }
     }
 
-    //NOT: getAllCategoryWithPage C01
+    //NOT: getAllCategoryWithPage *****************************************  C01
 
-    /**
-     * This method created for getting all categories
-     * @param page : represent page number
-     * @param size : represent page size
-     * @param sort : represent sort type
-     * @param type : represent type of sort
-     * @return : all categories with pageable type
-     */
+//    /**
+//     * This method created for getting all categories
+//     * @param page : represent page number
+//     * @param size : represent page size
+//     * @param sort : represent sort type
+//     * @param type : represent type of sort
+//     * @return : all categories with pageable type
+//     */
 //    public Page<CategoryResponse> getAllCategoryWithPage(int page, int size, String sort, String type) {
 //
 //        Pageable pageable = PageRequest.of(page,size, Sort.by(sort).ascending());
@@ -93,35 +116,52 @@ public class CategoryService {
 //    }
 
     //NOT: getAllCategoryWithList **************************************************C01
-    public ResponseEntity<List<CategoryResponse>> getAllCategory() {
 
+    /**
+     * This method created for getting all categories with list
+     * @return : all categories without properties
+     */
+    public ResponseEntity<List<CategoryWithoutPropertiesResponse>> getAllCategory() {
+
+        // get all categories
         List<Category> categories = categoryRepository.findAll();
-
-        List<CategoryResponse> categoryResponses = categories
+        // convert categories to categoryResponses
+        List<CategoryWithoutPropertiesResponse> categoryResponses = categories
                 .stream()
                 .map(categoryMapper::mapToCategoryResponse)
                 .collect(Collectors.toList());
-
         return ResponseEntity.ok(categoryResponses);
     }
 
+
     //NOT: getAllCategoryWithPageAndWithAdmin **************************************************C02
-    public Page<CategoryResponse> getAllCategoryWithPageAndWithAdmin(int page, int size, String sort, String type, String query) {
+    /**
+     * This method created for getting all categories with page for admin and manager
+     * @param page represent page number
+     * @param size represent page size
+     * @param sort represent sort type
+     * @param type represent type of sort
+     * @param query represent search query
+     * @return all categories with pageable type
+     */
+
+    public Page<CategoryWithoutPropertiesResponse>
+                              getAllCategoryWithPageAndWithAdmin(  int page,  int size, String sort, String type, String query) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         if (type.equals("desc")) {
             pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         }
 
-        // if query is null then return all categories
-        if (query == null) {
+        // if query is null or empty then return all categories
+        if (query == null || query.isEmpty()) {
             return categoryRepository.findAll(pageable).map(categoryMapper::mapToCategoryResponse);
         }
 
-        // if query is not null then return list of filtered categories which contains query
-        List<CategoryResponse> categoryResponses = categoryRepository.findAll(pageable)
+        // if query is't null then return list of filtered categories which contains query
+        List<CategoryWithoutPropertiesResponse> categoryResponses = categoryRepository.findAll(pageable)
                 .stream()
-                .filter(category -> category.getTitle().toLowerCase().contains(query))
+                .filter(category -> category.getTitle().toLowerCase().contains(query.toLowerCase()))
                 .map(categoryMapper::mapToCategoryResponse)
                 .collect(Collectors.toList());
 
@@ -131,7 +171,7 @@ public class CategoryService {
     }
 
 
-    //NOT: deleteCategory  C06
+    //NOT: deleteCategory *************************************************************** C06
 
     /**
      * this method created for deleting the category
@@ -142,31 +182,28 @@ public class CategoryService {
 
         //  check if category exists
         Optional<Category> category =  categoryRepository.findById(categoryId);
-
         if (category.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
+            throw new ResourceNotFoundException(messageUtil.getMessage("error.category.not-found"));
         }
-
         // check if category is built in
         if(category.get().isBuiltIn()){ // we used get() method because of Optional
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot delete built in category");
+            throw new NonDeletableException(messageUtil.getMessage("error.category.delete.built-in"));
         }
 
-        // TODO advert repoda conflict varsa çöz
-        // TODO birlestirince kontrol et
         // if there is any advert related to the category then it cannot be deleted
         List<Advert> adverts = advertRepository.findByCategory_Id(categoryId);
         if(!adverts.isEmpty()){
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Cannot delete category with associated adverts");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageUtil.getMessage("error.category.delete.advert"));
         }
-
+        // delete category
         categoryRepository.deleteById(categoryId);
-        return ResponseEntity.ok("Category deleted successfully");
+        // return deleted category
+        return ResponseEntity.ok(categoryMapper.mapToCategoryResponse(category.get()));
 
     }
 
 
-    //NOT: getById  CO3
+    //NOT: getById  ******************************************************************* CO3
     /**
      * This method created for getting category by id with category property keys
      * @param categoryId : represent category id
@@ -174,38 +211,59 @@ public class CategoryService {
      */
     public ResponseEntity<CategoryResponse> getById(Long categoryId) {
 
-//          check if category exists and return
+        // check if category exists and return
         Category category = categoryRepository.findById(categoryId).orElseThrow(()
-                -> new ResourceNotFoundException("Category not found"));
-
-
-                category.getCategoryPropertyKeys().forEach(System.out::println);
-        // we got all category property keys of the category
-//        List<CategoryPropertyKey> categoryPropertyKeys =
-//                categoryPropertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
-
-        // TODO: All category must have at least one category property key??????
-//        if (categoryPropertyKeys.size() == 0) {
-//            ResponseEntity.status(HttpStatus.FORBIDDEN).body("Category must have at least one category property key");}
-
-//        category.setCategoryPropertyKeys(categoryPropertyKeys);
+                -> new ResourceNotFoundException(messageUtil.getMessage("error.category.not-found")));
 
         return ResponseEntity.ok(categoryMapper.mapToCategoryResponsewithPropertyKeys(category));
+
     }
 
 
-    //NOT: updateById  C05
-    public ResponseEntity<CategoryResponse> updateById(Long categoryId, CategoryRequest categoryRequest) {
+    //NOT: updateById ************************************************************************ C05
 
-        Optional<Category> category =  categoryRepository.findById(categoryId);
+    /**
+     * this method created for updating category
+     * @param categoryId : represent category id
+     * @param categoryRequest  : represent category request object
+     * @return : ResponseEntity with updated category
+     */
 
-        //2
-        if (category.isEmpty()){
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
+    public ResponseEntity<?> updateById(Long categoryId, CategoryRequest categoryRequest)  {
+        // Check if the category with the given ID exists in the database
+        Optional<Category> category = categoryRepository.findById(categoryId);
+
+        if (category.isEmpty()) {
+            // If the category does't exist
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(messageUtil.getMessage("error.category.not-found"));
         }
 
-        return null;
+        // Get the existing category from the optional
+        Category existingCategory = category.get();
+
+        // check the category is built_in
+        if(existingCategory.isBuiltIn()){
+            throw new NonUpdatableException(messageUtil.getMessage("error.category.update.built-in"));
+        }
+
+        // check title for duplicate and constraint
+        checkTitle(categoryRequest.getTitle());
+
+        // Update the existing category with the new values
+        existingCategory.setTitle(categoryRequest.getTitle());
+        existingCategory.setIcon(categoryRequest.getIcon());
+        existingCategory.setSeq(categoryRequest.getSeq());
+        existingCategory.setActive(categoryRequest.isActive());
+        existingCategory.setSlug(slugMaker(categoryRequest.getTitle()));
+
+        // Save the updated category in the database
+        Category saved = categoryRepository.save(existingCategory);
+
+        // Return the updated category
+        return ResponseEntity.ok(categoryMapper.mapToCategoryResponse(saved));
     }
+
 
 
     /**
@@ -216,7 +274,7 @@ public class CategoryService {
     public Category getCategoryById(Long categoryId) {
 
         Category category =  categoryRepository.findById(categoryId)
-                                .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+                                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.category.not-found")));
         return category;
 
     }

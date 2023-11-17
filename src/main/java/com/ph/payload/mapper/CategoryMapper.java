@@ -2,6 +2,7 @@ package com.ph.payload.mapper;
 
 import com.ph.domain.entities.Category;
 import com.ph.payload.response.CategoryResponse;
+import com.ph.payload.response.CategoryWithoutPropertiesResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
@@ -10,8 +11,8 @@ public class CategoryMapper {
 
    private final CategoryPropertyKeyMapper propertyKeyMapper;
 
-    public CategoryResponse mapToCategoryResponse(Category category){
-        return CategoryResponse.builder()
+    public CategoryWithoutPropertiesResponse mapToCategoryResponse(Category category){
+        return CategoryWithoutPropertiesResponse.builder()
                         .id(category.getId())
                         .title(category.getTitle())
                         .slug(category.getSlug())
