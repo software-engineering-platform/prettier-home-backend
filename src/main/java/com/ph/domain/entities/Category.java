@@ -50,7 +50,7 @@ public class Category extends Entry implements Serializable {
     private List<Advert> adverts;
 
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<CategoryPropertyKey> categoryPropertyKeys;
     /**
      * Entity relationships end

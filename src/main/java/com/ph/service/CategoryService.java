@@ -32,7 +32,6 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     private final AdvertRepository advertRepository;
-    private final CategoryPropertyKeyRepository categoryPropertyKeyRepository;
     private final MessageUtil messageUtil;
 
     //NOT: saveCategory **************************************************  C04
@@ -171,7 +170,7 @@ public class CategoryService {
     }
 
 
-    //NOT: deleteCategory *************************************************************** C06
+    //Not: deleteCategory *************************************************************** C06
 
     /**
      * this method created for deleting the category
@@ -203,7 +202,7 @@ public class CategoryService {
     }
 
 
-    //NOT: getById  ******************************************************************* CO3
+    //Not: getById  ******************************************************************* CO3
     /**
      * This method created for getting category by id with category property keys
      * @param categoryId : represent category id
@@ -220,8 +219,7 @@ public class CategoryService {
     }
 
 
-    //NOT: updateById ************************************************************************ C05
-
+    //Not: updateById ************************************************************************ C05
     /**
      * this method created for updating category
      * @param categoryId : represent category id
@@ -265,7 +263,6 @@ public class CategoryService {
     }
 
 
-
     /**
      * this method created for getting category object for category property key service
      * @param categoryId : represent category id
@@ -273,13 +270,10 @@ public class CategoryService {
      */
     public Category getCategoryById(Long categoryId) {
 
-        Category category =  categoryRepository.findById(categoryId)
-                                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.category.not-found")));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new ResourceNotFoundException(messageUtil.getMessage("error.category.not-found")));
         return category;
-
     }
-
-
 
 }
 
