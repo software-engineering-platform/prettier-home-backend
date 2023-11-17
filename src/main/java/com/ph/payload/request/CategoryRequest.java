@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Getter
@@ -21,10 +22,6 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
     @Size(max = 150, message = "Title must be less than 150 characters")
     private String title;
 
-//    @NotNull(message = "Slug cannot be null")
-//    @Size(min = 5, max = 200, message = "Slug must be between 5 and 200 characters")
-//    private String slug;
-
     @NotNull(message = "Icon cannot be null")
     @Size(max = 50, message = "Icon must be less than 50 characters")
     private String icon;
@@ -33,28 +30,19 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
     private int seq;
 
     @NotNull(message = "Is Active cannot be null")
-    private boolean isActive;
-
-//    private List<CategoryPropertyKeyRequest> categoryPropertyKeyRequests;
+    private boolean active;
 
 
     @Override
     public Category get() {
 
-        boolean builtInValue = isBuiltInCategory(title);
-
         return Category.builder()
                 .title(getTitle())
-                .slug(getTitle().replaceAll(" ", "-").toLowerCase()+System.currentTimeMillis())
                 .icon(getIcon())
                 .seq(getSeq())
-                .builtIn(builtInValue)
                 .active(isActive())
                 .build();
     }
 
-    private boolean isBuiltInCategory(String title) {
 
-        return title.equals("House") || title.equals("Villa") || title.equals("Office") || title.equals("Apartment");
-    }
 }

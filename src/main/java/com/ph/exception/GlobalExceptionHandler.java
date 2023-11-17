@@ -5,7 +5,9 @@ import com.ph.exception.customs.ConflictException;
 import com.ph.exception.customs.NonDeletableException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.exception.customs.*;
+import com.ph.exception.customs.NonUpdatableException;
 import com.ph.utils.MessageUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,8 +80,20 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NonDeletableException.class)
-    public ResponseEntity<?> handleNonDeletableException(NonDeletableException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    public ResponseEntity<?> handleNonDeletableException(NonDeletableException ex, HttpServletRequest request) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("message", ex.getMessage());
+        errorResponse.put("path", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(NonUpdatableException.class)
+    public ResponseEntity<?> handleNonUpdatableException(NonUpdatableException ex, HttpServletRequest request) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("message", ex.getMessage());
+        errorResponse.put("path", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
     }
 
 }
