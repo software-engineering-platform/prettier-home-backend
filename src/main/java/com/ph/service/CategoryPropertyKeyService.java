@@ -129,39 +129,4 @@ public class CategoryPropertyKeyService {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // category service icin yazildi
-    // SORU: bunu klllaninca inceksin dongusu oluyor.??????????????????
-
-    /** !!!
-     * This method created for getting category property keys of specific category !!! for category service
-     * @param categoryId : represent category's id
-     * @return : List of category property key
-     */
-    public List<CategoryPropertyKey> getPropertyKeysOfCategoryForCategoryService(Long categoryId){
-
-        return propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
-
-    }
-
-
-
 }

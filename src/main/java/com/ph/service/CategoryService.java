@@ -31,8 +31,9 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    private final AdvertRepository advertRepository;
+    private final AdvertService advertService;
     private final MessageUtil messageUtil;
+
 
     //NOT: saveCategory **************************************************  C04
 
@@ -190,7 +191,7 @@ public class CategoryService {
         }
 
         // if there is any advert related to the category then it cannot be deleted
-        List<Advert> adverts = advertRepository.findByCategory_Id(categoryId);
+        List<Advert> adverts = advertService.getAdvertsOfCategory(categoryId);
         if(!adverts.isEmpty()){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageUtil.getMessage("error.category.delete.advert"));
         }

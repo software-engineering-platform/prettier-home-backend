@@ -2,6 +2,7 @@ package com.ph.service;
 
 import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.AdvertType;
+import com.ph.domain.entities.CategoryPropertyKey;
 import com.ph.domain.entities.User;
 import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.request.AdvertRequest;
@@ -268,4 +269,14 @@ public class AdvertService {
  */
 
 
+    /** !!!
+     * This method created for getting category property keys of specific category !!! for category service
+     * @param categoryId : represent category's id
+     * @return : List of category property key
+     */
+    public List<Advert> getAdvertsOfCategory(Long categoryId){
+
+        return repository.findByCategory_Id(categoryId);
+
+    }
 }
