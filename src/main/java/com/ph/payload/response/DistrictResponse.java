@@ -1,30 +1,29 @@
 package com.ph.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ph.domain.entities.*;
-import com.ph.domain.enums.Status;
+import com.ph.domain.entities.Advert;
+import com.ph.domain.entities.City;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class AdvertResponseForTourRequest implements Serializable {
-
+public class DistrictResponse implements Serializable {
 
     private Long id;
-    private String title;
-    private Double price;
-    private String location;
-    private CountryResponse country;
+
+    private String name;
+
+    private AdvertResponseForTourRequest adverts;
+
     private CityResponse city;
-    private DistrictResponse district;
-  /*  private List<Image> images;*/
+
 }

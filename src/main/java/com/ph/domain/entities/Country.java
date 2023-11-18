@@ -60,7 +60,7 @@ public class Country implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 /* ", adverts=" + adverts +*/
-                ", cities=" + cities +
+               /* ", cities=" + cities +*/
                 '}';
     }
     /**

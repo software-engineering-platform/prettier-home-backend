@@ -107,7 +107,7 @@ public class TourRequestsController {
     // Not :S08 - ApproveByCustomerAsTourId() *******************************************************************
     // http://localhost:8080/tour-requests/6/approve
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    @PatchMapping("/{id}/approve ")
+    @PatchMapping("/{id}/approve")
     public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(@PathVariable Long tourId) {
         return tourRequestsService.approveByCustomerAsTourId(tourId);
     }

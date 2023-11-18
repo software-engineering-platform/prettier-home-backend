@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -41,7 +42,28 @@ public class City implements Serializable {
     /**
      * Equals and HashCode - ToString methods start
      */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof City city)) return false;
+        return getId().equals(city.getId()) && getName().equals(city.getName()) && getAdverts().equals(city.getAdverts()) && getCountry().equals(city.getCountry()) && getDistricts().equals(city.getDistricts());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getAdverts(), getCountry(), getDistricts());
+    }
+
+    @Override
+    public String toString() {
+        return "City{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+               /* ", adverts=" + adverts +
+                ", country=" + country +
+                ", districts=" + districts +*/
+                '}';
+    }
     /**
      * Equals and HashCode - ToString methods end
      */

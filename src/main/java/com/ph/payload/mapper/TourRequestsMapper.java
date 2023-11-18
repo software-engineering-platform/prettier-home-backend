@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 public class TourRequestsMapper {
 
    private final UserMapper userMapper;
+   private final CountryMapper countryMapper;
+   private final CityMapper cityMapper;
+   private final DistrictMapper districtMapper;
+
     public TourRequestsStatusResponse toTourRequestsResponse(TourRequest tourRequest) {
         return TourRequestsStatusResponse.builder()
                 .id(tourRequest.getId())
@@ -46,11 +50,11 @@ public class TourRequestsMapper {
                 .id(advert.getId())
                 .price(advert.getPrice())
                 .title(advert.getTitle())
-                .city(advert.getCity())
-                .images(advert.getImages())
+                .city(cityMapper.toCityResponse(advert.getCity()))
+               /* .images(advert.getImages())*/
                 .location(advert.getLocation())
-                .district(advert.getDistrict())
-                .country(advert.getCountry())
+                .district(districtMapper.toDistrictResponse(advert.getDistrict()))
+                .country(countryMapper.toCountryResponse(advert.getCountry()))
                 .build();
     }
 
