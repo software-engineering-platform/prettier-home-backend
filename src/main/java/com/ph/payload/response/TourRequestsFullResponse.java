@@ -22,11 +22,11 @@ public class TourRequestsFullResponse {
 
     private LocalTime tourTime;
 
-    private Advert advert;
+    private AdvertResponseForTourRequest advert;
 
-    private User ownerUser;
+    private UserResponse ownerUser;
 
-    private User guestUser;
+    private UserResponse guestUser;
 
     private Status status;
 

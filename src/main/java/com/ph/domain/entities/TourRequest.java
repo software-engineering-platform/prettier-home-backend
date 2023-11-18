@@ -38,17 +38,17 @@ public class TourRequest extends Entry implements Serializable {
     /**
      * Entity relationships start
      */
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "advert_id")
     @NotNull
     private Advert advert;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_user_id")
     @NotNull
     private User ownerUser;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "guest_user_id")
     @NotNull
     private User guestUser;

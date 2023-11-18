@@ -4,6 +4,8 @@ import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.TourRequest;
 import com.ph.domain.entities.User;
 import com.ph.domain.enums.Status;
+import com.ph.exception.customs.ConflictException;
+import com.ph.exception.customs.RelatedFieldException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.TourRequestsMapper;
 import com.ph.payload.request.TourRequestRequest;
@@ -39,12 +41,15 @@ public class TourRequestsService {
     public ResponseEntity<?> save(TourRequestRequest request, UserDetails userDetails) {
         TourRequest tourRequest = request.get();
         //requestten gelen tourDate ve tourTime var mı yok mu  ve tam saatlerde mi kontrolu
-        if (!isValidTourTime(tourRequest.getTourTime()) && tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(messageUtil.getMessage("error.tourtime.conflict"));
+        if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
+            throw  new ConflictException(messageUtil.getMessage("error.tourtime.conflict"));
+        }
+        if (!isValidTourTime(tourRequest.getTourTime()) ){
+            throw  new RelatedFieldException(messageUtil.getMessage("error.tourtime.bad-request"));
         }
         Advert advert=advertService.getById(request.getAdvertId());
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
-                new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found")));
+                new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
         User ownerUser=advert.getUser();
         tourRequest.setAdvert(advert);
         tourRequest.setGuestUser(user);
@@ -56,7 +61,7 @@ public class TourRequestsService {
     // Not :Time'i sadece tam saatlerde almamızı saglayan yardımcı method
     private boolean isValidTourTime(LocalTime tourTime) {
         int minute = tourTime.getMinute();
-        return (minute == 0 );  // Eğer dakika 0 ise (tam saat), true döndür
+        return (minute == 00 || minute==30);  // Eğer dakika 0 ise (tam saat), true döndür
     }
 
 
@@ -70,8 +75,11 @@ public class TourRequestsService {
         if ((Status.APPROVED.name()).equals(tourRequest.getStatus().name()) || (Status.CANCELED.name()).equals(tourRequest.getStatus().name())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.pending-or-declined"));
         }
-        if (!isValidTourTime(request.getTourTime()) && tourRequestsRepository.existsByTourDateAndTourTime(request.getTourDate(), request.getTourTime())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(messageUtil.getMessage("error.tourtime.conflict"));
+        if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
+            throw  new ConflictException(messageUtil.getMessage("error.tourtime.conflict"));
+        }
+        if (!isValidTourTime(tourRequest.getTourTime()) ){
+            throw  new RelatedFieldException(messageUtil.getMessage("error.tourtime.bad-request"));
         }
 
         tourRequest.setTourDate(request.getTourDate());
@@ -84,7 +92,7 @@ public class TourRequestsService {
     // Not :S01 - GetAllTourRequestByCustomerAsPage() ***************************************************
     public Page<TourRequestsStatusResponse> getAllTourRequestByCustomerAsPage(UserDetails userDetails, int page, int size, String sort, String type) {
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
-                new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found")));
+                new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         if (Objects.equals(type, "desc")) {
@@ -120,7 +128,7 @@ public class TourRequestsService {
     public ResponseEntity<TourRequestsFullResponse> getTourRequestByCustomerId(UserDetails userDetails, Long tourId) {
 
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
-                new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found")));
+                new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
 
         TourRequest tourRequest = tourRequestsRepository.findByIdAndGuestUser_Id(tourId, user.getId())
                 .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
@@ -128,6 +136,7 @@ public class TourRequestsService {
     }
 
     // Not :S04 - GetTourRequestByManagerAndAdminAsTourId() **************************************************
+
     public ResponseEntity<TourRequestsFullResponse> getTourRequestByManagerAndAdminId(Long tourId) {
 
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
@@ -137,6 +146,7 @@ public class TourRequestsService {
     }
 
     // Not :S07 - CancelByCustomerAsTourId() *******************************************************************
+
 
     public ResponseEntity<TourRequestsResponse> cancelByCustomerAsTourId(Long tourId, UserDetails userDetails) {
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
@@ -149,6 +159,7 @@ public class TourRequestsService {
     }
 
     // Not :S08 - ApproveByCustomerAsTourId() *******************************************************************
+
     public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(Long tourId) {
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
@@ -168,6 +179,7 @@ public class TourRequestsService {
     }
 
     // Not : GetById() ***************************************************************************************
+
     public TourRequest getById(Long id){
       return tourRequestsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));

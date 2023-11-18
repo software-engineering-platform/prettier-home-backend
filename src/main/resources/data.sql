@@ -1,6 +1,6 @@
-INSERT INTO 'countries' ('name') VALUES ('Turkey');
+INSERT INTO countries (name) VALUES ('Turkey');
 
-INSERT INTO 'cities' (country_id, name) VALUES
+INSERT INTO cities (country_id, name) VALUES
 (1, 'Adana'),
 (1, 'Adıyaman'),
 (1, 'Afyonkarahisar'),

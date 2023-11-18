@@ -23,6 +23,7 @@ public class TourRequestsController {
     private final TourRequestsService tourRequestsService;
 
     // Not :S05 - Save() *************************************************************************
+    // http://localhost:8080/tour-requests
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PostMapping()
     public ResponseEntity<?> save(@RequestBody @Valid TourRequestRequest request,
@@ -31,6 +32,7 @@ public class TourRequestsController {
     }
 
     // Not :S06 - update() ****************************************************************************
+    // http://localhost:8080/tour-requests/2/auth
 
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PutMapping("/{id}/auth")
@@ -39,6 +41,7 @@ public class TourRequestsController {
     }
 
     // Not :S01 - GetAllTourRequestByCustomerAsPage() ***************************************************
+    // http://localhost:8080/tour-requests/auth
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @GetMapping("/auth")
     public Page<TourRequestsStatusResponse> getAllTourRequestByCustomerAsPage(
@@ -53,6 +56,7 @@ public class TourRequestsController {
     }
 
     // Not:S10 - deleteTourRequest() *******************************************************************
+    // http://localhost:8080/tour-requests/2
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<TourRequestsResponse> deleteTourRequest(@PathVariable Long id) {
@@ -61,6 +65,7 @@ public class TourRequestsController {
 
 
     // Not :S02 - GetAllTourRequestByManagerAndAdminAsPage() ***************************************************
+    // http://localhost:8080/tour-requests/admin
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/admin")
     public Page<TourRequestsFullResponse> getAllTourRequestByManagerAndAdminAsPage(
@@ -73,6 +78,7 @@ public class TourRequestsController {
     }
 
     // Not :S03 - GetTourRequestByCustomerAsTourId() ********************************************************
+    // http://localhost:8080/tour-requests/6/auth
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @GetMapping("/{id}/auth")
     public ResponseEntity<TourRequestsFullResponse> getTourRequestByCustomerId(
@@ -81,6 +87,7 @@ public class TourRequestsController {
     }
 
     // Not :S04 - GetTourRequestByManagerAndAdminAsTourId() **************************************************
+    // http://localhost:8080/tour-requests/7/admin
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/{id}/admin")
     public ResponseEntity<TourRequestsFullResponse> getTourRequestByManagerAndAdminId(@PathVariable Long tourId) {
@@ -89,6 +96,7 @@ public class TourRequestsController {
     }
 
     // Not :S07 - CancelByCustomerAsTourId() *******************************************************************
+    // http://localhost:8080/tour-requests/6/cancel
 
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PatchMapping("/{id}/cancel")
@@ -97,6 +105,7 @@ public class TourRequestsController {
     }
 
     // Not :S08 - ApproveByCustomerAsTourId() *******************************************************************
+    // http://localhost:8080/tour-requests/6/approve
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PatchMapping("/{id}/approve ")
     public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(@PathVariable Long tourId) {
@@ -104,6 +113,7 @@ public class TourRequestsController {
     }
 
     // Not :S09 - DeclineByCustomerAsTourId() *******************************************************************
+    // http://localhost:8080/tour-requests/6/decline
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PatchMapping("/{id}/decline")
     public ResponseEntity<TourRequestsStatusResponse> declineByCustomerAsTourId(@PathVariable Long tourId) {

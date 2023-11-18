@@ -23,9 +23,9 @@ public class TourRequestsStatusResponse {
 
     private LocalTime tourTime;
 
-    private Advert advert;
+    private AdvertResponseForTourRequest advert;
 
-    private User ownerUser;
+    private UserResponse ownerUser;
 
     private Status status;
 
