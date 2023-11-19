@@ -4,7 +4,7 @@ import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.Favorite;
 import com.ph.domain.entities.User;
 import com.ph.exception.customs.ResourceNotFoundException;
-import com.ph.payload.mapper.AdvertMapperForFavorite;
+import com.ph.payload.mapper.AdvertMapperForFavoriteAndTourRequest;
 import com.ph.payload.response.AdvertResponseForFavorite;
 import com.ph.repository.FavoritesRepository;
 import com.ph.utils.MessageUtil;
@@ -23,7 +23,7 @@ public class FavoritesService {
     private final UserService userService;
     private final MessageUtil messageUtil;
     private final AdvertService advertService;
-    private final AdvertMapperForFavorite advertMapperForFavorite;
+    private final AdvertMapperForFavoriteAndTourRequest advertMapperForFavorite;
 
     // Not :K01 - GetFavoritesByCustomer() ***************************************************
     public ResponseEntity<List<AdvertResponseForFavorite>> getFavoritesByCustomer(UserDetails userDetails) {
@@ -69,14 +69,14 @@ public class FavoritesService {
     public ResponseEntity<String> deleteFavoriteByCustomer(UserDetails userDetails) {
         User user = userService.getUserByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
-        favoritesRepository.deleteByUser(user);
+        favoritesRepository.deleteAllById(user.getFavorites().stream().map(favorite -> favorite.getId()).collect(Collectors.toList()));
         return ResponseEntity.ok().body(messageUtil.getMessage("favorites.successfully.deleted"));
     }
 
     // Not :K05 - DeleteFavoriteIdByAdminAndManager() *********************************************************
     public ResponseEntity<String> deleteFavoritesByAdminAndManager(Long userId) {
         User user=userService.getOneUserById(userId);
-        favoritesRepository.deleteByUser(user);
+        favoritesRepository.deleteAllById(user.getFavorites().stream().map(favorite -> favorite.getId()).collect(Collectors.toList()));
         return ResponseEntity.ok().body(messageUtil.getMessage("favorites.successfully.deleted"));
     }
 

@@ -14,13 +14,14 @@ public class TourRequestsMapper {
    private final CountryMapper countryMapper;
    private final CityMapper cityMapper;
    private final DistrictMapper districtMapper;
-   private final AdvertMapper advertMapper;
+
+   private final AdvertMapperForFavoriteAndTourRequest advertMapperForFavoriteAndTourRequest;
 
     public TourRequestsStatusResponse toTourRequestsResponse(TourRequest tourRequest) {
         return TourRequestsStatusResponse.builder()
                 .id(tourRequest.getId())
                 .tourDate(tourRequest.getTourDate())
-                .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
+                .advert(advertMapperForFavoriteAndTourRequest.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .status(tourRequest.getStatus())
                 .build();
@@ -30,7 +31,7 @@ public class TourRequestsMapper {
         return TourRequestsFullResponse.builder()
                 .id(tourRequest.getId())
                 .tourDate(tourRequest.getTourDate())
-                .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
+                .advert(advertMapperForFavoriteAndTourRequest.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .guestUser(userMapper.toUserResponse(tourRequest.getGuestUser()))
                 .status(tourRequest.getStatus())

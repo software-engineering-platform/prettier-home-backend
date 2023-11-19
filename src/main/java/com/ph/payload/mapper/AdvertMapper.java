@@ -18,7 +18,7 @@ public class AdvertMapper {
     private final CountryMapper countryMapper;
 
 
-  public   Advert toEntity(AdvertRequest request) {
+    public Advert toEntity(AdvertRequest request) {
         return Advert.builder()
                 .title(request.getTitle())
                 .description(request.getDesc())
@@ -27,7 +27,7 @@ public class AdvertMapper {
                 .build();
     }
 
-    public AdvertResponse toResponse(Advert advert){
+    public AdvertResponse toResponse(Advert advert) {
         return AdvertResponse.builder()
                 .id(advert.getId())
                 .createdAt(advert.getCreatedAt())
@@ -46,14 +46,14 @@ public class AdvertMapper {
                 .user(advert.getUser())
                 .advertType(advert.getAdvertType())
                 .category(advert.getCategory())
-                  .images(advert.getImages())
+                .images(advert.getImages())
                 .favorites(advert.getFavorites())
                 .slug(advert.getSlug())
                 .build();
     }
 
 
-   public Advert toEntityForUpdate(AdvertRequestForUpdateByAdmin request){
+    public Advert toEntityForUpdate(AdvertRequestForUpdateByAdmin request) {
         return Advert.builder()
                 .title(request.getTitle())
                 .description(request.getDesc())
@@ -63,7 +63,7 @@ public class AdvertMapper {
                 .build();
     }
 
-    public Advert toEntityForUpdateCustomer(AdvertRequestForUpdateByCustomer request){
+    public Advert toEntityForUpdateCustomer(AdvertRequestForUpdateByCustomer request) {
         return Advert.builder()
                 .title(request.getTitle())
                 .description(request.getDesc())
@@ -72,21 +72,4 @@ public class AdvertMapper {
                 .location(request.getLocation())
                 .build();
     }
-
-
-
-    public AdvertResponseForTourRequest toAdvertResponseForTourRequest(Advert advert){
-        return AdvertResponseForTourRequest.builder()
-                .id(advert.getId())
-                .price(advert.getPrice())
-                .title(advert.getTitle())
-                .city(cityMapper.toCityResponse(advert.getCity()))
-                /* .images(advert.getImages())*/
-                .location(advert.getLocation())
-                .district(districtMapper.toDistrictResponse(advert.getDistrict()))
-                .country(countryMapper.toCountryResponse(advert.getCountry()))
-                .build();
-    }
-
-
 }
