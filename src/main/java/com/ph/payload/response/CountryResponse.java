@@ -25,7 +25,7 @@ public class CountryResponse implements Serializable {
 
     private String name;
 
-    private AdvertResponseForTourRequest adverts;
+    /*private List<AdvertResponseForTourRequest> advertsResponse;
 
-    private List<CityResponse> cities;
+    private List<CityResponse> citiesResponse;*/
 }

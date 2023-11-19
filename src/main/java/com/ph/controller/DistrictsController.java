@@ -2,6 +2,7 @@ package com.ph.controller;
 
 import com.ph.domain.entities.City;
 import com.ph.domain.entities.District;
+import com.ph.payload.response.DistrictResponse;
 import com.ph.service.CityService;
 import com.ph.service.DistrictsService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,10 @@ public class DistrictsController {
     private final DistrictsService districtsService;
 
     //Not:U03 GetAllDistricts() *************************************************************************
+
+    // http://localhost:8080/districts
     @GetMapping()
-    public List<District> getAllDistricts() {
+    public List<DistrictResponse> getAllDistricts() {
 
         return districtsService.getAllDistricts();
     }

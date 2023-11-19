@@ -14,12 +14,13 @@ public class TourRequestsMapper {
    private final CountryMapper countryMapper;
    private final CityMapper cityMapper;
    private final DistrictMapper districtMapper;
+   private final AdvertMapper advertMapper;
 
     public TourRequestsStatusResponse toTourRequestsResponse(TourRequest tourRequest) {
         return TourRequestsStatusResponse.builder()
                 .id(tourRequest.getId())
                 .tourDate(tourRequest.getTourDate())
-                .advert(toAdvertResponseForTourRequest(tourRequest.getAdvert()))
+                .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .status(tourRequest.getStatus())
                 .build();
@@ -29,7 +30,7 @@ public class TourRequestsMapper {
         return TourRequestsFullResponse.builder()
                 .id(tourRequest.getId())
                 .tourDate(tourRequest.getTourDate())
-                .advert(toAdvertResponseForTourRequest(tourRequest.getAdvert()))
+                .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .guestUser(userMapper.toUserResponse(tourRequest.getGuestUser()))
                 .status(tourRequest.getStatus())
@@ -45,18 +46,7 @@ public class TourRequestsMapper {
                 .build();
     }
 
-    public AdvertResponseForTourRequest toAdvertResponseForTourRequest(Advert advert){
-        return AdvertResponseForTourRequest.builder()
-                .id(advert.getId())
-                .price(advert.getPrice())
-                .title(advert.getTitle())
-                .city(cityMapper.toCityResponse(advert.getCity()))
-               /* .images(advert.getImages())*/
-                .location(advert.getLocation())
-                .district(districtMapper.toDistrictResponse(advert.getDistrict()))
-                .country(countryMapper.toCountryResponse(advert.getCountry()))
-                .build();
-    }
+
 
 
 }

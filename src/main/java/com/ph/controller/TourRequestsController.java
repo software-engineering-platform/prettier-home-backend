@@ -90,7 +90,7 @@ public class TourRequestsController {
     // http://localhost:8080/tour-requests/7/admin
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/{id}/admin")
-    public ResponseEntity<TourRequestsFullResponse> getTourRequestByManagerAndAdminId(@PathVariable Long tourId) {
+    public ResponseEntity<TourRequestsFullResponse> getTourRequestByManagerAndAdminId(@PathVariable(name="id") Long tourId) {
         return tourRequestsService.getTourRequestByManagerAndAdminId(tourId);
 
     }
@@ -100,7 +100,7 @@ public class TourRequestsController {
 
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<TourRequestsResponse> cancelByCustomerAsTourId(@PathVariable Long tourId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<TourRequestsResponse> cancelByCustomerAsTourId(@PathVariable(name="id") Long tourId, @AuthenticationPrincipal UserDetails userDetails) {
         return tourRequestsService.cancelByCustomerAsTourId(tourId, userDetails);
     }
 
@@ -108,7 +108,7 @@ public class TourRequestsController {
     // http://localhost:8080/tour-requests/6/approve
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PatchMapping("/{id}/approve")
-    public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(@PathVariable Long tourId) {
+    public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(@PathVariable(name="id") Long tourId) {
         return tourRequestsService.approveByCustomerAsTourId(tourId);
     }
 
@@ -116,7 +116,7 @@ public class TourRequestsController {
     // http://localhost:8080/tour-requests/6/decline
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PatchMapping("/{id}/decline")
-    public ResponseEntity<TourRequestsStatusResponse> declineByCustomerAsTourId(@PathVariable Long tourId) {
+    public ResponseEntity<TourRequestsStatusResponse> declineByCustomerAsTourId(@PathVariable(name="id") Long tourId) {
         return tourRequestsService.declinedByCustomerAsTourId(tourId);
     }
 

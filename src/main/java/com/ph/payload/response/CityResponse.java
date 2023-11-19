@@ -19,9 +19,9 @@ public class CityResponse implements Serializable {
 
     private String name;
 
-    private AdvertResponseForTourRequest adverts;
+    /*private List<AdvertResponseForTourRequest> advertsResponse;*/
 
-    private CountryResponse country;
+    /*private CountryResponse countryResponse;*/
 
-    private List<DistrictResponse> districts;
+    /*private List<DistrictResponse> districtsResponse;*/
 }

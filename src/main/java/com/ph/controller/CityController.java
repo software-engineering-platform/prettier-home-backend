@@ -2,6 +2,7 @@ package com.ph.controller;
 
 import com.ph.domain.entities.City;
 import com.ph.domain.entities.Country;
+import com.ph.payload.response.CityResponse;
 import com.ph.service.CityService;
 import com.ph.service.CountriesService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,10 @@ public class CityController {
     private final CityService cityService;
 
     //Not:U02 GetAllCities() *************************************************************************
+
+    // http://localhost:8080/cities
     @GetMapping()
-    public List<City> getAllCities() {
+    public List<CityResponse> getAllCities() {
 
         return cityService.getAllCities();
     }

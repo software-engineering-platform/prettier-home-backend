@@ -1,6 +1,7 @@
 package com.ph.controller;
 
 import com.ph.domain.entities.Country;
+import com.ph.payload.response.CountryResponse;
 import com.ph.service.CountriesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,8 +19,10 @@ public class CountriesController {
     private final CountriesService countriesService;
 
     //Not:U01 GetAllCountries() *************************************************************************
+
+    // http://localhost:8080/countries
     @GetMapping()
-    public List<Country> getAllCountries() {
+    public List<CountryResponse> getAllCountries() {
         return countriesService.getAllCountries();
     }
 }

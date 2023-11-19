@@ -5,10 +5,17 @@ import com.ph.payload.request.AdvertRequest;
 import com.ph.payload.request.AdvertRequestForUpdateByAdmin;
 import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
 import com.ph.payload.response.AdvertResponse;
+import com.ph.payload.response.AdvertResponseForTourRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AdvertMapper {
+
+    private final CityMapper cityMapper;
+    private final DistrictMapper districtMapper;
+    private final CountryMapper countryMapper;
 
 
   public   Advert toEntity(AdvertRequest request) {
@@ -67,6 +74,19 @@ public class AdvertMapper {
     }
 
 
+
+    public AdvertResponseForTourRequest toAdvertResponseForTourRequest(Advert advert){
+        return AdvertResponseForTourRequest.builder()
+                .id(advert.getId())
+                .price(advert.getPrice())
+                .title(advert.getTitle())
+                .city(cityMapper.toCityResponse(advert.getCity()))
+                /* .images(advert.getImages())*/
+                .location(advert.getLocation())
+                .district(districtMapper.toDistrictResponse(advert.getDistrict()))
+                .country(countryMapper.toCountryResponse(advert.getCountry()))
+                .build();
+    }
 
 
 }

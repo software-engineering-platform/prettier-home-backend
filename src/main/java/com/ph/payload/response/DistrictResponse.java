@@ -1,9 +1,6 @@
 package com.ph.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ph.domain.entities.Advert;
-import com.ph.domain.entities.City;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,8 +19,8 @@ public class DistrictResponse implements Serializable {
 
     private String name;
 
-    private AdvertResponseForTourRequest adverts;
+    /*private List<AdvertResponseForTourRequest> advertsResponse;
 
-    private CityResponse city;
+    private CityResponse cityResponse;*/
 
 }
