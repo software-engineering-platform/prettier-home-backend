@@ -2,7 +2,6 @@ package com.ph.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ph.domain.entities.*;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,9 +33,9 @@ public class AdvertResponse {
     private District district;
     private User user;
     private Category category;
-     private List<Image> images;
-     private LocalDateTime createdAt;
-     private LocalDateTime updatedAt;
-     private List<Favorite> favorites;
-     private String slug;
- }
+    private List<Image> images;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private List<Favorite> favorites;
+    private String slug;
+}
