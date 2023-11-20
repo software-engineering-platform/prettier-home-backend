@@ -5,13 +5,20 @@ import com.ph.payload.request.AdvertRequest;
 import com.ph.payload.request.AdvertRequestForUpdateByAdmin;
 import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
 import com.ph.payload.response.AdvertResponse;
+import com.ph.payload.response.AdvertResponseForTourRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AdvertMapper {
 
+    private final CityMapper cityMapper;
+    private final DistrictMapper districtMapper;
+    private final CountryMapper countryMapper;
 
-  public   Advert toEntity(AdvertRequest request) {
+
+    public Advert toEntity(AdvertRequest request) {
         return Advert.builder()
                 .title(request.getTitle())
                 .description(request.getDesc())
@@ -20,7 +27,7 @@ public class AdvertMapper {
                 .build();
     }
 
-    public AdvertResponse toResponse(Advert advert){
+    public AdvertResponse toResponse(Advert advert) {
         return AdvertResponse.builder()
                 .id(advert.getId())
                 .createdAt(advert.getCreatedAt())
@@ -39,14 +46,14 @@ public class AdvertMapper {
                 .user(advert.getUser())
                 .advertType(advert.getAdvertType())
                 .category(advert.getCategory())
-                  .images(advert.getImages())
+                .images(advert.getImages())
                 .favorites(advert.getFavorites())
                 .slug(advert.getSlug())
                 .build();
     }
 
 
-   public Advert toEntityForUpdate(AdvertRequestForUpdateByAdmin request){
+    public Advert toEntityForUpdate(AdvertRequestForUpdateByAdmin request) {
         return Advert.builder()
                 .title(request.getTitle())
                 .description(request.getDesc())
@@ -56,7 +63,7 @@ public class AdvertMapper {
                 .build();
     }
 
-    public Advert toEntityForUpdateCustomer(AdvertRequestForUpdateByCustomer request){
+    public Advert toEntityForUpdateCustomer(AdvertRequestForUpdateByCustomer request) {
         return Advert.builder()
                 .title(request.getTitle())
                 .description(request.getDesc())
@@ -65,8 +72,4 @@ public class AdvertMapper {
                 .location(request.getLocation())
                 .build();
     }
-
-
-
-
 }

@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -19,7 +20,6 @@ public class Contact implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String firstName;
     private String lastName;
     private String email;
@@ -31,6 +31,29 @@ public class Contact implements Serializable {
     /**
      * Equals and HashCode - ToString methods start
      */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Contact contact)) return false;
+        return getId().equals(contact.getId()) && getFirstName().equals(contact.getFirstName()) && getLastName().equals(contact.getLastName()) && getEmail().equals(contact.getEmail()) && getMessage().equals(contact.getMessage()) && getCreatedAt().equals(contact.getCreatedAt());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getFirstName(), getLastName(), getEmail(), getMessage(), getCreatedAt());
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", message='" + message + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 
     /**
      * Equals and HashCode - ToString methods end

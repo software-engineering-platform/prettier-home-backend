@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -38,7 +39,26 @@ public class Favorite extends Entry implements Serializable {
     /**
      * Equals and HashCode - ToString methods start
      */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Favorite favorite)) return false;
+        return getId().equals(favorite.getId()) && getUser().equals(favorite.getUser()) && getAdvert().equals(favorite.getAdvert());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUser(), getAdvert());
+    }
+
+    @Override
+    public String toString() {
+        return "Favorite{" +
+                "id=" + id +
+                ", user=" + user +
+                /*", advert=" + advert +*/
+                '}';
+    }
     /**
      * Equals and HashCode - ToString methods end
      */
