@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -38,6 +39,27 @@ public class District implements Serializable {
     /**
      * Equals and HashCode - ToString methods start
      */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof District district)) return false;
+        return getId().equals(district.getId()) && getName().equals(district.getName()) && getAdverts().equals(district.getAdverts()) && getCity().equals(district.getCity());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getAdverts(), getCity());
+    }
+
+    @Override
+    public String toString() {
+        return "District{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+              /*  ", adverts=" + adverts +
+                ", city=" + city +*/
+                '}';
+    }
 
     /**
      * Equals and HashCode - ToString methods end

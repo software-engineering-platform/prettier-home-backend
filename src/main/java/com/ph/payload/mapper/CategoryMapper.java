@@ -11,7 +11,7 @@ public class CategoryMapper {
 
    private final CategoryPropertyKeyMapper propertyKeyMapper;
 
-    public CategoryWithoutPropertiesResponse mapToCategoryResponse(Category category){
+    public CategoryWithoutPropertiesResponse mapToCategoryWithoutPropertyResponse(Category category){
         return CategoryWithoutPropertiesResponse.builder()
                         .id(category.getId())
                         .title(category.getTitle())

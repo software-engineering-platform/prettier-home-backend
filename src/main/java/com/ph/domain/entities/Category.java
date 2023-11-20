@@ -39,9 +39,8 @@ public class Category extends Entry implements Serializable {
     @Column(name = "built_in", nullable = false)
     private boolean builtIn;
 
-    //Soru: wrapper mi primitive mi olarak ayarlanmalı?
     @Column(name = "is_active")
-    private boolean active;  // TODO: isActive getter methodunda sorun oluşturdugundan active olarak değiştirildi.
+    private boolean active;  // NOt: isActive getter methodunda problem oluşturdugundan active olarak değiştirildi.
     /**
      * Entity relationships start
      */
