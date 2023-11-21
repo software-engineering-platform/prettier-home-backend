@@ -19,7 +19,7 @@ public class CategoryMapper {
                         .icon(category.getIcon())
                         .seq(category.getSeq())
                         .builtIn(category.isBuiltIn())
-                        .active(category.isActive()) // !!!isActive changed to active
+                        .active(category.isActive())
                         .build();
     }
 
