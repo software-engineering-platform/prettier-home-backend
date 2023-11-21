@@ -17,3 +17,9 @@ spring:
       - security
       - data
       - mail
+
+#ExportFilePath
+export:
+  folder:
+    path:
+      xls: ${user.home}/Desktop/.excelExport
