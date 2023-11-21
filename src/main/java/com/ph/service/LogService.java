@@ -33,4 +33,8 @@ public class LogService {
     }
 
 
+    public void  deleteByAdvertNull(){
+        logRepository.deleteByAdvertNull();
+    }
+
 }

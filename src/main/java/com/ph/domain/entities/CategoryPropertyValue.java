@@ -29,7 +29,7 @@ public class CategoryPropertyValue implements Serializable {
      */
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)// Every category property values must have category property key
+    @JoinColumn(nullable = false )// Every category property values must have category property key
     private CategoryPropertyKey categoryPropertyKey;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -85,5 +85,8 @@ public class FavoritesService {
         favoritesRepository.deleteById(favoriteId);
         return ResponseEntity.ok().body(messageUtil.getMessage("favorite.successfully.deleted"));
     }
+
+
+
 }
 
