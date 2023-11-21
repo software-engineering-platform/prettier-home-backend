@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class CategoryPropertyKeyRequest implements Supplier<CategoryPropertyKey>, Serializable {
+public class    CategoryPropertyKeyRequest implements Supplier<CategoryPropertyKey>, Serializable {
 
     @NotNull(message = "Name cannot be null")
     @Size(min = 2, max = 80, message = "Name must be between 2 and 80 characters")

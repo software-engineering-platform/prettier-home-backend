@@ -116,12 +116,12 @@ public class CategoryService {
     //NOT: getAllCategoryWithList **************************************************C01
 
     /**
-     * This method created for getting all categories with list
+     * This method created for getting all categories which active field is true
      * @return : all categories without properties
      */
     public ResponseEntity<List<CategoryWithoutPropertiesResponse>> getAllCategory() {
 
-        // added: 19.11.2023 ->  get all categories with active field set to true
+        // added: 19.11.2023 ->  get all categories where active field is true
         List<Category> categories = categoryRepository.findAll()
                 .stream()
                 .filter(Category::isActive)

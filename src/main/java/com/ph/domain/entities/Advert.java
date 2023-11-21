@@ -1,5 +1,6 @@
 package com.ph.domain.entities;
 
+import com.ph.domain.enums.StatusForAdvert;
 import com.ph.domain.abstracts.Entry;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-@Entity
+ @Entity
 @Getter
 @Setter
 @SuperBuilder
@@ -28,16 +29,17 @@ public class Advert extends Entry implements Serializable {
     private String title;
     @Column(length = 300)
      private String description;
-    @Column(nullable = false,unique = true)
+    @Column( unique = true)
     private String slug;
     @Column(nullable = false)
     private Double price;
-    @Column(nullable = false)
-    private Integer status=0;
+
+
+    private StatusForAdvert statusForAdvert = StatusForAdvert.PENDING;
 
     private boolean builtIn;
 
-    @Column(nullable = false)
+
     private boolean isActive=true;
     private Integer viewCount=0;
     private String location;
@@ -46,47 +48,58 @@ public class Advert extends Entry implements Serializable {
      * Entity relationships start
      */
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "advert_type_id")
     private AdvertType advertType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "country_id")
     private Country country;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "city_id")
     private City city;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "district_id")
     private District district;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY ,orphanRemoval = true)
     private List<CategoryPropertyValue> categoryPropertyValues;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     private List<TourRequest> tourRequests;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     private List<Image> images;
 
     @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Log> logs;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
     private List<Favorite> favorites;
     /**
      * Entity relationships end
      */
+
+    @PreRemove
+    private void preRemove() {
+        categoryPropertyValues.forEach(categoryPropertyValue -> categoryPropertyValue.setAdvert(null));
+        tourRequests.forEach(tourRequest -> tourRequest.setAdvert(null));
+        images.forEach(image -> image.setAdvert(null));
+        favorites.forEach(favorite -> favorite.setAdvert(null));
+        logs.forEach(log -> log.setAdvert(null));
+
+    }
+
 
     /**
      * Equals and HashCode - ToString methods start
@@ -96,12 +109,12 @@ public class Advert extends Entry implements Serializable {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Advert advert = (Advert) obj;
-        return status == advert.status && builtIn == advert.builtIn && isActive == advert.isActive && viewCount == advert.viewCount && Objects.equals(id, advert.id) && Objects.equals(title, advert.title) && Objects.equals(description, advert.description) && Objects.equals(slug, advert.slug) && Objects.equals(price, advert.price) && Objects.equals(location, advert.location);
+        return statusForAdvert == advert.statusForAdvert && builtIn == advert.builtIn && isActive == advert.isActive && viewCount == advert.viewCount && Objects.equals(id, advert.id) && Objects.equals(title, advert.title) && Objects.equals(description, advert.description) && Objects.equals(slug, advert.slug) && Objects.equals(price, advert.price) && Objects.equals(location, advert.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, description, slug, price, status, builtIn, isActive, viewCount, location);
+        return Objects.hash(id, title, description, slug, price, statusForAdvert, builtIn, isActive, viewCount, location);
     }
 
     @Override
@@ -112,7 +125,7 @@ public class Advert extends Entry implements Serializable {
                 ", description='" + description + '\'' +
                 ", slug='" + slug + '\'' +
                 ", price=" + price +
-                ", status=" + status +
+                ", status=" + statusForAdvert +
                 ", builtIn=" + builtIn +
                 ", isActive=" + isActive +
                 ", viewCount=" + viewCount +
