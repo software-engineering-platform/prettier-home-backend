@@ -135,4 +135,12 @@ Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nes
     List<Advert> findByUser_Id(Long id);
 
     Optional<Advert> findBySlug(String slug);
+
+    /**
+     * This  created for getting all builtIn adverts
+     * @param b : represent builtIn
+     * @return : all builtIn adverts
+     */
+    @Query("select a from Advert a where a.builtIn = ?1")
+    List<Advert> findAllByBuiltIn(boolean b);
 }

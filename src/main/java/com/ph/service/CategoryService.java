@@ -10,8 +10,6 @@ import com.ph.payload.mapper.CategoryMapper;
 import com.ph.payload.request.CategoryRequest;
 import com.ph.payload.response.CategoryResponse;
 import com.ph.payload.response.CategoryWithoutPropertiesResponse;
-import com.ph.repository.AdvertRepository;
-import com.ph.repository.CategoryPropertyKeyRepository;
 import com.ph.repository.CategoryRepository;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +29,9 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    private final AdvertRepository advertRepository;
-    private final CategoryPropertyKeyRepository categoryPropertyKeyRepository;
+    private final AdvertService advertService;
     private final MessageUtil messageUtil;
+
 
     //NOT: saveCategory **************************************************  C04
 
@@ -55,7 +53,7 @@ public class CategoryService {
         // save category in database
         Category saved = categoryRepository.save(category);
         // return created category
-        return ResponseEntity.ok(categoryMapper.mapToCategoryResponse(saved));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryWithoutPropertyResponse(saved));
 
     }
 
@@ -118,18 +116,23 @@ public class CategoryService {
     //NOT: getAllCategoryWithList **************************************************C01
 
     /**
-     * This method created for getting all categories with list
+     * This method created for getting all categories which active field is true
      * @return : all categories without properties
      */
     public ResponseEntity<List<CategoryWithoutPropertiesResponse>> getAllCategory() {
 
-        // get all categories
-        List<Category> categories = categoryRepository.findAll();
+        // added: 19.11.2023 ->  get all categories where active field is true
+        List<Category> categories = categoryRepository.findAll()
+                .stream()
+                .filter(Category::isActive)
+                .toList();
+
         // convert categories to categoryResponses
         List<CategoryWithoutPropertiesResponse> categoryResponses = categories
                 .stream()
-                .map(categoryMapper::mapToCategoryResponse)
+                .map(categoryMapper::mapToCategoryWithoutPropertyResponse)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(categoryResponses);
     }
 
@@ -155,14 +158,14 @@ public class CategoryService {
 
         // if query is null or empty then return all categories
         if (query == null || query.isEmpty()) {
-            return categoryRepository.findAll(pageable).map(categoryMapper::mapToCategoryResponse);
+            return categoryRepository.findAll(pageable).map(categoryMapper::mapToCategoryWithoutPropertyResponse);
         }
 
         // if query is't null then return list of filtered categories which contains query
         List<CategoryWithoutPropertiesResponse> categoryResponses = categoryRepository.findAll(pageable)
                 .stream()
                 .filter(category -> category.getTitle().toLowerCase().contains(query.toLowerCase()))
-                .map(categoryMapper::mapToCategoryResponse)
+                .map(categoryMapper::mapToCategoryWithoutPropertyResponse)
                 .collect(Collectors.toList());
 
         // PageImpl structure : PageImpl<T>(List<T>, Pageable, int)
@@ -171,7 +174,7 @@ public class CategoryService {
     }
 
 
-    //NOT: deleteCategory *************************************************************** C06
+    //Not: deleteCategory *************************************************************** C06
 
     /**
      * this method created for deleting the category
@@ -191,19 +194,19 @@ public class CategoryService {
         }
 
         // if there is any advert related to the category then it cannot be deleted
-        List<Advert> adverts = advertRepository.findByCategory_Id(categoryId);
+        List<Advert> adverts = advertService.getAdvertsOfCategory(categoryId);
         if(!adverts.isEmpty()){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageUtil.getMessage("error.category.delete.advert"));
         }
         // delete category
         categoryRepository.deleteById(categoryId);
         // return deleted category
-        return ResponseEntity.ok(categoryMapper.mapToCategoryResponse(category.get()));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryWithoutPropertyResponse(category.get()));
 
     }
 
 
-    //NOT: getById  ******************************************************************* CO3
+    //Not: getById  ******************************************************************* CO3
     /**
      * This method created for getting category by id with category property keys
      * @param categoryId : represent category id
@@ -220,8 +223,7 @@ public class CategoryService {
     }
 
 
-    //NOT: updateById ************************************************************************ C05
-
+    //Not: updateById ************************************************************************ C05
     /**
      * this method created for updating category
      * @param categoryId : represent category id
@@ -261,9 +263,8 @@ public class CategoryService {
         Category saved = categoryRepository.save(existingCategory);
 
         // Return the updated category
-        return ResponseEntity.ok(categoryMapper.mapToCategoryResponse(saved));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryWithoutPropertyResponse(saved));
     }
-
 
 
     /**
@@ -273,13 +274,10 @@ public class CategoryService {
      */
     public Category getCategoryById(Long categoryId) {
 
-        Category category =  categoryRepository.findById(categoryId)
-                                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.category.not-found")));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new ResourceNotFoundException(messageUtil.getMessage("error.category.not-found")));
         return category;
-
     }
-
-
 
 }
 

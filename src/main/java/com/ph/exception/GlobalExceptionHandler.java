@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleNonDeletableException(NonDeletableException ex, HttpServletRequest request) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("message", ex.getMessage());
-        errorResponse.put("path", request.getRequestURI());
+        //errorResponse.put("path", request.getRequestURI());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
 //        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }

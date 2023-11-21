@@ -39,9 +39,8 @@ public class Category extends Entry implements Serializable {
     @Column(name = "built_in", nullable = false)
     private boolean builtIn;
 
-    //Soru: wrapper mi primitive mi olarak ayarlanmalı?
     @Column(name = "is_active")
-    private boolean active;  // TODO: isActive getter methodunda sorun oluşturdugundan active olarak değiştirildi.
+    private boolean active;  // NOt: isActive getter methodunda problem oluşturdugundan active olarak değiştirildi.
     /**
      * Entity relationships start
      */
@@ -50,7 +49,7 @@ public class Category extends Entry implements Serializable {
     private List<Advert> adverts;
 
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<CategoryPropertyKey> categoryPropertyKeys;
     /**
      * Entity relationships end

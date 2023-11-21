@@ -18,11 +18,12 @@ public class CategoryPropertyKeyController {
 
     private final CategoryPropertyKeyService propertyKeyService;
 
-    //NOT: save() ************************************************************C08
+    //Not: save() ************************************************************C08
     @PostMapping("/{categoryId}/properties") // http://localhost:8080/categoriesKey/1/properties
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<CategoryPropertyKeyResponse> save(@Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest,
-                                  @PathVariable Long categoryId) {
+                                                        @PathVariable Long categoryId) {
+
         return propertyKeyService.save(propertyKeyRequest, categoryId);
     }
 
@@ -35,6 +36,7 @@ public class CategoryPropertyKeyController {
         return propertyKeyService.getPropertyKeysOfCategory(categoryId);
     }
 
+
     // Not: deletePropertyKey() *************************************** C10
     @DeleteMapping("/properties/{propertyId}") // http://localhost:8080/categoriesKey/properties/1
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
@@ -42,5 +44,13 @@ public class CategoryPropertyKeyController {
         return propertyKeyService.deletePropertyKey(propertyId);
     }
 
+    // Not: updatePropertyKey() *************************************** C09
+    @PutMapping("/properties/{propertyId}") // http://localhost:8080/categoriesKey/properties/1
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    public ResponseEntity<CategoryPropertyKeyResponse> updatePropertyKey(@PathVariable Long propertyId,
+                                                       @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest) {
+
+        return propertyKeyService.updatePropertyKey(propertyId, propertyKeyRequest);
+    }
 
 }
