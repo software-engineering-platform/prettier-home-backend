@@ -6,7 +6,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Range;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,6 +18,10 @@ import java.util.Optional;
 
 @Repository
 public interface TourRequestsRepository extends JpaRepository<TourRequest, Long> {
+    @Transactional
+    @Modifying
+    @Query("delete from TourRequest t where t.advert is null")
+    void deleteByAdvertNull();
     Optional<TourRequest> findByIdAndGuestUser_Id(Long id, Long id1);
 
     boolean existsByTourDateAndTourTime(LocalDate tourDate, LocalTime tourTime);

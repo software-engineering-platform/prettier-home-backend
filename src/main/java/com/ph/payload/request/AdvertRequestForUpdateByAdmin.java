@@ -1,11 +1,11 @@
 package com.ph.payload.request;
 
+import com.ph.domain.enums.StatusForAdvert;
 import com.ph.payload.request.abstracts.AdvertRequestAbs;
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -16,7 +16,8 @@ public class AdvertRequestForUpdateByAdmin extends AdvertRequestAbs {
 
 
 
-    private Integer status;
+    private StatusForAdvert statusForAdvert;
+    private List<String>  propertyvalues;
 
 
 

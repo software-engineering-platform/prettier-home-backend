@@ -18,8 +18,8 @@ import lombok.*;
 public class AdvertRequest extends AdvertRequestAbs {
 
 
+   private List<String> propertyvalues;
 
-    @NotNull(message = "Image URL cannot be null")
     private List<Integer> imageUrl;
 
 
