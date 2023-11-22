@@ -112,8 +112,9 @@ public class AdvertService {
                                             Integer priceStart, Integer priceEnd,
                                             Integer status, Pageable pageable) throws ResourceNotFoundException {
 
+
         // Check if the start price is greater than the end price
-        if(priceStart > priceEnd){
+        if(priceStart != null && priceEnd != null && priceStart > priceEnd){
             throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.price.start.gt.price.end"));
         }
 
@@ -129,7 +130,7 @@ public class AdvertService {
         }
 
         // Retrieve the Advert entities based on the provided parameters and map them to AdvertResponse objects
-        return repository.findForAdmin(query, categoryId, advertTypeId, priceStart, priceEnd, statusForAdvert, pageable)
+        return repository.findForAnyms(query, categoryId, advertTypeId, priceStart, priceEnd, statusForAdvert, pageable)
                 .map(mapper::toResponse);
     }
 
@@ -224,7 +225,7 @@ public class AdvertService {
                                             Integer priceStart, Integer priceEnd,
                                             Integer status, Pageable pageable) {
         // Check if priceStart is greater than priceEnd
-        if (priceStart > priceEnd) {
+        if (priceStart != null && priceEnd != null && priceStart > priceEnd) {
             throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.price.start.gt.price.end"));
         }
 

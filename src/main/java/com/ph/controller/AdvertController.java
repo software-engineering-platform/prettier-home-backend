@@ -1,5 +1,6 @@
 package com.ph.controller;
 
+ import com.ph.exception.customs.ValuesNotMatchException;
  import com.ph.payload.mapper.AdvertCategoryDTO;
  import com.ph.payload.mapper.AdvertCityDTO;
  import com.ph.payload.request.AdvertRequest;
@@ -125,7 +126,7 @@ public class AdvertController {
     ) {
         // Validate price range
         if (priceStart != null && priceEnd != null && priceStart > priceEnd) {
-            throw new IllegalArgumentException("price_start must be less than or equal to price_end");
+            throw new ValuesNotMatchException("price_start must be less than or equal to price_end");
         }
 
         // Use ascending or descending order based on the sorting type

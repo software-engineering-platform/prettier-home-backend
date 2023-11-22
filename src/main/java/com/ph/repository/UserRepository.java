@@ -1,6 +1,7 @@
 package com.ph.repository;
 
 import com.ph.domain.entities.User;
+import com.ph.security.role.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+    List<User> findByRole(Role role);
     Optional<User> findByEmail(@NonNull String email);
 
     Optional<User> findByResetPasswordCode(@NonNull String resetPasswordCode);
