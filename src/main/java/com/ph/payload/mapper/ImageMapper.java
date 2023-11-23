@@ -12,7 +12,7 @@ public class ImageMapper {
                 .name(savedImage.getName())
                 .type(savedImage.getType())
                 .featured(savedImage.isFeatured())
-                .data(savedImage.getData())
+//                .data(savedImage.getData())
                 .advertId(savedImage.getAdvert().getId())
                 .build();
     }

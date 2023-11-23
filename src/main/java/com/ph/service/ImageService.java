@@ -1,16 +1,16 @@
 package com.ph.service;
 
-import com.ph.domain.entities.Advert;
-import com.ph.domain.entities.Image;
+ import com.ph.domain.entities.Advert;
+ import com.ph.domain.entities.Image;
 import com.ph.exception.customs.ImageException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.ImageMapper;
-import com.ph.payload.request.ImageRequest;
-import com.ph.payload.response.ImageResponse;
+ import com.ph.payload.response.ImageResponse;
 import com.ph.repository.AdvertRepository;
 import com.ph.repository.ImageRepository;
 import com.ph.utils.ImageUtil;
-import lombok.RequiredArgsConstructor;
+ import jakarta.transaction.Transactional;
+ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
+ import java.util.Comparator;
+ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -29,22 +30,32 @@ public class ImageService {
     private final AdvertRepository advertRepository;
 
 
-    public ImageResponse createImage(MultipartFile request, Long id, boolean featured )   {
+    public Image saveImage(MultipartFile request ,Long advertId){
         Image image = null;
         try {
             image = Image.builder()
                     .name(request.getOriginalFilename())
-                    .featured(featured)
+                    .featured(false)
                     .type(request.getContentType())
                     .data(ImageUtil.compressImage(request.getBytes()))
-                    .advert(advertRepository.findById(id)
-                            .orElseThrow(() -> new ResourceNotFoundException(String.format("Advert not found with id: %s", id))))
+                    .advert(advertRepository.findById(advertId)
+                            .orElseThrow(() -> new ResourceNotFoundException(String.format("Advert not found with id: %s", advertId))))
                     .build();
         } catch (IOException e) {
             throw new ImageException(e.getMessage());
         }
-        Image savedImage = imageRepository.save(image);
-        return imageMapper.toImageResponse(savedImage);
+        return imageRepository.save(image);
+    }
+
+
+
+
+    public ImageResponse createImage(List<MultipartFile> request, Long advertId  )   {
+
+  List<Image> savedImage =  request.stream().map(t->saveImage(t,advertId)).toList();
+
+
+        return imageMapper.toImageResponse(savedImage.get(0));
 
 
     }
@@ -74,9 +85,55 @@ public class ImageService {
         return images.stream().map(imageMapper::toImageResponse).toList();
     }
 
-    public void deleteImage(Long id) {
-        imageRepository.deleteById(id);
+    public void deleteImage(List<Long> id) {
+        imageRepository.deleteAllById(id);
     }
 
 
+    @Transactional
+    public ImageResponse updateImage(Long imgId, Long advertId) {
+      Advert advert =  advertRepository.findById(advertId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Advert not found with id: %s", advertId)));
+
+      List<Image> advertImages = advert.getImages();
+
+        boolean match = advertImages.stream().anyMatch(image -> image.getId().equals(imgId));
+        if (!match) {
+            throw new ResourceNotFoundException(String.format("Image not found with id: %s", imgId));
+        }
+
+        Image found = imageRepository.findById(imgId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Image not found with id: %s", imgId)));
+
+
+         Image featuredImage =   advertImages.stream().filter(Image::isFeatured).findFirst().orElse(null);
+        if (featuredImage != null) {
+            featuredImage.setFeatured(false);
+            imageRepository.save(featuredImage);
+        }
+
+
+        found.setFeatured(true);
+        imageRepository.save(found);
+
+        return imageMapper.toImageResponse(found);
+
+
+
+
+
+
+
+    }
+
+    @Transactional
+    public List<ImageResponse> getAllImagesByAdvertId(Long id) {
+        Advert advert =  advertRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format("Advert not found with id: %s", id)));
+        List<Image> advertImages = advert.getImages();
+
+        advertImages.sort(Comparator.comparing(Image::isFeatured).reversed());
+
+        return advertImages.stream().map(imageMapper::toImageResponse).toList();
+    }
 }
