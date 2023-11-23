@@ -9,13 +9,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
- import org.springframework.stereotype.Repository;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface AdvertRepository extends JpaRepository<Advert,Long> {
+public interface AdvertRepository extends JpaRepository<Advert, Long> {
+    @Query("""
+            select a from Advert a
+            where (a.createdAt between ?1 and ?2) and (?3 is null or a.category.id = ?3) and (?4 is null or a.advertType.id = ?4) and (?5 is null or a.statusForAdvert = ?5)""")
+    List<Advert> findForExcel(@Nullable LocalDateTime createdAtStart,
+                              @Nullable LocalDateTime createdAtEnd,
+                              @Nullable Long id, @Nullable Long id1,
+                              @Nullable StatusForAdvert statusForAdvert);
 
     //Not: AÇIKLAMASI ALTTAKİ NOTTA BULUNMAKTADIR
      /*
@@ -56,14 +65,14 @@ Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nes
             // reklamın ve kategorisinin aktif olduğunu kontrol edelim
             "(a.isActive = true and a.category.active = true)")
     Page<Advert> findForAnyms(@Param("q") String query,
-                                 @Param("category") Long categoryId,
-                                 @Param("advert_type_id") Long advertTypeId,
-                                 @Param("price_start") Integer priceStart,
-                                 @Param("price_end") Integer priceEnd,
-                                 @Param("status") Integer status,
-                                 Pageable pageable);
+                              @Param("category") Long categoryId,
+                              @Param("advert_type_id") Long advertTypeId,
+                              @Param("price_start") Integer priceStart,
+                              @Param("price_end") Integer priceEnd,
+                              @Param("status") StatusForAdvert status,
+                              Pageable pageable);
 
-@Query("select a from Advert a where " +
+    @Query("select a from Advert a where " +
             // q parametresi boş değilse, reklamın başlığı veya açıklamasında arama yapalım
             "(:q is null or :q = '' or lower(a.title) like lower(concat('%', :q, '%')) or lower(a.description) like lower(concat('%', :q, '%'))) and " +
             // category_id parametresi boş değilse, reklamın kategorisini kontrol edelim
@@ -74,35 +83,41 @@ Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nes
             "(:price_start is null or a.price >= :price_start) and " +
             "(:price_end is null or a.price <= :price_end) and " +
             // status parametresi boş değilse, reklamın durumunu kontrol edelim
-            "(:status is null or a.statusForAdvert = :status)" )
-
+            "(:status is null or a.statusForAdvert = :status)")
     Page<Advert> findForAdmin(@Param("q") String query,
-                                 @Param("category") Long categoryId,
-                                 @Param("advert_type_id") Long advertTypeId,
-                                 @Param("price_start") Integer priceStart,
-                                 @Param("price_end") Integer priceEnd,
-                                 @Param("status") StatusForAdvert status,
-                                 Pageable pageable);
+                              @Param("category") Long categoryId,
+                              @Param("advert_type_id") Long advertTypeId,
+                              @Param("price_start") Integer priceStart,
+                              @Param("price_end") Integer priceEnd,
+                              @Param("status") StatusForAdvert status,
+                              Pageable pageable);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+//    @Query("select a from Advert a where " +
+//            // category_id parametresi boş değilse, reklamın kategorisini kontrol edelim
+//            "(:category is null or a.category.id = :category) and " +
+//            // advert_type_id parametresi boş değilse, reklamın tipini kontrol edelim
+//            "(:advert_type_id is null or a.advertType.id = :advert_type_id) and " +
+//            // price_start ve price_end parametreleri boş değilse, reklamın fiyatını kontrol edelim
+//            "(:start_date is null or a.createdAt >= :start_date) and " +
+//            "(:end_date is null or a.createdAt <= :end_date) and " +
+//       //  status parametresi boş değilse, reklamın durumunu kontrol edelim
+//            "(:status is null or a.statusForAdvert = :status)" )
+//
+//    List<Advert> findForExcel(
+//            @Param("start_date") LocalDateTime startDate,
+//            @Param("end_date") LocalDateTime endDate,
+//            @Param("status") StatusForAdvert status,
+//            @Param("advert_type_id") Long advertTypeId,
+//            @Param("category") Long categoryId
+//
+//
+//    );
 
 
     //Start: categoryService için yazıldı
     List<Advert> findByCategory_Id(Long categoryId);
     //Finish: categoryService için yazıldı
-
 
 
     @Query("SELECT new com.ph.payload.mapper.AdvertCityDTO(a.city.name, COUNT(a.id)) FROM Advert a GROUP BY a.city.name")
@@ -111,7 +126,6 @@ Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nes
 
     @Query("SELECT new com.ph.payload.mapper.AdvertCategoryDTO(a.category.title, COUNT(a.id)) FROM Advert a GROUP BY a.category.title")
     List<AdvertCategoryDTO> getAdvertsByCategories();
-
 
 
     @Query("SELECT a FROM Advert a LEFT JOIN a.tourRequests t GROUP BY a ORDER BY (3 * COUNT(t) + a.viewCount) DESC LIMIT :limit  ")
@@ -126,18 +140,15 @@ Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nes
  */
 
 
-
-
-
-
-
     Page<Advert> findByUser_Id(Long id, Pageable pageable);
+
     List<Advert> findByUser_Id(Long id);
 
     Optional<Advert> findBySlug(String slug);
 
     /**
      * This  created for getting all builtIn adverts
+     *
      * @param b : represent builtIn
      * @return : all builtIn adverts
      */
