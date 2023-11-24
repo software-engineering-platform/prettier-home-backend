@@ -64,18 +64,9 @@ public class ImageService {
         Image found = imageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format("Image not found with id: %s", id)));
 
-       ImageResponse response = ImageResponse.builder()
-                .id(found.getId())
-                .name(found.getName())
-                .type(found.getType())
-                .featured(found.isFeatured())
-                .data(ImageUtil.decompressImage(found.getData()))
-                .advertId(found.getAdvert().getId())
-                .build();
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf(found.getType()))
-                .body(ImageUtil.decompressImage(found.getData()));
+
+        return ResponseEntity.ok(imageMapper.toImageResponse(found));
 
 
     }

@@ -17,7 +17,7 @@ public class ImageResponse implements Serializable {
     private String type;
     private boolean featured;
     private Long advertId;
-    private byte[] data;
+    private String data;
 
 
 }
