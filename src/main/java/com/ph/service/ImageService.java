@@ -5,6 +5,7 @@ package com.ph.service;
 import com.ph.exception.customs.ImageException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.ImageMapper;
+ import com.ph.payload.request.ImageRequest;
  import com.ph.payload.response.ImageResponse;
 import com.ph.repository.AdvertRepository;
 import com.ph.repository.ImageRepository;
@@ -50,9 +51,9 @@ public class ImageService {
 
 
 
-    public ImageResponse createImage(List<MultipartFile> request, Long advertId  )   {
+    public ImageResponse createImage(List<MultipartFile> request, ImageRequest advert  )   {
 
-  List<Image> savedImage =  request.stream().map(t->saveImage(t,advertId)).toList();
+  List<Image> savedImage =  request.stream().map(t->saveImage(t,advert.getAdvertId())).toList();
 
 
         return imageMapper.toImageResponse(savedImage.get(0));

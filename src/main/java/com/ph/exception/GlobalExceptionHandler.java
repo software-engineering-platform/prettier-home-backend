@@ -129,4 +129,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
+
+    @ExceptionHandler(JsonValidationException.class)
+    public ResponseEntity<?> handleJsonValidationException(JsonValidationException ex  ) {
+        Map<String, String> errorResponse = new HashMap<>();
+        String[] split = ex.getMessage().split("¨¨");
+        for (int i = 0; i <split.length ; i++) {
+            if (i % 2 == 0) {
+                errorResponse.put(split[i], split[i + 1]);
+            }
+
+        }
+
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+
 }
