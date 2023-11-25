@@ -256,7 +256,7 @@ public class CategoryService {
         existingCategory.setTitle(categoryRequest.getTitle());
         existingCategory.setIcon(categoryRequest.getIcon());
         existingCategory.setSeq(categoryRequest.getSeq());
-        existingCategory.setActive(categoryRequest.isActive());
+        existingCategory.setActive(categoryRequest.getActive());
         existingCategory.setSlug(slugMaker(categoryRequest.getTitle()));
 
         // Save the updated category in the database

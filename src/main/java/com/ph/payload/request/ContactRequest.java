@@ -1,6 +1,7 @@
 package com.ph.payload.request;
 
 import com.ph.domain.entities.Contact;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.io.Serializable;
@@ -15,6 +16,7 @@ public class ContactRequest implements Supplier<Contact>, Serializable {
 
     private String firstName;
     private String lastName;
+    @Email(message = "{validation.email.pattern}")
     private String email;
     private String message;
 

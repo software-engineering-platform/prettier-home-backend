@@ -3,10 +3,11 @@ package com.ph.service;
 
 import com.ph.domain.entities.AdvertType;
 import com.ph.exception.customs.ResourceNotFoundException;
-import com.ph.payload.mapper.AdvertTypeMapper;
+import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.request.AdvertTypeRequest;
 import com.ph.payload.response.AdvertTypeResponse;
 import com.ph.repository.AdvertTypeRepository;
+import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,9 @@ import java.util.stream.Collectors;
 public class AdvertTypeService {
 
     private final AdvertTypeRepository repository;
-    private final AdvertTypeMapper mapper;
+
+    private final AdvertMapper mapper;
+    private final MessageUtil messageUtil;
 
 
  /*
@@ -61,7 +64,7 @@ public class AdvertTypeService {
      */
     public AdvertType getById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("AdvertType not found by id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.type.not.found"), id)));
     }
       /*
     !!! HELPER METHOD END .

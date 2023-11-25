@@ -1,12 +1,8 @@
 package com.ph.controller;
 
- import com.fasterxml.jackson.core.JsonProcessingException;
- import com.fasterxml.jackson.databind.ObjectMapper;
- import com.ph.payload.request.ImageRequest;
  import com.ph.payload.response.ImageResponse;
 import com.ph.service.ImageService;
 
- import com.ph.utils.ValidationUtil;
  import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
  import org.springframework.http.ResponseEntity;
@@ -23,12 +19,12 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping
-    public ResponseEntity<?> uploadImage(@RequestParam("image")List<MultipartFile> file,
-                                         @RequestParam("advert") String advert ){
+    public ResponseEntity<?> uploadImage(@RequestParam("images")List<MultipartFile> images,
+                                       @RequestParam("advert") Long advertId ){
 
 
-        ImageRequest imageRequest= ValidationUtil.convertAndValidate(advert, ImageRequest.class);
-      ImageResponse response = imageService.createImage(file, imageRequest );
+
+      ImageResponse response = imageService.createImage(images, advertId );
         return ResponseEntity.status(HttpStatus.OK)
                  .body(response);
     }

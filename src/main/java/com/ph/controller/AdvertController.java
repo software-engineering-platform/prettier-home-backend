@@ -1,14 +1,17 @@
 package com.ph.controller;
 
  import com.ph.exception.customs.ValuesNotMatchException;
- import com.ph.payload.mapper.AdvertCategoryDTO;
- import com.ph.payload.mapper.AdvertCityDTO;
+ import com.ph.payload.response.AdvertCategoryResponse;
+ import com.ph.payload.response.AdvertCityResponse;
  import com.ph.payload.request.AdvertRequest;
 import com.ph.payload.request.AdvertRequestForUpdateByAdmin;
 import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
-import com.ph.payload.response.AdvertResponse;
-import com.ph.service.AdvertService;
-import jakarta.validation.Valid;
+import com.ph.payload.response.DetailedAdvertResponse;
+ import com.ph.payload.response.SimpleAdvertResponse;
+ import com.ph.service.AdvertService;
+ import com.ph.utils.MessageUtil;
+ import com.ph.utils.ValidationUtil;
+ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
  import org.springframework.data.domain.PageRequest;
@@ -19,14 +22,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+ import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+ import java.util.List;
 
 @RestController
 @RequestMapping("/adverts")
 @RequiredArgsConstructor
 public class AdvertController {
     private final AdvertService service;
+    private final MessageUtil messageUtil;
 
 
 
@@ -34,8 +39,7 @@ public class AdvertController {
     // NOT:A01 / getByAdminPage() ************************************************************
 
     @GetMapping()
-
-    public Page<AdvertResponse> getByAnonymusPage(
+    public Page<SimpleAdvertResponse> getByAnonymusPage(
             @RequestParam(value = "q", defaultValue = "", required = false) String query,
             @RequestParam(value = "category.id", required = false) Long categoryId,
             @RequestParam(value = "advert_type_id", required = false) Long advertTypeId,
@@ -67,7 +71,7 @@ public class AdvertController {
     // NOT:A02 / getAdvertsByCities() ************************************************************
 
     @GetMapping("/cities")
-    public List<AdvertCityDTO> getAdvertsByCities(){
+    public List<AdvertCityResponse> getAdvertsByCities(){
         return service.getAdvertsByCities();
 
 
@@ -77,7 +81,7 @@ public class AdvertController {
     // NOT:A03 / getAdvertsByCategories() ************************************************************
 
     @GetMapping("/categories")
-    public List<AdvertCategoryDTO> getAdvertsByCategories() {
+    public List<AdvertCategoryResponse> getAdvertsByCategories() {
         return service.getAdvertsByCategories();
 
     }
@@ -85,7 +89,7 @@ public class AdvertController {
 
     // NOT:A04 / getMostPopularAdverts() ************************************************************
     @GetMapping("/popular/{amount}")
-    public List<AdvertResponse> getMostPopularAdverts(@PathVariable Integer amount){
+    public List<DetailedAdvertResponse> getMostPopularAdverts(@PathVariable Integer amount){
         return service.getMostPopularAdverts(amount);
     }
 
@@ -95,7 +99,7 @@ public class AdvertController {
 
     @GetMapping("/auth")
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    public Page<AdvertResponse> getByCustomerPage(
+    public Page<DetailedAdvertResponse> getByCustomerPage(
 
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "size", defaultValue = "20", required = false) int size,
@@ -112,7 +116,7 @@ public class AdvertController {
 
     @GetMapping("/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public Page<AdvertResponse> getByAdminPage(
+    public Page<DetailedAdvertResponse> getByAdminPage(
             @RequestParam(value = "q", defaultValue = "", required = false) String query,
             @RequestParam(value = "category.id", required = false) Long categoryId,
             @RequestParam(value = "advert_type_id", required = false) Long advertTypeId,
@@ -126,7 +130,7 @@ public class AdvertController {
     ) {
         // Validate price range
         if (priceStart != null && priceEnd != null && priceStart > priceEnd) {
-            throw new ValuesNotMatchException("price_start must be less than or equal to price_end");
+            throw new ValuesNotMatchException(messageUtil.getMessage("error.advert.price.start.gt.price.end"));
         }
 
         // Use ascending or descending order based on the sorting type
@@ -152,7 +156,7 @@ public class AdvertController {
     // NOT:A07 / getBySlug() ************************************************************
 
     @GetMapping("/{slug}")
-    public ResponseEntity<AdvertResponse> getBySlug(@PathVariable String slug) {
+    public ResponseEntity<DetailedAdvertResponse> getBySlug(@PathVariable String slug) {
         return service.getBySlug(slug);
     }
 
@@ -161,8 +165,8 @@ public class AdvertController {
 
     @GetMapping("/{id}/auth")
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    public ResponseEntity<AdvertResponse> getByCustomer(@PathVariable Long id,
-                                                        @AuthenticationPrincipal UserDetails userDetails     ) {
+    public ResponseEntity<DetailedAdvertResponse> getByCustomer(@PathVariable Long id,
+                                                                @AuthenticationPrincipal UserDetails userDetails     ) {
         return service.getByCustomer(id, userDetails);
     }
 
@@ -172,7 +176,7 @@ public class AdvertController {
 
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public ResponseEntity<AdvertResponse> getByAdmin(@PathVariable Long id) {
+    public ResponseEntity<DetailedAdvertResponse> getByAdmin(@PathVariable Long id) {
         return service.getByAdmin(id);
     }
 
@@ -182,9 +186,11 @@ public class AdvertController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public ResponseEntity<AdvertResponse> create(@RequestBody @Valid AdvertRequest request,
-                                                 @AuthenticationPrincipal UserDetails userDetails) {
-        return service.create(request, userDetails );
+    public ResponseEntity<DetailedAdvertResponse> create(@RequestParam(value = "advert")  String advert,
+                                                         @RequestParam(value = "images")  List<MultipartFile> images,
+                                                         @AuthenticationPrincipal UserDetails userDetails) {
+        AdvertRequest request = ValidationUtil.convertAndValidate(advert, AdvertRequest.class);
+        return service.create(request,images, userDetails );
     }
 
 
@@ -192,9 +198,9 @@ public class AdvertController {
 
     @PutMapping("/auth/{id}")
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    public ResponseEntity<AdvertResponse> updateForCustomer(@PathVariable Long id,
-                                                            @AuthenticationPrincipal UserDetails userDetails,
-                                                            @RequestBody @Valid AdvertRequestForUpdateByCustomer request) {
+    public ResponseEntity<DetailedAdvertResponse> updateForCustomer(@PathVariable Long id,
+                                                                    @AuthenticationPrincipal UserDetails userDetails,
+                                                                    @RequestBody @Valid AdvertRequestForUpdateByCustomer request) {
         return service.updateForCustomer(id, request, userDetails );
     }
 
@@ -202,8 +208,8 @@ public class AdvertController {
 
     @PutMapping("/admin/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public ResponseEntity<AdvertResponse> update(@PathVariable Long id,
-                                                 @RequestBody @Valid AdvertRequestForUpdateByAdmin request
+    public ResponseEntity<DetailedAdvertResponse> update(@PathVariable Long id,
+                                                         @RequestBody @Valid AdvertRequestForUpdateByAdmin request
     , @AuthenticationPrincipal UserDetails userDetails
 
     ) {

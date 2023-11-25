@@ -6,7 +6,6 @@ import com.ph.exception.customs.ConflictException;
 import com.ph.exception.customs.NonDeletableException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.CategoryMapper;
-import com.ph.payload.mapper.CategoryPropertyKeyMapper;
 import com.ph.payload.request.CategoryPropertyKeyRequest;
 import com.ph.payload.response.CategoryPropertyKeyResponse;
 import com.ph.repository.CategoryPropertyKeyRepository;
@@ -22,7 +21,7 @@ import java.util.List;
 public class CategoryPropertyKeyService {
 
     private final CategoryPropertyKeyRepository propertyKeyRepository;
-    private final CategoryPropertyKeyMapper categoryPropertyKeyMapper;
+    private final CategoryMapper categoryMapper;
     private final CategoryService categoryService;
     private final MessageUtil messageUtil;
 
@@ -54,7 +53,7 @@ public class CategoryPropertyKeyService {
         // save category property key
         CategoryPropertyKey saved = propertyKeyRepository.save(categoryPropertyKey);
 
-        return ResponseEntity.ok(categoryPropertyKeyMapper.mapToCategoryPropertyKeyResponse(saved));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryPropertyKeyResponse(saved));
 
     }
 
@@ -71,7 +70,7 @@ public class CategoryPropertyKeyService {
 
         return ResponseEntity.ok(propertyKeys
                 .stream()
-                .map(categoryPropertyKeyMapper::mapToCategoryPropertyKeyResponse)
+                .map(categoryMapper::mapToCategoryPropertyKeyResponse)
                 .toList());
     }
 
@@ -95,7 +94,7 @@ public class CategoryPropertyKeyService {
         }
 
         propertyKeyRepository.deleteById(propertyId);
-        return ResponseEntity.ok(categoryPropertyKeyMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKey));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKey));
 
     }
 
@@ -125,7 +124,7 @@ public class CategoryPropertyKeyService {
         CategoryPropertyKey categoryPropertyKeyUpdated = propertyKeyRepository.save(categoryPropertyKey);
 
         // return updated category property key
-        return ResponseEntity.ok(categoryPropertyKeyMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKeyUpdated));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKeyUpdated));
 
     }
 

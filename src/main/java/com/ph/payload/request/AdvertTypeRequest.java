@@ -10,6 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 public class AdvertTypeRequest {
 
-    @NotNull(message = "Title cannot be null")
+    @NotNull(message = "{validation.advert.notnull}")
     private String title;
 }

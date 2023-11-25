@@ -43,10 +43,10 @@ public class TourRequestsService {
         TourRequest tourRequest = request.get();
         //requestten gelen tourDate ve tourTime var mı yok mu  ve tam saatlerde mi kontrolu
         if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw  new ConflictException(messageUtil.getMessage("error.tourtime.conflict"));
+            throw  new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
         if (!isValidTourTime(tourRequest.getTourTime()) ){
-            throw  new RelatedFieldException(messageUtil.getMessage("error.tourtime.bad-request"));
+            throw  new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
         }
         Advert advert=advertService.getById(request.getAdvertId());
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
@@ -78,10 +78,10 @@ public class TourRequestsService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.pending-or-declined"));
         }
         if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw  new ConflictException(messageUtil.getMessage("error.tourtime.conflict"));
+            throw  new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
         if (!isValidTourTime(tourRequest.getTourTime()) ){
-            throw  new RelatedFieldException(messageUtil.getMessage("error.tourtime.bad-request"));
+            throw  new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
         }
 
         tourRequest.setTourDate(request.getTourDate());

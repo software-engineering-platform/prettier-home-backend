@@ -7,6 +7,8 @@ server:
     include-message: always
 
 spring:
+  web:
+    locale: auto
   messages:
     basename: messages
     encoding: UTF-8

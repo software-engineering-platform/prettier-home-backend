@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -211,7 +212,8 @@ public class UserService {
         // Check if the authenticated user is a manager and the found user is not a customer
         if (authenticatedUser.getRole().name().equals("MANAGER") && !foundUser.getRole().name().equals("CUSTOMER")) {
             // Return bad request response
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(messageUtil.getMessage("error.user.update.unauthorized"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                    Map.of("message",messageUtil.getMessage("error.user.update.unauthorized")));
         }
         // Update the found user with the request data
         User updatedUser = updateUser(foundUser, request);
@@ -235,7 +237,8 @@ public class UserService {
         // Check if the authenticated user is a manager and the found user is not a customer
         if (authenticatedUser.getRole().name().equals("MANAGER") && !foundUser.getRole().name().equals("CUSTOMER")) {
             // Return a bad request response
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(messageUtil.getMessage("error.user.delete.unauthorized"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message",messageUtil.getMessage("error.user.delete.unauthorized")));
         }
         // Check if the found user has any built-in and related fields
         checkBuiltInAndRelatedFieldsBeforeDeletion(foundUser);
