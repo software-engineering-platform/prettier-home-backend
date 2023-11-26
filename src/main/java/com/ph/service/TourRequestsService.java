@@ -56,7 +56,7 @@ public class TourRequestsService {
         tourRequest.setGuestUser(user);
         tourRequest.setOwnerUser(ownerUser);
         TourRequest saved = tourRequestsRepository.save(tourRequest);
-        logService.logMessage(messageUtil.getMessage("tour-request.created"), advert, user);
+        logService.logMessage(messageUtil.getMessage("success.tour-request.created"), advert, user);
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsSaveResponse(tourRequest));
     }
 
@@ -157,7 +157,7 @@ public class TourRequestsService {
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
         tourRequest.setStatus(Status.CANCELED);
         tourRequestsRepository.save(tourRequest);
-        logService.logMessage(messageUtil.getMessage("tour-request.canceled"), tourRequest.getAdvert(), tourRequest.getGuestUser());
+        logService.logMessage(messageUtil.getMessage("success.tour-request.canceled"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsSaveResponse(tourRequest));
     }
 
@@ -168,7 +168,7 @@ public class TourRequestsService {
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
         tourRequest.setStatus(Status.APPROVED);
         tourRequestsRepository.save(tourRequest);
-        logService.logMessage(messageUtil.getMessage("tour-request.approved"), tourRequest.getAdvert(), tourRequest.getGuestUser());
+        logService.logMessage(messageUtil.getMessage("success.tour-request.approved"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsResponse(tourRequest));
     }
 
@@ -179,7 +179,7 @@ public class TourRequestsService {
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
         tourRequest.setStatus(Status.DECLINED);
         tourRequestsRepository.save(tourRequest);
-        logService.logMessage(messageUtil.getMessage("tour-request.declined"), tourRequest.getAdvert(), tourRequest.getGuestUser());
+        logService.logMessage(messageUtil.getMessage("success.tour-request.declined"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsResponse(tourRequest));
     }
 
