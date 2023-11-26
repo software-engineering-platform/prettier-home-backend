@@ -166,7 +166,6 @@ public class AdvertService {
      */
 
     @Cacheable(value = "mostPopularAdverts", key = "#amount")
-    
     public List<SimpleAdvertResponse> getMostPopularAdverts(Integer amount) {
 
         // Set the default amount if null
