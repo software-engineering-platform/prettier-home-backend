@@ -13,6 +13,8 @@ import com.ph.payload.response.CategoryWithoutPropertiesResponse;
 import com.ph.repository.CategoryRepository;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -181,6 +183,7 @@ public class CategoryService {
      * @param categoryId : represent the category id
      * @return : ResponseEntity with deleted category
      */
+    @CacheEvict(value = "category", key = "#categoryId" )
     public ResponseEntity<?> deleteCategory(Long categoryId) {
 
         //  check if category exists
@@ -200,6 +203,8 @@ public class CategoryService {
         }
         // delete category
         categoryRepository.deleteById(categoryId);
+
+
         // return deleted category
         return ResponseEntity.ok(categoryMapper.mapToCategoryWithoutPropertyResponse(category.get()));
 
@@ -212,6 +217,7 @@ public class CategoryService {
      * @param categoryId : represent category id
      * @return : ResponseEntity with category that is asked
      */
+    @Cacheable(value = "category", key = "#categoryId")
     public ResponseEntity<CategoryResponse> getById(Long categoryId) {
 
         // check if category exists and return
@@ -231,12 +237,13 @@ public class CategoryService {
      * @return : ResponseEntity with updated category
      */
 
+    @CacheEvict(value = "category", key = "#categoryId")
     public ResponseEntity<?> updateById(Long categoryId, CategoryRequest categoryRequest)  {
         // Check if the category with the given ID exists in the database
         Optional<Category> category = categoryRepository.findById(categoryId);
 
         if (category.isEmpty()) {
-            // If the category does't exist
+            // If the category doesn't exist
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(messageUtil.getMessage("error.category.not-found"));
         }

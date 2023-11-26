@@ -9,6 +9,7 @@ import com.ph.repository.CityRepository;
 
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class CityService {
         return  cityRepository.findAll().stream().map(locationMapper::toCityResponse).collect(Collectors.toList());
     }
     // Not : GetById() ***************************************************************************************
+    @Cacheable(value = "city", key = "#id")
     public City getById(Long id){
         return cityRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.city.not-found")));

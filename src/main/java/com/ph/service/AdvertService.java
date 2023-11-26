@@ -21,6 +21,7 @@ import com.ph.repository.*;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,13 +31,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AdvertService {
 
     private final AdvertRepository repository;
@@ -51,7 +51,7 @@ public class AdvertService {
     private final LogService logService;
     private final MessageUtil messageUtil;
 
-
+        //NOT: TODO  CACHEEVİCT POPULAR İÇİN Bİ DÜŞÜN
 
     // NOT:  helperMethodSlugMaker() ************************************************************
 
@@ -107,7 +107,7 @@ public class AdvertService {
      * @return A page of AdvertResponse objects.
      * @throws ResourceNotFoundException If the start price is greater than the end price.
      */
-    @Transactional
+    
     public Page<SimpleAdvertResponse> getForAnyms(String query, Long categoryId, Long advertTypeId,
                                                   Integer priceStart, Integer priceEnd,
                                                   Integer status, Pageable pageable) throws ResourceNotFoundException {
@@ -166,7 +166,7 @@ public class AdvertService {
      */
 
     @Cacheable(value = "mostPopularAdverts", key = "#amount")
-    @Transactional
+    
     public List<SimpleAdvertResponse> getMostPopularAdverts(Integer amount) {
 
         // Set the default amount if null
@@ -410,6 +410,8 @@ public class AdvertService {
      * @throws NonDeletableException     If the user does not have permission to update the advert.
      * @throws ResourceNotFoundException If the category specified in the request does not exist.
      */
+//    @CachePut(value = "mostPopularAdverts", key = "#id") not:bakılıcak
+
     public ResponseEntity<DetailedAdvertResponse> updateForCustomer(Long id, AdvertRequestForUpdateByCustomer request, UserDetails userDetails) {
         Advert advert = getById(id);
 
@@ -539,7 +541,7 @@ public class AdvertService {
      * @return a message indicating the success of the deletion
      * @throws BuiltInFieldException if the advert is a built-in field and cannot be deleted
      */
-    @Transactional
+    
     public String delete(Long id, UserDetails userDetails) {
         User user = (User) userDetails;
 

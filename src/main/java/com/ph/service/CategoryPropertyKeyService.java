@@ -11,6 +11,8 @@ import com.ph.payload.response.CategoryPropertyKeyResponse;
 import com.ph.repository.CategoryPropertyKeyRepository;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -64,6 +66,7 @@ public class CategoryPropertyKeyService {
      * @param categoryId : represent category's id
      * @return : List of category property key
      */
+    @Cacheable(value = "categoryPropertyKeys", key = "#categoryId")
     public ResponseEntity<List<CategoryPropertyKeyResponse>> getPropertyKeysOfCategory(Long categoryId) {
 
         List<CategoryPropertyKey> propertyKeys = propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
@@ -84,6 +87,7 @@ public class CategoryPropertyKeyService {
      */
     //Delete related records in category_property_values table
     // TODO: Check whether category property values deleted
+    @CacheEvict(value = "categoryPropertyKeys",allEntries = true)
     public ResponseEntity<CategoryPropertyKeyResponse> deletePropertyKey(Long propertyId) {
 
         CategoryPropertyKey categoryPropertyKey = propertyKeyRepository.findById(propertyId).orElseThrow(()
@@ -105,6 +109,7 @@ public class CategoryPropertyKeyService {
      * @param propertyKeyRequest: represent category property key request
      * @return updated category property key
      */
+    @CacheEvict(value = "categoryPropertyKeys",allEntries = true)
     public ResponseEntity<CategoryPropertyKeyResponse> updatePropertyKey(Long propertyId,
                                                                          CategoryPropertyKeyRequest propertyKeyRequest) {
 

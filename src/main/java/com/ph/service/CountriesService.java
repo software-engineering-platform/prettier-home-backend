@@ -6,7 +6,8 @@ import com.ph.payload.mapper.LocationMapper;
 import com.ph.payload.response.CountryResponse;
 import com.ph.repository.CountriesRepository;
 import com.ph.utils.MessageUtil;
-import lombok.RequiredArgsConstructor;
+ import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class CountriesService {
     }
 
     // Not : GetById() ***************************************************************************************
+    @Cacheable(value = "country", key = "#id")
     public Country getById(Long id) {
         return countriesRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.country.not-found")));

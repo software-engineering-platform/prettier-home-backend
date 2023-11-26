@@ -6,6 +6,7 @@ import com.ph.payload.response.DistrictResponse;
 import com.ph.repository.DistrictsRepository;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ public class DistrictsService {
     }
 
     // Not : GetById() ***************************************************************************************
+    @Cacheable(value = "district", key = "#id")
     public District getById(Long id){
         return districtsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.district.not-found")));

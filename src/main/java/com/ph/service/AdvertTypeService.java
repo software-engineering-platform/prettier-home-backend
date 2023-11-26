@@ -9,6 +9,8 @@ import com.ph.payload.response.AdvertTypeResponse;
 import com.ph.repository.AdvertTypeRepository;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +64,7 @@ public class AdvertTypeService {
      * @return the AdvertType with the specified id
      * @throws ResourceNotFoundException if the AdvertType is not found
      */
+    @Cacheable(value = "advertType", key = "#id")
     public AdvertType getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.type.not.found"), id)));
@@ -125,6 +128,7 @@ public class AdvertTypeService {
      * @param id The ID of the AdvertType to delete.
      * @return The response entity with the deleted AdvertType.
      */
+    @CacheEvict(value = "advertType", key = "#id")
     public ResponseEntity<AdvertTypeResponse> delete(Long id) {
         // Retrieve the AdvertType by its ID
         AdvertType advertType = getById(id);
