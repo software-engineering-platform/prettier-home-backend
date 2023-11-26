@@ -163,7 +163,7 @@ public class AdvertService {
      * @param amount The number of popular adverts to retrieve.
      * @return A list of AdvertResponse objects representing the most popular adverts.
      */
-    public List<DetailedAdvertResponse> getMostPopularAdverts(Integer amount) {
+    public List<SimpleAdvertResponse> getMostPopularAdverts(Integer amount) {
         // Set the default amount if null
         if (amount == null) {
             amount = 10;
@@ -173,8 +173,8 @@ public class AdvertService {
         List<Advert> popularAdverts = repository.findPopularAdverts(amount);
 
         // Convert the Advert objects to AdvertResponse objects
-        List<DetailedAdvertResponse> popularDetailedAdvertRespons = popularAdverts.stream()
-                .map(mapper::toDetailedAdvertResponse)
+        List<SimpleAdvertResponse> popularDetailedAdvertRespons = popularAdverts.stream()
+                .map(mapper::toSimpleAdvertResponse)
                 .collect(Collectors.toList());
 
         return popularDetailedAdvertRespons;
