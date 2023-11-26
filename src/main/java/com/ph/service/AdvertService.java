@@ -21,6 +21,7 @@ import com.ph.repository.*;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -163,7 +164,11 @@ public class AdvertService {
      * @param amount The number of popular adverts to retrieve.
      * @return A list of AdvertResponse objects representing the most popular adverts.
      */
+
+    @Cacheable(value = "mostPopularAdverts", key = "#amount")
+    @Transactional
     public List<SimpleAdvertResponse> getMostPopularAdverts(Integer amount) {
+
         // Set the default amount if null
         if (amount == null) {
             amount = 10;
