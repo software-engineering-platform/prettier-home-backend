@@ -22,12 +22,33 @@ public class CityService {
     private final MessageUtil messageUtil;
     private final CityMapper cityMapper;
 
-    //Not:U02 GetAllCities() *************************************************************************
+    //Not:U05 GetAllCities() *************************************************************************
+    /**
+     * Retrieves all cities.
+     * @return a list of CityResponse objects representing all cities.
+     */
     public List<CityResponse> getAllCities() {
-
+        // Retrieve all cities from the cityRepository
         return  cityRepository.findAll().stream().map(cityMapper::toCityResponse).collect(Collectors.toList());
     }
+
+    //Not:U02 GetAllCitiesByCountryId() *************************************************************************
+
+    // Retrieves all cities by country ID.
+    // @param countryId The ID of the country.
+    // @return a list of CityResponse objects representing all cities.
+    public List<CityResponse> getAllCitiesByCountryId(Long countryId) {
+        // Retrieve all cities from the cityRepository based on the country ID
+        return  cityRepository.findByCountry_Id(countryId).stream().map(cityMapper::toCityResponse).collect(Collectors.toList());
+    }
+
     // Not : GetById() ***************************************************************************************
+    /**
+     * Retrieve a City object by its ID.
+     * @param id The ID of the City to retrieve.
+     * @return The City object with the specified ID.
+     * @throws ResourceNotFoundException if the City with the specified ID is not found.
+     */
     public City getById(Long id){
         return cityRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.city.not-found")));

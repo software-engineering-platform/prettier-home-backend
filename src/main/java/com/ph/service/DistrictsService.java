@@ -23,13 +23,37 @@ public class DistrictsService {
     private final CityService cityService;
 
     //Not:U03 GetAllDistricts() *************************************************************************
+    /**
+     * Retrieves all districts.
+     * @return a list of DistrictResponse objects representing all districts
+     */
+
     public List<DistrictResponse> getAllDistricts() {
-
-        return  districtsRepository.findAll().stream().map(districtMapper::toDistrictResponse).collect(Collectors.toList());
-
+        return  districtsRepository.findAll()
+                .stream()
+                .map(districtMapper::toDistrictResponse)
+                .collect(Collectors.toList());
+    }
+    //Not:U03 GetAllDistrictsByCityId() *************************************************************************
+    /**
+     * Retrieves all districts by city ID.
+     * @param cityId The ID of the city.
+     * @return A list of district responses.
+     */
+    public List<DistrictResponse> getAllDistrictsByCityId(Long cityId) {
+        return  districtsRepository.findByCity_Id(cityId)
+                .stream()
+                .map(districtMapper::toDistrictResponse)
+                .collect(Collectors.toList());
     }
 
     // Not : GetById() ***************************************************************************************
+    /**
+     * Get a district by its ID.
+     * @param id The ID of the district to retrieve.
+     * @return The district with the specified ID.
+     * @throws ResourceNotFoundException if the district with the specified ID is not found.
+     */
     public District getById(Long id){
         return districtsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.district.not-found")));

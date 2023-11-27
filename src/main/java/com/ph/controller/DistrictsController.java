@@ -7,6 +7,7 @@ import com.ph.service.CityService;
 import com.ph.service.DistrictsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,12 +20,19 @@ public class DistrictsController {
 
     private final DistrictsService districtsService;
 
-    //Not:U03 GetAllDistricts() *************************************************************************
+    //Not:U04 GetAllDistricts() *************************************************************************
 
     // http://localhost:8080/districts
-    @GetMapping()
+    @GetMapping("/search")
     public List<DistrictResponse> getAllDistricts() {
 
         return districtsService.getAllDistricts();
+    }
+
+    //Not:U03 GetAllDistrictsByCityId() *************************************************************************
+    @GetMapping("/{cityId}")
+    public List<DistrictResponse> getAllDistrictsByCityId(@PathVariable Long cityId) {
+
+        return districtsService.getAllDistrictsByCityId(cityId);
     }
 }

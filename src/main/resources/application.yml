@@ -17,3 +17,6 @@ spring:
       - security
       - data
       - mail
+  sql:
+    init:
+      mode: always
