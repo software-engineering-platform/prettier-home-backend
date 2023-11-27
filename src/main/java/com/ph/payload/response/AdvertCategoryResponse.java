@@ -1,14 +1,13 @@
-package com.ph.payload.mapper;
+package com.ph.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class AdvertCategoryDTO {
+public class AdvertCategoryResponse {
     private String categoryName;
     private Long categoryQuantity;
 

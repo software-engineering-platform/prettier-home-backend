@@ -43,10 +43,10 @@ public class TourRequestsService {
         TourRequest tourRequest = request.get();
         //requestten gelen tourDate ve tourTime var mı yok mu  ve tam saatlerde mi kontrolu
         if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw  new ConflictException(messageUtil.getMessage("error.tourtime.conflict"));
+            throw  new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
         if (!isValidTourTime(tourRequest.getTourTime()) ){
-            throw  new RelatedFieldException(messageUtil.getMessage("error.tourtime.bad-request"));
+            throw  new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
         }
         Advert advert=advertService.getById(request.getAdvertId());
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
@@ -56,7 +56,7 @@ public class TourRequestsService {
         tourRequest.setGuestUser(user);
         tourRequest.setOwnerUser(ownerUser);
         TourRequest saved = tourRequestsRepository.save(tourRequest);
-        logService.logMessage(messageUtil.getMessage("tour-request.created"), advert, user);
+        logService.logMessage(messageUtil.getMessage("success.tour-request.created"), advert, user);
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsSaveResponse(tourRequest));
     }
 
@@ -78,10 +78,10 @@ public class TourRequestsService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.pending-or-declined"));
         }
         if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw  new ConflictException(messageUtil.getMessage("error.tourtime.conflict"));
+            throw  new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
         if (!isValidTourTime(tourRequest.getTourTime()) ){
-            throw  new RelatedFieldException(messageUtil.getMessage("error.tourtime.bad-request"));
+            throw  new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
         }
 
         tourRequest.setTourDate(request.getTourDate());
@@ -157,7 +157,7 @@ public class TourRequestsService {
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
         tourRequest.setStatus(Status.CANCELED);
         tourRequestsRepository.save(tourRequest);
-        logService.logMessage(messageUtil.getMessage("tour-request.canceled"), tourRequest.getAdvert(), tourRequest.getGuestUser());
+        logService.logMessage(messageUtil.getMessage("success.tour-request.canceled"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsSaveResponse(tourRequest));
     }
 
@@ -168,7 +168,7 @@ public class TourRequestsService {
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
         tourRequest.setStatus(Status.APPROVED);
         tourRequestsRepository.save(tourRequest);
-        logService.logMessage(messageUtil.getMessage("tour-request.approved"), tourRequest.getAdvert(), tourRequest.getGuestUser());
+        logService.logMessage(messageUtil.getMessage("success.tour-request.approved"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsResponse(tourRequest));
     }
 
@@ -179,7 +179,7 @@ public class TourRequestsService {
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
         tourRequest.setStatus(Status.DECLINED);
         tourRequestsRepository.save(tourRequest);
-        logService.logMessage(messageUtil.getMessage("tour-request.declined"), tourRequest.getAdvert(), tourRequest.getGuestUser());
+        logService.logMessage(messageUtil.getMessage("success.tour-request.declined"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsResponse(tourRequest));
     }
 

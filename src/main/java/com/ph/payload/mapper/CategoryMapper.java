@@ -1,15 +1,19 @@
 package com.ph.payload.mapper;
 
 import com.ph.domain.entities.Category;
-import com.ph.payload.response.CategoryResponse;
-import com.ph.payload.response.CategoryWithoutPropertiesResponse;
+import com.ph.domain.entities.CategoryPropertyKey;
+import com.ph.domain.entities.CategoryPropertyValue;
+import com.ph.payload.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Component
 public class CategoryMapper {
 
-   private final CategoryPropertyKeyMapper propertyKeyMapper;
 
     public CategoryWithoutPropertiesResponse mapToCategoryWithoutPropertyResponse(Category category){
         return CategoryWithoutPropertiesResponse.builder()
@@ -32,11 +36,39 @@ public class CategoryMapper {
                         .seq(category.getSeq())
                         .builtIn(category.isBuiltIn())
                         .active(category.isActive())
-                        .categoryPropertyKeysResponse(category.getCategoryPropertyKeys().stream().map(propertyKeyMapper::mapToCategoryPropertyKeyResponse).toList())
+                        .categoryPropertyKeysResponse(category.getCategoryPropertyKeys().stream().map(this::mapToCategoryPropertyKeyResponse).toList())
                                                         // we'l get an exception if we set cotegoryPropertyKeys object that's why we usegetCategoryPropertyKeysResponse
                         .build();
     }
 
 
+    public CategoryResponseForFavorite toCategoryResponseForFavorite(Category category){
+        return CategoryResponseForFavorite.builder()
+                .id(category.getId())
+                .title(category.getTitle())
+                .build();
+    }
+
+
+
+    public CategoryPropertyKeyResponse mapToCategoryPropertyKeyResponse(CategoryPropertyKey categoryPropertyKey){
+
+        return CategoryPropertyKeyResponse.builder()
+                .id(categoryPropertyKey.getId())
+                .name(categoryPropertyKey.getName())
+                .builtIn(categoryPropertyKey.isBuiltIn())
+                .build();
+    }
+
+
+
+    public List<PropertyValueResponse> entityToResponse(List<CategoryPropertyValue> entities) {
+        return entities.stream()
+                .map(entity -> PropertyValueResponse.builder()
+                        .id(entity.getId())
+                        .value(entity.getValue())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
 }

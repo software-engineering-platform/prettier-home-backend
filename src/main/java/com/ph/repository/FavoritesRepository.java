@@ -13,10 +13,7 @@ import java.util.Optional;
 
 @Repository
 public interface FavoritesRepository extends JpaRepository<Favorite, Long> {
-    @Transactional
-    @Modifying
-    @Query("delete from Favorite f where f.advert is null")
-    void deleteByAdvertNull();
+
     long deleteByUser(User user);
     Optional<Favorite> findByUser_IdAndAdvert_Id(Long id, Long id1);
     List<Favorite> findByUser_Id(Long id);

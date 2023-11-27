@@ -1,6 +1,5 @@
 package com.ph.payload.mapper;
 
-import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.TourRequest;
 import com.ph.payload.response.*;
 import lombok.RequiredArgsConstructor;
@@ -11,17 +10,16 @@ import org.springframework.stereotype.Component;
 public class TourRequestsMapper {
 
    private final UserMapper userMapper;
-   private final CountryMapper countryMapper;
-   private final CityMapper cityMapper;
-   private final DistrictMapper districtMapper;
 
-   private final AdvertMapperForFavoriteAndTourRequest advertMapperForFavoriteAndTourRequest;
+
+
+   private final AdvertMapper advertMapper;
 
     public TourRequestsStatusResponse toTourRequestsResponse(TourRequest tourRequest) {
         return TourRequestsStatusResponse.builder()
                 .id(tourRequest.getId())
                 .tourDate(tourRequest.getTourDate())
-                .advert(advertMapperForFavoriteAndTourRequest.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
+                .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .status(tourRequest.getStatus())
                 .build();
@@ -31,7 +29,7 @@ public class TourRequestsMapper {
         return TourRequestsFullResponse.builder()
                 .id(tourRequest.getId())
                 .tourDate(tourRequest.getTourDate())
-                .advert(advertMapperForFavoriteAndTourRequest.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
+                .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .guestUser(userMapper.toUserResponse(tourRequest.getGuestUser()))
                 .status(tourRequest.getStatus())

@@ -2,8 +2,8 @@ package com.ph.repository;
 
 import com.ph.domain.entities.Advert;
 import com.ph.domain.enums.StatusForAdvert;
-import com.ph.payload.mapper.AdvertCategoryDTO;
-import com.ph.payload.mapper.AdvertCityDTO;
+import com.ph.payload.response.AdvertCategoryResponse;
+import com.ph.payload.response.AdvertCityResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @Repository
 public interface AdvertRepository extends JpaRepository<Advert, Long> {
+    Advert findByImages_Id(Long id);
     @Query("""
             select a from Advert a
             where (a.createdAt between ?1 and ?2) and (?3 is null or a.category.id = ?3) and (?4 is null or a.advertType.id = ?4) and (?5 is null or a.statusForAdvert = ?5)""")
@@ -120,16 +121,16 @@ Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nes
     //Finish: categoryService için yazıldı
 
 
-    @Query("SELECT new com.ph.payload.mapper.AdvertCityDTO(a.city.name, COUNT(a.id)) FROM Advert a GROUP BY a.city.name")
-    List<AdvertCityDTO> getAdvertsByCities();
+    @Query("SELECT new com.ph.payload.response.AdvertCityResponse(a.city.name, COUNT(a.id)) FROM Advert a GROUP BY a.city.name")
+    List<AdvertCityResponse> getAdvertsByCities();
 
 
-    @Query("SELECT new com.ph.payload.mapper.AdvertCategoryDTO(a.category.title, COUNT(a.id)) FROM Advert a GROUP BY a.category.title")
-    List<AdvertCategoryDTO> getAdvertsByCategories();
+    @Query("SELECT new com.ph.payload.response.AdvertCategoryResponse(a.category.title, COUNT(a.id)) FROM Advert a GROUP BY a.category.title")
+    List<AdvertCategoryResponse> getAdvertsByCategories();
 
 
-    @Query("SELECT a FROM Advert a LEFT JOIN a.tourRequests t GROUP BY a ORDER BY (3 * COUNT(t) + a.viewCount) DESC LIMIT :limit  ")
-    public List<Advert> findPopularAdverts(Integer limit);
+    @Query("SELECT a FROM Advert a LEFT JOIN a.tourRequests t GROUP BY a ORDER BY (3 * COUNT(t) + a.viewCount) DESC LIMIT :limit")
+    public List<Advert> findPopularAdverts(@Param("limit") Integer limit);
 
     //NOT: ESKİ QUERY (EKSİK)
 /*

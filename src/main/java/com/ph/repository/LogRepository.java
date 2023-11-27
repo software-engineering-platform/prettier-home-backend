@@ -9,8 +9,5 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface LogRepository extends JpaRepository<Log, Long> {
-    @Transactional
-    @Modifying
-    @Query("delete from Log l where l.advert is null")
-    void deleteByAdvertNull();
+
 }

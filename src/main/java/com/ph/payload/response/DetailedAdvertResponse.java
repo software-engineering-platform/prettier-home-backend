@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AdvertResponse {
+public class DetailedAdvertResponse {
 
 
     private Long id;
@@ -51,7 +51,7 @@ public class AdvertResponse {
 
     private CategoryResponse category;
 
-    private List<Image> images;
+    private List<ImageResponse> images;
 
     private LocalDateTime createdAt;
 

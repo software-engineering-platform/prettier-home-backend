@@ -22,10 +22,7 @@ import java.util.Optional;
 
 @Repository
 public interface TourRequestsRepository extends JpaRepository<TourRequest, Long> {
-    @Transactional
-    @Modifying
-    @Query("delete from TourRequest t where t.advert is null")
-    void deleteByAdvertNull();
+
     Optional<TourRequest> findByIdAndGuestUser_Id(Long id, Long id1);
 
     boolean existsByTourDateAndTourTime(LocalDate tourDate, LocalTime tourTime);

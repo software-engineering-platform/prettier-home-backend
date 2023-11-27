@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/users")
@@ -111,5 +112,21 @@ public class UserController {
         return userService.updateUserRole(userId, request);
     }
 
+    @PatchMapping("/photo")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CUSTOMER','MANAGER')")
+    public ResponseEntity<?> updateUserStatus(
+            @RequestParam(name = "photo")  MultipartFile photo,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return userService.updateUserPhoto( photo, userDetails);
+    }
+
+    @DeleteMapping("/photo")
+    @PreAuthorize("hasAnyAuthority('ADMIN','CUSTOMER','MANAGER')")
+    public ResponseEntity<?> deleteUserPhoto(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return userService.deleteUserPhoto(userDetails);
+    }
 
 }

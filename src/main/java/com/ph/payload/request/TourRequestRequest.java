@@ -19,16 +19,16 @@ import java.util.function.Supplier;
 @NoArgsConstructor
 public class TourRequestRequest implements Supplier<TourRequest>, Serializable {
 
-    @NotNull(message = "Please enter tourdate")
+    @NotNull(message = "{validation.tour.request.tour.date.notnull}")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @Future(message = "Please enter future date")
+    @Future(message = "{validation.tour.request.tour.date.future}")
     private LocalDate tourDate;
 
-    @NotNull(message = "Please enter tourtime")
+    @NotNull(message = "{validation.tour.request.tour.time.notnull}")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "US")
     private LocalTime tourTime;
 
-    @NotNull(message = "Please enter advert id")
+    @NotNull(message = "{validation.advert.id.notnull}")
     private Long advertId;
 
 
