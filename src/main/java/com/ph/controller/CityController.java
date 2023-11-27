@@ -7,6 +7,7 @@ import com.ph.service.CityService;
 import com.ph.service.CountriesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,12 +20,19 @@ public class CityController {
 
     private final CityService cityService;
 
-    //Not:U02 GetAllCities() *************************************************************************
+    //Not:U05 GetAllCities() *************************************************************************
 
     // http://localhost:8080/cities
-    @GetMapping()
+    @GetMapping("/search")
     public List<CityResponse> getAllCities() {
-
         return cityService.getAllCities();
+    }
+
+    //Not:U02 GetAllCitiesByCountryId() *************************************************************************
+
+    // http://localhost:8080/cities
+    @GetMapping("/{countryId}")
+    public List<CityResponse> getAllCitiesByCountryId(@PathVariable Long countryId) {
+        return cityService.getAllCitiesByCountryId(countryId);
     }
 }
