@@ -22,7 +22,7 @@ public class CategoryController {
 
     //NOT: saveCategory **************************************************C04
     @PostMapping() // http://localhost:8080/categories
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<?> save(@Valid @RequestBody CategoryRequest categoryRequest) {
 
         return categoryService.save(categoryRequest);

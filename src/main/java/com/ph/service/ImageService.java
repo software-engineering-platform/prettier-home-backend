@@ -33,7 +33,7 @@ public class ImageService {
 
 
     public Image saveImage(MultipartFile request ,Long advertId){
-        Image image = null;
+        Image image ;
         try {
             image = Image.builder()
                     .name(request.getOriginalFilename())
@@ -59,8 +59,15 @@ public class ImageService {
     if (request.isEmpty()) {
     throw new ImageException(String.format(messageUtil.getMessage("error.image.not.found")));
     }
+            //NOT : BURAYA BAK
+  Advert advert =  advertRepository.findById(advertId)
+            .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found"), advertId)));
 
+    List<Image> images= advert.getImages();
 
+    if(images!=null &&images.size()+request.size()>10){
+        throw new ImageException(String.format(messageUtil.getMessage("error.image.too.many")));
+    }
 
   List<Image> savedImage =  request.stream().map(t->saveImage(t, advertId)).toList();
 

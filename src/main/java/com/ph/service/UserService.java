@@ -1,13 +1,16 @@
 package com.ph.service;
 
 
+import com.ph.domain.entities.ProfilePhoto;
 import com.ph.domain.entities.User;
 import com.ph.exception.customs.*;
 import com.ph.payload.mapper.UserMapper;
 import com.ph.payload.request.*;
 import com.ph.repository.UserRepository;
 import com.ph.security.role.Role;
+import com.ph.utils.ImageUtil;
 import com.ph.utils.MessageUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,20 +19,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final MessageUtil messageUtil;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
-
+    private final ProfilePhotoService profilePhotoService;
 
     /**
      * This method is used to retrieve user for login process and some other methods.
@@ -352,4 +358,32 @@ public class UserService {
         }
     }
 
+     public ResponseEntity<?> updateUserPhoto(MultipartFile photo, UserDetails userDetails) {
+        User user=(User) userDetails;
+        if (user.isBuiltIn()) {
+            throw new BuiltInFieldException(messageUtil.getMessage("error.user.update.built-in"));
+        }
+         ProfilePhoto profilePhoto;
+        if (user.getProfilePhoto()==null){
+            profilePhoto=profilePhotoService.saveProfilePhoto(photo);
+        }else {
+            profilePhoto=profilePhotoService.updateProfilePhoto(user.getProfilePhoto(),photo);
+        }
+        user.setProfilePhoto(profilePhoto);
+        User updated = userRepository.save(user);
+        return ResponseEntity.ok(userMapper.toUserResponse(updated));
+
+
+    }
+
+    public ResponseEntity<?> deleteUserPhoto(UserDetails userDetails) {
+        User user=(User) userDetails;
+        if (user.isBuiltIn()) {
+            throw new BuiltInFieldException(messageUtil.getMessage("error.user.update.built-in"));
+        }
+        profilePhotoService.deleteProfilePhoto(user.getProfilePhoto());
+        user.setProfilePhoto(null);
+        User updated = userRepository.save(user);
+        return ResponseEntity.ok(userMapper.toUserResponse(updated));
+    }
 }
