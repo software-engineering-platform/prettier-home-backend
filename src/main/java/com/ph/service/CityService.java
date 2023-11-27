@@ -1,18 +1,19 @@
 package com.ph.service;
 
 import com.ph.domain.entities.City;
-import com.ph.domain.entities.Country;
-import com.ph.domain.entities.TourRequest;
+
 import com.ph.exception.customs.ResourceNotFoundException;
-import com.ph.payload.mapper.CityMapper;
+ import com.ph.payload.mapper.LocationMapper;
 import com.ph.payload.response.CityResponse;
 import com.ph.repository.CityRepository;
-import com.ph.repository.CountriesRepository;
+
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 public class CityService {
     private final CityRepository cityRepository;
     private final MessageUtil messageUtil;
-    private final CityMapper cityMapper;
+    private final LocationMapper locationMapper;
 
     //Not:U05 GetAllCities() *************************************************************************
     /**
@@ -29,7 +30,7 @@ public class CityService {
      */
     public List<CityResponse> getAllCities() {
         // Retrieve all cities from the cityRepository
-        return  cityRepository.findAll().stream().map(cityMapper::toCityResponse).collect(Collectors.toList());
+        return  cityRepository.findAll().stream().map(locationMapper::toCityResponse).collect(Collectors.toList());
     }
 
     //Not:U02 GetAllCitiesByCountryId() *************************************************************************
@@ -39,7 +40,7 @@ public class CityService {
     // @return a list of CityResponse objects representing all cities.
     public List<CityResponse> getAllCitiesByCountryId(Long countryId) {
         // Retrieve all cities from the cityRepository based on the country ID
-        return  cityRepository.findByCountry_Id(countryId).stream().map(cityMapper::toCityResponse).collect(Collectors.toList());
+        return  cityRepository.findByCountry_Id(countryId).stream().map(locationMapper::toCityResponse).collect(Collectors.toList());
     }
 
     // Not : GetById() ***************************************************************************************
@@ -49,6 +50,7 @@ public class CityService {
      * @return The City object with the specified ID.
      * @throws ResourceNotFoundException if the City with the specified ID is not found.
      */
+    @Cacheable(value = "city", key = "#id")
     public City getById(Long id){
         return cityRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.city.not-found")));

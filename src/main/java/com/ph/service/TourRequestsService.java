@@ -54,11 +54,11 @@ public class TourRequestsService {
         TourRequest tourRequest = request.get();
         // Check if there is a conflict with the tour date and time
         if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw new ConflictException(messageUtil.getMessage("error.tourtime.conflict"));
+            throw  new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
         // Check if the tour time is valid
-        if (!isValidTourTime(tourRequest.getTourTime())) {
-            throw new RelatedFieldException(messageUtil.getMessage("error.tourtime.bad-request"));
+        if (!isValidTourTime(tourRequest.getTourTime()) ){
+            throw  new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
         }
         // Get the advert and user
         Advert advert = advertService.getById(request.getAdvertId());
@@ -70,11 +70,11 @@ public class TourRequestsService {
         tourRequest.setGuestUser(user);
         tourRequest.setOwnerUser(ownerUser);
         // Save the tour request
-        TourRequest savedTourRequest = tourRequestsRepository.save(tourRequest);
+        TourRequest saved = tourRequestsRepository.save(tourRequest);
         // Log the tour request creation
-        logService.logMessage(messageUtil.getMessage("tour-request.created"), advert, user);
+        logService.logMessage(messageUtil.getMessage("success.tour-request.created"), advert, user);
         // Return the response entity with the saved tour request details
-        return ResponseEntity.ok(tourRequestsMapper.toTourRequestsSaveResponse(savedTourRequest));
+        return ResponseEntity.ok(tourRequestsMapper.toTourRequestsSaveResponse(saved));
     }
 
 
@@ -113,11 +113,10 @@ public class TourRequestsService {
         }
         // Check if there is a conflict in tour time
         if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw new ConflictException(messageUtil.getMessage("error.tourtime.conflict"));
+            throw  new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
-        // Check if the tour time is valid
-        if (!isValidTourTime(tourRequest.getTourTime())) {
-            throw new RelatedFieldException(messageUtil.getMessage("error.tourtime.bad-request"));
+        if (!isValidTourTime(tourRequest.getTourTime()) ){
+            throw  new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
         }
         // Update the tour request data and save it
         tourRequest.setTourDate(request.getTourDate());
@@ -266,7 +265,7 @@ public class TourRequestsService {
         tourRequest.setStatus(Status.CANCELED);
         tourRequestsRepository.save(tourRequest);
         // Log the canceled tour request
-        logService.logMessage(messageUtil.getMessage("tour-request.canceled"), tourRequest.getAdvert(), tourRequest.getGuestUser());
+        logService.logMessage(messageUtil.getMessage("success.tour-request.canceled"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         // Return the response entity with the canceled tour request
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsSaveResponse(tourRequest));
     }
@@ -289,7 +288,7 @@ public class TourRequestsService {
         // Save the updated tour request in the repository
         tourRequestsRepository.save(tourRequest);
         // Log a message indicating that the tour request has been approved
-        logService.logMessage(messageUtil.getMessage("tour-request.approved"), tourRequest.getAdvert(), tourRequest.getGuestUser());
+        logService.logMessage(messageUtil.getMessage("success.tour-request.approved"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         // Return the status response of the approved tour request
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsResponse(tourRequest));
     }
@@ -312,7 +311,7 @@ public class TourRequestsService {
         // Save the updated tour request in the repository
         tourRequestsRepository.save(tourRequest);
         // Log a message indicating that the tour request has been declined
-        logService.logMessage(messageUtil.getMessage("tour-request.declined"), tourRequest.getAdvert(), tourRequest.getGuestUser());
+        logService.logMessage(messageUtil.getMessage("success.tour-request.declined"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         // Return the status response of the declined tour request
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsResponse(tourRequest));
     }
@@ -328,5 +327,4 @@ public class TourRequestsService {
         return tourRequestsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
     }
-
 }

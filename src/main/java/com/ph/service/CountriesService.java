@@ -1,13 +1,13 @@
 package com.ph.service;
 
-import com.ph.domain.entities.City;
 import com.ph.domain.entities.Country;
 import com.ph.exception.customs.ResourceNotFoundException;
-import com.ph.payload.mapper.CountryMapper;
+import com.ph.payload.mapper.LocationMapper;
 import com.ph.payload.response.CountryResponse;
 import com.ph.repository.CountriesRepository;
 import com.ph.utils.MessageUtil;
-import lombok.RequiredArgsConstructor;
+ import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class CountriesService {
     private final CountriesRepository countriesRepository;
     private final MessageUtil messageUtil;
-    private final CountryMapper countryMapper;
+    private final LocationMapper locationMapper;
 
     //Not:U01 GetAllCountries() *************************************************************************
     /**
@@ -26,7 +26,7 @@ public class CountriesService {
      * @return the list of country responses
      */
     public List<CountryResponse> getAllCountries() {
-        return countriesRepository.findAll().stream().map(countryMapper::toCountryResponse).collect(Collectors.toList());
+        return countriesRepository.findAll().stream().map(locationMapper::toCountryResponse).collect(Collectors.toList());
     }
 
     // Not : GetById() ***************************************************************************************
@@ -36,6 +36,7 @@ public class CountriesService {
      * @return The country with the specified ID.
      * @throws ResourceNotFoundException if no country is found with the given ID.
      */
+    @Cacheable(value = "country", key = "#id")
     public Country getById(Long id) {
         return countriesRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.country.not-found")));

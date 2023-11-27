@@ -20,7 +20,7 @@ public class CategoryPropertyKey implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String name;
 
     @Column(name = "built_in")
@@ -35,7 +35,7 @@ public class CategoryPropertyKey implements Serializable {
     private Category category;
 
 
-    @OneToMany(mappedBy = "categoryPropertyKey", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "categoryPropertyKey", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     //TODO: check on the postman whether keys value has been deleted or not
     private List<CategoryPropertyValue> categoryPropertyValues;
     /**

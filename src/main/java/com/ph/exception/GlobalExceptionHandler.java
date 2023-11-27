@@ -29,27 +29,27 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<?> handleConflictException(ConflictException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(BuiltInFieldException.class)
     public ResponseEntity<?> handleBuiltInFieldException(BuiltInFieldException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(RelatedFieldException.class)
     public ResponseEntity<?> handleRelatedFieldException(RelatedFieldException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<?> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -59,11 +59,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailSendingException.class)
     public ResponseEntity<?> handleEmailSendingException(EmailSendingException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", ex.getMessage()));
     }
     @ExceptionHandler(ValuesNotMatchException.class)
     public ResponseEntity<?> handleValuesNotMatchException(ValuesNotMatchException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -80,20 +80,50 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NonDeletableException.class)
-    public ResponseEntity<?> handleNonDeletableException(NonDeletableException ex, HttpServletRequest request) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("message", ex.getMessage());
-        errorResponse.put("path", request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
-//        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    public ResponseEntity<?> handleNonDeletableException(NonDeletableException ex ) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", ex.getMessage()));
+
     }
 
     @ExceptionHandler(NonUpdatableException.class)
-    public ResponseEntity<?> handleNonUpdatableException(NonUpdatableException ex, HttpServletRequest request) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("message", ex.getMessage());
-        errorResponse.put("path", request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    public ResponseEntity<?> handleNonUpdatableException(NonUpdatableException ex ) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", ex.getMessage()));
     }
+
+    @ExceptionHandler(MissingArgumentException.class)
+    public ResponseEntity<?> handleMissingArgumentException(MissingArgumentException ex ) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(DirectoryCreationException.class)
+    public ResponseEntity<?> handleDirectoryCreationException(DirectoryCreationException ex   ) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", ex.getMessage()));
+    }
+
+    @ExceptionHandler(DataExportException.class)
+    public ResponseEntity<?> handleDataExportException(DataExportException ex ) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", ex.getMessage()));
+    }
+
+
+    @ExceptionHandler(ImageException.class)
+    public ResponseEntity<?> handleImageException(ImageException ex ) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
+    }
+
+
+    @ExceptionHandler(JsonValidationException.class)
+    public ResponseEntity<?> handleJsonValidationException(JsonValidationException ex  ) {
+        Map<String, String> errorResponse = new HashMap<>();
+        String[] split = ex.getMessage().split("¨¨");
+        for (int i = 0; i <split.length ; i++) {
+            if (i % 2 == 0) {
+                errorResponse.put(split[i], split[i + 1]);
+            }
+
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
 
 }

@@ -6,11 +6,13 @@ import com.ph.exception.customs.ConflictException;
 import com.ph.exception.customs.NonDeletableException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.CategoryMapper;
-import com.ph.payload.mapper.CategoryPropertyKeyMapper;
 import com.ph.payload.request.CategoryPropertyKeyRequest;
 import com.ph.payload.response.CategoryPropertyKeyResponse;
 import com.ph.repository.CategoryPropertyKeyRepository;
+import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +23,11 @@ import java.util.List;
 public class CategoryPropertyKeyService {
 
     private final CategoryPropertyKeyRepository propertyKeyRepository;
-    private final CategoryPropertyKeyMapper categoryPropertyKeyMapper;
-    private final CategoryService categoryService;
     private final CategoryMapper categoryMapper;
+    private final CategoryService categoryService;
+    private final MessageUtil messageUtil;
 
-    // NOT: save() ************************************************************ C08
-
+    // Not: save() ************************************************************ C08
     /**
      * this method created for save category property key
      * @param propertyKeyRequest: represent category property key containing specific information
@@ -36,94 +37,100 @@ public class CategoryPropertyKeyService {
 
         CategoryPropertyKey categoryPropertyKey = propertyKeyRequest.get();
 
-        // if there is same name in database then throw ConflictException
-        boolean isPropertyKeyExists = propertyKeyRepository.existsByName(categoryPropertyKey.getName());
-        if(isPropertyKeyExists){
-           throw new ConflictException("Property key already exists");
-
-        }
         // get category by category id from category service
-        Category category= categoryService.getCategoryById(categoryId);
+        Category category = categoryService.getCategoryById(categoryId);
 
-//         set category to category property key
+        //
+        List<CategoryPropertyKey> categoryPropertyKeysOfTheCategory = propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
+        // is there same category property key in categoryPropertyKeysOfTheCategory
+        for (CategoryPropertyKey key : categoryPropertyKeysOfTheCategory) {
+            if(key.getName().equals(categoryPropertyKey.getName())){
+                throw new ConflictException(messageUtil.getMessage("error.cpk.save.duplicate.name.in.category"));
+            }
+        }
+
+        // set category to category property key
         categoryPropertyKey.setCategory(category);
 
         // save category property key
         CategoryPropertyKey saved = propertyKeyRepository.save(categoryPropertyKey);
 
-        return ResponseEntity.ok(categoryPropertyKeyMapper.mapToCategoryPropertyKeyResponse(saved));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryPropertyKeyResponse(saved));
 
     }
 
 
-// Not: getPropertyKeysOfCategory() *********************************************************** C09
+    // Not: getPropertyKeysOfCategory() *********************************************************** C09
     /** !!!
      * This method created for getting category property keys of specific category
      * @param categoryId : represent category's id
      * @return : List of category property key
      */
+    @Cacheable(value = "categoryPropertyKeys", key = "#categoryId")
     public ResponseEntity<List<CategoryPropertyKeyResponse>> getPropertyKeysOfCategory(Long categoryId) {
 
         List<CategoryPropertyKey> propertyKeys = propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
 
         return ResponseEntity.ok(propertyKeys
                 .stream()
-                .map(categoryPropertyKeyMapper::mapToCategoryPropertyKeyResponse)
+                .map(categoryMapper::mapToCategoryPropertyKeyResponse)
                 .toList());
     }
 
 
-
     // Not: deletePropertyKey() *************************************** C10
+
+    /**
+     * This method created for delete category property key
+     * @param propertyId:
+     * @return deleted category property key
+     */
     //Delete related records in category_property_values table
-    //category_property_values olmadığı için bu kontrol saglanamadi
+    // TODO: Check whether category property values deleted
+    @CacheEvict(value = "categoryPropertyKeys",allEntries = true)
     public ResponseEntity<CategoryPropertyKeyResponse> deletePropertyKey(Long propertyId) {
 
         CategoryPropertyKey categoryPropertyKey = propertyKeyRepository.findById(propertyId).orElseThrow(()
                 -> new ResourceNotFoundException("Category property key not found"));
 
         if(categoryPropertyKey.isBuiltIn()){
-            throw new NonDeletableException("Built-in category property key can not be deleted");
+            throw new ConflictException(messageUtil.getMessage("error.cpk.delete.built-in"));
         }
 
         propertyKeyRepository.deleteById(propertyId);
-        return ResponseEntity.ok(categoryPropertyKeyMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKey));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKey));
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // category service icin yazildi
-    // SORU: bunu klllaninca inceksin dongusu oluyor.??????????????????
-
-    /** !!!
-     * This method created for getting category property keys of specific category !!! for category service
-     * @param categoryId : represent category's id
-     * @return : List of category property key
+    // Not: updatePropertyKey() *************************************** C09
+    /**
+     * This method created for update category property key
+     * @param propertyId: represent category property key id
+     * @param propertyKeyRequest: represent category property key request
+     * @return updated category property key
      */
-    public List<CategoryPropertyKey> getPropertyKeysOfCategoryForCategoryService(Long categoryId){
+    @CacheEvict(value = "categoryPropertyKeys",allEntries = true)
+    public ResponseEntity<CategoryPropertyKeyResponse> updatePropertyKey(Long propertyId,
+                                                                         CategoryPropertyKeyRequest propertyKeyRequest) {
 
-        return propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
+        // check if category property key exists
+        CategoryPropertyKey categoryPropertyKey = propertyKeyRepository.findById(propertyId).orElseThrow(()
+                -> new ResourceNotFoundException(messageUtil.getMessage("error.cpk.not-found")));
+
+        // check if category property key is built in
+        if(categoryPropertyKey.isBuiltIn()){
+            throw new NonDeletableException(messageUtil.getMessage("error.cpk.update.built-in"));
+        }
+
+        // update category property key
+        categoryPropertyKey.setName(propertyKeyRequest.getName());
+
+        // save category property key
+        CategoryPropertyKey categoryPropertyKeyUpdated = propertyKeyRepository.save(categoryPropertyKey);
+
+        // return updated category property key
+        return ResponseEntity.ok(categoryMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKeyUpdated));
 
     }
-
 
 }

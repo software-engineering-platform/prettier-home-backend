@@ -4,7 +4,7 @@ import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.Favorite;
 import com.ph.domain.entities.User;
 import com.ph.exception.customs.ResourceNotFoundException;
-import com.ph.payload.mapper.AdvertMapperForFavoriteAndTourRequest;
+import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.response.AdvertResponseForFavorite;
 import com.ph.repository.FavoritesRepository;
 import com.ph.utils.MessageUtil;
@@ -23,7 +23,7 @@ public class FavoritesService {
     private final UserService userService;
     private final MessageUtil messageUtil;
     private final AdvertService advertService;
-    private final AdvertMapperForFavoriteAndTourRequest advertMapperForFavorite;
+    private final AdvertMapper advertMapper;
 
     // Not :K01 - GetFavoritesByCustomer() ***************************************************
     /**
@@ -37,7 +37,7 @@ public class FavoritesService {
                 new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
         List<Favorite> favorites = favoritesRepository.findByUser_Id(user.getId());
         List<Advert> adverts = favorites.stream().map(Favorite::getAdvert).toList();
-        return ResponseEntity.ok(adverts.stream().map(advertMapperForFavorite::toAdvertResponseForFavorite).collect(Collectors.toList()));
+        return ResponseEntity.ok(adverts.stream().map(advertMapper::toAdvertResponseForFavorite).collect(Collectors.toList()));
     }
 
     // Not :K02 - GetByUserIdFavoritesByManagerAndAdmin() ***************************************************
@@ -51,8 +51,8 @@ public class FavoritesService {
         List<Favorite> favorites = favoritesRepository.findByUser_Id(id);
         // Extract the list of adverts from the favorites
         List<Advert> adverts = favorites.stream().map(Favorite::getAdvert).toList();
+        return ResponseEntity.ok(adverts.stream().map(advertMapper::toAdvertResponseForFavorite).collect(Collectors.toList()));
         // Convert the adverts to a list of AdvertResponseForFavorite and return as a ResponseEntity
-        return ResponseEntity.ok(adverts.stream().map(advertMapperForFavorite::toAdvertResponseForFavorite).collect(Collectors.toList()));
     }
 
 
@@ -70,10 +70,11 @@ public class FavoritesService {
                 .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
         // Check if the favorite already exists
         Optional<Favorite> favorite = favoritesRepository.findByUser_IdAndAdvert_Id(user.getId(), advertId);
+
         if (favorite.isPresent()) {
             // If the favorite exists, delete it and return the response entity
             favoritesRepository.delete(favorite.get());
-            return ResponseEntity.ok().body(advertMapperForFavorite.toAdvertResponseForFavorite(favorite.get().getAdvert()));
+            return ResponseEntity.ok().body(advertMapper.toAdvertResponseForFavorite(favorite.get().getAdvert()));
         } else {
             // If the favorite does not exist, create a new favorite and save it
             Advert advert = advertService.getById(advertId);
@@ -83,7 +84,7 @@ public class FavoritesService {
 
             Favorite savedFavorite = favoritesRepository.save(newFavorite);
 
-            return ResponseEntity.ok(advertMapperForFavorite.toAdvertResponseForFavorite(savedFavorite.getAdvert()));
+            return ResponseEntity.ok(advertMapper.toAdvertResponseForFavorite(savedFavorite.getAdvert()));
         }
     }
 
@@ -99,9 +100,9 @@ public class FavoritesService {
         User user = userService.getUserByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
         // Delete all favorites by their IDs
-        favoritesRepository.deleteAllById(user.getFavorites().stream().map(favorite -> favorite.getId()).collect(Collectors.toList()));
+        favoritesRepository.deleteAllById(user.getFavorites().stream().map(Favorite::getId).collect(Collectors.toList()));
         // Return a success response with a message
-        return ResponseEntity.ok().body(messageUtil.getMessage("favorites.successfully.deleted"));
+        return ResponseEntity.ok().body(messageUtil.getMessage("success.favorites.successfully.deleted"));
     }
 
     // Not :K05 - DeleteFavoriteIdByAdminAndManager() *********************************************************
@@ -114,9 +115,9 @@ public class FavoritesService {
         // Get the user by ID
         User user=userService.getOneUserById(userId);
         // Delete all favorites associated with the user
-        favoritesRepository.deleteAllById(user.getFavorites().stream().map(favorite -> favorite.getId()).collect(Collectors.toList()));
+        favoritesRepository.deleteAllById(user.getFavorites().stream().map(Favorite::getId).collect(Collectors.toList()));
         // Return a ResponseEntity with a success message
-        return ResponseEntity.ok().body(messageUtil.getMessage("favorites.successfully.deleted"));
+        return ResponseEntity.ok().body(messageUtil.getMessage("success.favorites.successfully.deleted"));
     }
 
     // Not :K06 - DeleteFavoriteIdByAdminAndManager() *********************************************************
@@ -127,7 +128,7 @@ public class FavoritesService {
      */
     public ResponseEntity<String> deleteFavoriteIdByAdminAndManager(Long favoriteId) {
         favoritesRepository.deleteById(favoriteId);
-        return ResponseEntity.ok().body(messageUtil.getMessage("favorite.successfully.deleted"));
+        return ResponseEntity.ok().body(messageUtil.getMessage("success.favorite.successfully.deleted"));
     }
 }
 
