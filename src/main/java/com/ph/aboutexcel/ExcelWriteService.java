@@ -14,17 +14,6 @@ import java.nio.file.Paths;
 @RequiredArgsConstructor
 public class ExcelWriteService extends AbstractExcelExporter {
 
-    @Value("${export.folder.path.xls}")
-    private String excelFolderPath;
-
-    @Override
-    protected String prepareDirectoriesAndExcelFilePath(String fileName) {
-        Path excelPath = Paths.get(excelFolderPath);
-        createDirectories(excelPath.toString());
-        String excelFilePath = excelPath.resolve(fileName + ".xlsx").toString();
-        return excelFilePath;
-    }
-
 
     @Override
     protected CellStyle buildHeaderStyle(Workbook workbook) {

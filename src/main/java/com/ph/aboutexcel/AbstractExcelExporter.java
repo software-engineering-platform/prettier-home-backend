@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 public abstract class AbstractExcelExporter {
-    protected abstract String prepareDirectoriesAndExcelFilePath(String fileName);
+
 
     protected abstract CellStyle buildHeaderStyle(Workbook workbook);
 
@@ -25,14 +25,14 @@ public abstract class AbstractExcelExporter {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractExcelExporter.class);
 
-    public <T> void writeToExcel(List<T> exportDataList, String fileName, String sheetName) {
+    public <T> void writeToExcel(List<T> exportDataList, String fileName, String sheetName,String path) {
 
         checkMethodParameters(exportDataList, fileName, sheetName);
 
-        String excelFilePath = prepareDirectoriesAndExcelFilePath(fileName);
+
 
         try (
-                FileOutputStream fos = new FileOutputStream(excelFilePath);
+                FileOutputStream fos = new FileOutputStream(path);
                 Workbook workbook = new XSSFWorkbook();
         ) {
 

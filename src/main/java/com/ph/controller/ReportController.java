@@ -21,9 +21,11 @@ public class ReportController {
     // Not: get most popular properties
     @GetMapping("/most-popular-properties")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseEntity<?> getProperties(@RequestParam Integer amount){ //http://localhost:8080/report/most-popular-properties?amount=10
+    public ResponseEntity<?> getProperties(@RequestParam Integer amount,
+    @RequestParam String path
+    ){ //http://localhost:8080/report/most-popular-properties?amount=10
 
-      return  reportService.getMostPopularProperties(amount);
+      return  reportService.getMostPopularProperties(amount,path);
 
     }
 
@@ -36,10 +38,11 @@ public class ReportController {
             @RequestParam(name = "endDate" ,required = false) LocalDate endDate,
             @RequestParam(name = "status",required = false ) Integer status,
             @RequestParam(name = "type" ,required = false) Long typeId,
-            @RequestParam(name = "category",required = false ) Long categoryId
+            @RequestParam(name = "category",required = false ) Long categoryId,
+            @RequestParam String path
 
 ){
-        return reportService.getAdverts(startDate,endDate,status,typeId,categoryId);
+        return reportService.getAdverts(startDate,endDate,status,typeId,categoryId,path);
     }
 
 
@@ -59,8 +62,8 @@ public class ReportController {
 
     @GetMapping("users")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseEntity<?> getUsersByRole(@RequestParam String role){ //http://localhost:8080/report/users
-        return reportService.getUsersByRole(role);
+    public ResponseEntity<?> getUsersByRole(@RequestParam String role,@RequestParam String path){ //http://localhost:8080/report/users
+        return reportService.getUsersByRole(role,path);
     }
 
 
@@ -73,10 +76,12 @@ public class ReportController {
     public ResponseEntity<?> getTourRequests(
             @RequestParam(name = "startDate",required = false ) LocalDate startDate,
             @RequestParam(name = "endDate" ,required = false) LocalDate endDate,
-            @RequestParam(name = "status" ,required = false) Status status)
+            @RequestParam(name = "status" ,required = false) Status status,
+            @RequestParam String path
+    )
 
      { //http://localhost:8080/report
-        return reportService.getTourRequests(startDate,endDate,status);
+        return reportService.getTourRequests(startDate,endDate,status,path);
     }
 
 
