@@ -43,6 +43,7 @@ public class CategoryService {
      * @param categoryRequest : represent category containing specific information
      * @return : ResponseEntity with created category
      */
+    @CacheEvict(value = "category", allEntries = true)
     public ResponseEntity<?> save(CategoryRequest categoryRequest) {
 
         Category category = categoryRequest.get();

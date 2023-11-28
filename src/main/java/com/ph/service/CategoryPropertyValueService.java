@@ -22,7 +22,7 @@ public class CategoryPropertyValueService {
     private final MessageUtil messageUtil;
 
 
-    public void saveValue(CategoryPropertyKey key, String value, Advert advert){
+    public CategoryPropertyValue saveValue(CategoryPropertyKey key, String value, Advert advert){
 
      CategoryPropertyValue categoryPropertyValue =   CategoryPropertyValue.builder()
                 .advert(advert)
@@ -30,7 +30,7 @@ public class CategoryPropertyValueService {
                 .value(value)
                 .build();
 
-        repository.save(categoryPropertyValue);
+       return repository.save(categoryPropertyValue);
 
     }
 

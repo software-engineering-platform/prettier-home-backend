@@ -44,6 +44,16 @@ public class UserController {
         return userService.resetPassword(request);
     }
 
+    @PatchMapping("/change-password")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
+    public ResponseEntity<?> changeAuthenticatedUserPassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid ChangePasswordRequest request
+    ) {
+        return userService.changeAuthenticatedUserPassword(request, userDetails);
+    }
+
+
     @GetMapping("/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     public ResponseEntity<?> getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {

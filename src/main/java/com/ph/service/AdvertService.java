@@ -20,6 +20,9 @@ import com.ph.payload.response.DetailedAdvertResponse;
 import com.ph.payload.response.SimpleAdvertResponse;
 import com.ph.repository.*;
 import com.ph.utils.MessageUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -50,6 +53,7 @@ public class AdvertService {
     private final CountriesService countriesService;
     private final LogService logService;
     private final MessageUtil messageUtil;
+    private final CategoryPropertyValueRepository propRepository;
 
     private void checkPrice(Integer priceStart, Integer priceEnd) {
         // Check if the start price is greater than the end price
@@ -58,7 +62,7 @@ public class AdvertService {
         }
     }
 
-    private Advert setAdvertField (Advert advert, User user, AdvertRequestAbs requestAbs) {
+    private void setAdvertField (Advert advert, User user, AdvertRequestAbs requestAbs) {
         AdvertType type = typeService.getById(requestAbs.getAdvertTypeId());
         Country country = countriesService.getById(requestAbs.getCountryId());
         City city = cityService.getById(requestAbs.getCityId());
@@ -71,7 +75,7 @@ public class AdvertService {
         advert.setCity(city);
         advert.setDistrict(district);
         advert.setUser(user);
-         return advert;
+
 
     }
 
@@ -442,10 +446,11 @@ public class AdvertService {
         setAdvertField(advert, user, request);
         advert.setStatusForAdvert(StatusForAdvert.PENDING);
         advert.setSlug(slugMaker(advert.getTitle(), id));
-        Advert savedAdvert = repository.save(advert);
+
 
         // Update the property values of the advert
         List<CategoryPropertyKey> propertyKeys = advert.getCategory().getCategoryPropertyKeys();
+        System.out.println("Prop keys "+propertyKeys);
         List<String> valuesOfProperty = request.getPropertyvalues();
         List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream()
                 .map(CategoryPropertyValue::getId)
@@ -453,16 +458,21 @@ public class AdvertService {
         //KEY SONRADAN EKLENDİĞİNDE HATA NOT TODO
         for (int i = 0; i < propertyKeys.size(); i++) {
             if(propertyValuesIds.size()<i+1){
-                propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), savedAdvert);
+              CategoryPropertyValue categoryPropertyValue =
+                      propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
+              advert.getCategoryPropertyValues().add(categoryPropertyValue);
             }else{
-                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), savedAdvert, propertyValuesIds.get(i));
+                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), advert, propertyValuesIds.get(i));
 
             }
          }
 
+         System.out.println("Values"+advert.getCategoryPropertyValues());
+        Advert savedAdvert = repository.save(advert);
         // Log the update event
         logService.logMessage("Advert updated by :" + user.getUsername(), savedAdvert, user);
 
+        System.out.println("Values"+savedAdvert.getCategoryPropertyValues());
         return ResponseEntity.ok(mapper.toDetailedAdvertResponse(savedAdvert));
     }
 
@@ -495,7 +505,7 @@ public class AdvertService {
         }
 
         // Get the advert type, country, city, district, and category by ID
-        setAdvertField(advert, user, request);
+       setAdvertField(advert, user, request);
         // Update the advert with the request data
         mapper.toEntityForUpdate(advert, request);
 
@@ -504,7 +514,7 @@ public class AdvertService {
         advert.setSlug(slugMaker(advert.getTitle(), id));
 
         // Save the updated advert
-        Advert updatedAdvert = repository.save(advert);
+
 
         // Update the property values of the advert
         List<CategoryPropertyKey> propertyKeys = advert.getCategory().getCategoryPropertyKeys();
@@ -512,13 +522,15 @@ public class AdvertService {
         List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream().map(CategoryPropertyValue::getId).toList();
         for (int i = 0; i < propertyKeys.size(); i++) {
             if(propertyValuesIds.size()<i+1){
-                propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), updatedAdvert);
+              CategoryPropertyValue categoryPropertyValue=
+                      propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
+              advert.getCategoryPropertyValues().add(categoryPropertyValue);
             }else{
-                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), updatedAdvert, propertyValuesIds.get(i));
+                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), advert, propertyValuesIds.get(i));
+            }
+        }
 
-            }        }
-
-
+        Advert updatedAdvert = repository.save(advert);
         // Log the update
         logService.logMessage("Advert updated by: " + user.getUsername(), updatedAdvert, user);
 
@@ -580,5 +592,10 @@ public class AdvertService {
 
         return repository.findByCategory_Id(categoryId);
 
+    }
+
+
+    public boolean isHaveUserAdvert(Long id){
+        return repository.existsByUser_Id(id);
     }
 }

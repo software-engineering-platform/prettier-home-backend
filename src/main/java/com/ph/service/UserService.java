@@ -1,11 +1,14 @@
 package com.ph.service;
 
 
+import com.ph.domain.entities.Favorite;
 import com.ph.domain.entities.ProfilePhoto;
 import com.ph.domain.entities.User;
 import com.ph.exception.customs.*;
 import com.ph.payload.mapper.UserMapper;
 import com.ph.payload.request.*;
+import com.ph.repository.FavoritesRepository;
+import com.ph.repository.TourRequestsRepository;
 import com.ph.repository.UserRepository;
 import com.ph.security.role.Role;
 import com.ph.utils.ImageUtil;
@@ -25,6 +28,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +40,9 @@ public class UserService {
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ProfilePhotoService profilePhotoService;
-
+    private final FavoritesRepository favoritesRepository;
+    private final AdvertService advertService;
+    private final TourRequestsRepository tourRequestsRepository;
     /**
      * This method is used to retrieve user for login process and some other methods.
      * Retrieve a user by their email address.
@@ -123,6 +129,32 @@ public class UserService {
         userRepository.save(user);
         // Return a ResponseEntity with a status of OK
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+    /**
+     * Change the password of the authenticated user.
+     *
+     * @param request The change password request.
+     * @param userDetails The details of the authenticated user.
+     * @return A response entity indicating the success of the password change.
+     * @throws BuiltInFieldException If the user is a built-in user.
+     * @throws ValuesNotMatchException If the current password provided does not match the user's password.
+     */
+    public ResponseEntity<?> changeAuthenticatedUserPassword(ChangePasswordRequest request, UserDetails userDetails) {
+        // Cast the userDetails to User object
+        User user = (User) userDetails;
+        // Check if the user is built-in and return a bad request if true
+        if (user.isBuiltIn()) {
+            throw new BuiltInFieldException(messageUtil.getMessage("error.user.update.built-in"));
+        }
+        // Check if the current password matches the user's password
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+            throw new ValuesNotMatchException(messageUtil.getMessage("error.user.password.invalid"));
+        }
+        // Update the user's password
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        // Save the updated user
+        User updated = userRepository.save(user);
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -248,6 +280,7 @@ public class UserService {
         }
         // Check if the found user has any built-in and related fields
         checkBuiltInAndRelatedFieldsBeforeDeletion(foundUser);
+        favoritesRepository.deleteAllById(foundUser.getFavorites().stream().map(Favorite::getId).collect(Collectors.toList()));
         // Delete the found user from the repository
         userRepository.delete(foundUser);
         // Return a success response
@@ -328,10 +361,6 @@ public class UserService {
         checkDuplicate(request.getPhone(), request.getEmail(), user);
         // Update the user with the provided request
         request.accept(user);
-        // If a new password is provided, update the password hash
-        if (request.getPassword() != null) {
-            user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
-        }
         // Save the updated user
         return userRepository.save(user);
     }
@@ -349,13 +378,13 @@ public class UserService {
             throw new BuiltInFieldException(messageUtil.getMessage("error.user.delete.built-in"));
         }
         // Check if the user has any adverts
-        if (!user.getAdverts().isEmpty()) {
-            throw new RelatedFieldException(messageUtil.getMessage("error.user.delete.adverts"));
-        }
-        // Check if the user has any guest or owned tour requests
-        if (!user.getGuestTourRequests().isEmpty() || !user.getOwnedTourRequests().isEmpty()) {
-            throw new RelatedFieldException(messageUtil.getMessage("error.user.delete.tou-requests"));
-        }
+//        if (advertService.isHaveUserAdvert(user.getId())) {
+//            throw new RelatedFieldException(messageUtil.getMessage("error.user.delete.adverts"));
+//        }
+//        // Check if the user has any guest or owned tour requests
+//        if (tourRequestsRepository.existsByGuestUser_Id(user.getId()) || tourRequestsRepository.existsByOwnerUser_Id(user.getId())) {
+//            throw new RelatedFieldException(messageUtil.getMessage("error.user.delete.tou-requests"));
+//        }
     }
 
      public ResponseEntity<?> updateUserPhoto(MultipartFile photo, UserDetails userDetails) {
@@ -386,4 +415,6 @@ public class UserService {
         User updated = userRepository.save(user);
         return ResponseEntity.ok(userMapper.toUserResponse(updated));
     }
+
+
 }

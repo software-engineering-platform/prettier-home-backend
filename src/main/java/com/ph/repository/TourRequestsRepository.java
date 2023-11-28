@@ -22,6 +22,8 @@ import java.util.Optional;
 
 @Repository
 public interface TourRequestsRepository extends JpaRepository<TourRequest, Long> {
+    boolean existsByOwnerUser_Id(Long id);
+    boolean existsByGuestUser_Id(Long id);
 
     Optional<TourRequest> findByIdAndGuestUser_Id(Long id, Long id1);
 

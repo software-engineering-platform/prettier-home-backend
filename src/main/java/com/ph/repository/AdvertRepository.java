@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @Repository
 public interface AdvertRepository extends JpaRepository<Advert, Long> {
+    boolean existsByUser_Id(Long id);
     Advert findByImages_Id(Long id);
     @Query("""
             select a from Advert a

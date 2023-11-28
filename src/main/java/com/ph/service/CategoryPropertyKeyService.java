@@ -33,6 +33,7 @@ public class CategoryPropertyKeyService {
      * @param propertyKeyRequest: represent category property key containing specific information
      * @return : ResponseEntity with created category property key
      */
+    @CacheEvict( cacheNames = {"category","categoryPropertyKeys"},allEntries = true)
     public ResponseEntity<CategoryPropertyKeyResponse> save(CategoryPropertyKeyRequest propertyKeyRequest, Long categoryId) {
 
         CategoryPropertyKey categoryPropertyKey = propertyKeyRequest.get();
@@ -87,7 +88,7 @@ public class CategoryPropertyKeyService {
      */
     //Delete related records in category_property_values table
     // TODO: Check whether category property values deleted
-    @CacheEvict(value = "categoryPropertyKeys",allEntries = true)
+    @CacheEvict( cacheNames = {"category","categoryPropertyKeys"},allEntries = true)
     public ResponseEntity<CategoryPropertyKeyResponse> deletePropertyKey(Long propertyId) {
 
         CategoryPropertyKey categoryPropertyKey = propertyKeyRepository.findById(propertyId).orElseThrow(()
@@ -109,7 +110,8 @@ public class CategoryPropertyKeyService {
      * @param propertyKeyRequest: represent category property key request
      * @return updated category property key
      */
-    @CacheEvict(value = "categoryPropertyKeys",allEntries = true)
+    @CacheEvict( cacheNames = {"category","categoryPropertyKeys"},allEntries = true)
+
     public ResponseEntity<CategoryPropertyKeyResponse> updatePropertyKey(Long propertyId,
                                                                          CategoryPropertyKeyRequest propertyKeyRequest) {
 
