@@ -6,12 +6,13 @@ import com.ph.exception.customs.ConflictException;
 import com.ph.exception.customs.NonDeletableException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.CategoryMapper;
-import com.ph.payload.mapper.CategoryPropertyKeyMapper;
 import com.ph.payload.request.CategoryPropertyKeyRequest;
 import com.ph.payload.response.CategoryPropertyKeyResponse;
 import com.ph.repository.CategoryPropertyKeyRepository;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ import java.util.List;
 public class CategoryPropertyKeyService {
 
     private final CategoryPropertyKeyRepository propertyKeyRepository;
-    private final CategoryPropertyKeyMapper categoryPropertyKeyMapper;
+    private final CategoryMapper categoryMapper;
     private final CategoryService categoryService;
     private final MessageUtil messageUtil;
 
@@ -54,7 +55,7 @@ public class CategoryPropertyKeyService {
         // save category property key
         CategoryPropertyKey saved = propertyKeyRepository.save(categoryPropertyKey);
 
-        return ResponseEntity.ok(categoryPropertyKeyMapper.mapToCategoryPropertyKeyResponse(saved));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryPropertyKeyResponse(saved));
 
     }
 
@@ -65,13 +66,14 @@ public class CategoryPropertyKeyService {
      * @param categoryId : represent category's id
      * @return : List of category property key
      */
+    @Cacheable(value = "categoryPropertyKeys", key = "#categoryId")
     public ResponseEntity<List<CategoryPropertyKeyResponse>> getPropertyKeysOfCategory(Long categoryId) {
 
         List<CategoryPropertyKey> propertyKeys = propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
 
         return ResponseEntity.ok(propertyKeys
                 .stream()
-                .map(categoryPropertyKeyMapper::mapToCategoryPropertyKeyResponse)
+                .map(categoryMapper::mapToCategoryPropertyKeyResponse)
                 .toList());
     }
 
@@ -85,6 +87,7 @@ public class CategoryPropertyKeyService {
      */
     //Delete related records in category_property_values table
     // TODO: Check whether category property values deleted
+    @CacheEvict(value = "categoryPropertyKeys",allEntries = true)
     public ResponseEntity<CategoryPropertyKeyResponse> deletePropertyKey(Long propertyId) {
 
         CategoryPropertyKey categoryPropertyKey = propertyKeyRepository.findById(propertyId).orElseThrow(()
@@ -95,7 +98,7 @@ public class CategoryPropertyKeyService {
         }
 
         propertyKeyRepository.deleteById(propertyId);
-        return ResponseEntity.ok(categoryPropertyKeyMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKey));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKey));
 
     }
 
@@ -106,6 +109,7 @@ public class CategoryPropertyKeyService {
      * @param propertyKeyRequest: represent category property key request
      * @return updated category property key
      */
+    @CacheEvict(value = "categoryPropertyKeys",allEntries = true)
     public ResponseEntity<CategoryPropertyKeyResponse> updatePropertyKey(Long propertyId,
                                                                          CategoryPropertyKeyRequest propertyKeyRequest) {
 
@@ -125,7 +129,7 @@ public class CategoryPropertyKeyService {
         CategoryPropertyKey categoryPropertyKeyUpdated = propertyKeyRepository.save(categoryPropertyKey);
 
         // return updated category property key
-        return ResponseEntity.ok(categoryPropertyKeyMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKeyUpdated));
+        return ResponseEntity.ok(categoryMapper.mapToCategoryPropertyKeyResponse(categoryPropertyKeyUpdated));
 
     }
 

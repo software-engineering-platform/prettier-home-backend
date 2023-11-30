@@ -6,6 +6,7 @@ import com.ph.domain.entities.CategoryPropertyKey;
 import com.ph.domain.entities.CategoryPropertyValue;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.repository.CategoryPropertyValueRepository;
+import com.ph.utils.MessageUtil;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class CategoryPropertyValueService {
 
     private final CategoryPropertyValueRepository repository;
+    private final MessageUtil messageUtil;
 
 
     public void saveValue(CategoryPropertyKey key, String value, Advert advert){
@@ -34,7 +36,8 @@ public class CategoryPropertyValueService {
 
     public void updateValue(CategoryPropertyKey categoryPropertyKey, String s, Advert savedAdvert, Long aLong) {
 
-        CategoryPropertyValue categoryPropertyValue = repository.findById(aLong).orElseThrow(() -> new ResourceNotFoundException("CategoryPropertyValue not found by id :"+aLong));
+        CategoryPropertyValue categoryPropertyValue = repository.findById(aLong).orElseThrow(() ->
+                new ResourceNotFoundException(String.format(messageUtil.getMessage("error.category.property.value.not.found"), aLong)));
 
         categoryPropertyValue.setAdvert(savedAdvert);
         categoryPropertyValue.setCategoryPropertyKey(categoryPropertyKey);

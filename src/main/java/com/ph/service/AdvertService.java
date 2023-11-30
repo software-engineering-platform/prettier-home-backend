@@ -9,47 +9,75 @@ import com.ph.domain.entities.*;
 import com.ph.exception.customs.BuiltInFieldException;
 import com.ph.exception.customs.NonDeletableException;
 import com.ph.exception.customs.ResourceNotFoundException;
-import com.ph.payload.mapper.AdvertCategoryDTO;
-import com.ph.payload.mapper.AdvertCityDTO;
+import com.ph.payload.request.abstracts.AdvertRequestAbs;
+import com.ph.payload.response.AdvertCategoryResponse;
+import com.ph.payload.response.AdvertCityResponse;
 import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.request.AdvertRequest;
 import com.ph.payload.request.AdvertRequestForUpdateByAdmin;
 import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
-import com.ph.payload.response.AdvertResponse;
+import com.ph.payload.response.DetailedAdvertResponse;
+import com.ph.payload.response.SimpleAdvertResponse;
 import com.ph.repository.*;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AdvertService {
 
     private final AdvertRepository repository;
     private final AdvertTypeService typeService;
     private final AdvertMapper mapper;
-    //private final ImageService imageService;
+    private final ImageService imageService;
     private final CategoryRepository categoryRepository;
     private final CategoryPropertyValueService propertyValueService;
     private final CityService cityService;
     private final DistrictsService districtService;
     private final CountriesService countriesService;
-    private final TourRequestsRepository tourRequestsRepository;
     private final LogService logService;
     private final MessageUtil messageUtil;
-    private final FavoritesRepository favoritesRepository;
 
+    private void checkPrice(Integer priceStart, Integer priceEnd) {
+        // Check if the start price is greater than the end price
+        if (priceStart != null && priceEnd != null && priceStart > priceEnd) {
+            throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.price.start.gt.price.end"));
+        }
+    }
+
+    private Advert setAdvertField (Advert advert, User user, AdvertRequestAbs requestAbs) {
+        AdvertType type = typeService.getById(requestAbs.getAdvertTypeId());
+        Country country = countriesService.getById(requestAbs.getCountryId());
+        City city = cityService.getById(requestAbs.getCityId());
+        District district = districtService.getById(requestAbs.getDistrictId());
+        Category category = categoryRepository.findById(requestAbs.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.categories.not.found"), requestAbs.getCategoryId())));
+        advert.setCategory(category);
+        advert.setAdvertType(type);
+        advert.setCountry(country);
+        advert.setCity(city);
+        advert.setDistrict(district);
+        advert.setUser(user);
+         return advert;
+
+    }
+
+
+
+        //NOT: TODO  CACHEEVİCT POPULAR İÇİN Bİ DÜŞÜN
 
     // NOT:  helperMethodSlugMaker() ************************************************************
 
@@ -58,7 +86,7 @@ public class AdvertService {
      * Replaces spaces in the title with hyphens.
      *
      * @param title The title to generate the slug from.
-     * @param id The id to include in the slug.
+     * @param id    The id to include in the slug.
      * @return The generated slug.
      */
     public static String slugMaker(String title, Long id) {
@@ -75,9 +103,6 @@ public class AdvertService {
 //    }
 
 
-
-
-
     // NOT:  helperMethodGetById() ************************************************************
 
     /**
@@ -89,7 +114,7 @@ public class AdvertService {
      */
     public Advert getById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Advert not found by id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found"), id)));
     }
 
 
@@ -98,25 +123,23 @@ public class AdvertService {
     /**
      * Retrieves a page of AdvertResponse objects based on the provided parameters.
      *
-     * @param query         The search query string.
-     * @param categoryId    The ID of the category to filter by.
-     * @param advertTypeId  The ID of the advert type to filter by.
-     * @param priceStart    The starting price range to filter by.
-     * @param priceEnd      The ending price range to filter by.
-     * @param status        The status to filter by.
-     * @param pageable      The pageable object containing pagination information.
-     * @return              A page of AdvertResponse objects.
+     * @param query        The search query string.
+     * @param categoryId   The ID of the category to filter by.
+     * @param advertTypeId The ID of the advert type to filter by.
+     * @param priceStart   The starting price range to filter by.
+     * @param priceEnd     The ending price range to filter by.
+     * @param status       The status to filter by.
+     * @param pageable     The pageable object containing pagination information.
+     * @return A page of AdvertResponse objects.
      * @throws ResourceNotFoundException If the start price is greater than the end price.
      */
-    public Page<AdvertResponse> getForAnyms(String query, Long categoryId, Long advertTypeId,
-                                            Integer priceStart, Integer priceEnd,
-                                            Integer status, Pageable pageable) throws ResourceNotFoundException {
+    
+    public Page<SimpleAdvertResponse> getForAnyms(String query, Long categoryId, Long advertTypeId,
+                                                  Integer priceStart, Integer priceEnd,
+                                                  Integer status, Pageable pageable) throws ResourceNotFoundException {
 
 
-        // Check if the start price is greater than the end price
-        if(priceStart != null && priceEnd != null && priceStart > priceEnd){
-            throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.price.start.gt.price.end"));
-        }
+        checkPrice(priceStart, priceEnd);
 
         StatusForAdvert statusForAdvert = null;
 
@@ -131,16 +154,19 @@ public class AdvertService {
 
         // Retrieve the Advert entities based on the provided parameters and map them to AdvertResponse objects
         return repository.findForAnyms(query, categoryId, advertTypeId, priceStart, priceEnd, statusForAdvert, pageable)
-                .map(mapper::toResponse);
+                .map(mapper::toSimpleAdvertResponse);
     }
 
+
+
     // NOT:A02 / getAdvertsByCities() ************************************************************
+
     /**
      * Retrieves a list of AdvertCityDTO objects by cities.
      *
      * @return The list of AdvertCityDTO objects.
      */
-    public List<AdvertCityDTO> getAdvertsByCities() {
+    public List<AdvertCityResponse> getAdvertsByCities() {
         return repository.getAdvertsByCities();
     }
 
@@ -150,19 +176,23 @@ public class AdvertService {
      * @return the list of AdvertCategoryDTO objects
      */
     // NOT:A03 / getAdvertsByCategories() ************************************************************
-    public List<AdvertCategoryDTO> getAdvertsByCategories() {
+    public List<AdvertCategoryResponse> getAdvertsByCategories() {
         return repository.getAdvertsByCategories();
     }
 
 
     // NOT:A04 / getMostPopularAdverts() ************************************************************
+
     /**
      * Retrieves the most popular adverts.
      *
      * @param amount The number of popular adverts to retrieve.
      * @return A list of AdvertResponse objects representing the most popular adverts.
      */
-    public List<AdvertResponse> getMostPopularAdverts(Integer amount) {
+
+    @Cacheable(value = "mostPopularAdverts", key = "#amount")
+    public List<SimpleAdvertResponse> getMostPopularAdverts(Integer amount) {
+
         // Set the default amount if null
         if (amount == null) {
             amount = 10;
@@ -172,11 +202,11 @@ public class AdvertService {
         List<Advert> popularAdverts = repository.findPopularAdverts(amount);
 
         // Convert the Advert objects to AdvertResponse objects
-        List<AdvertResponse> popularAdvertResponses = popularAdverts.stream()
-                .map(mapper::toResponse)
+        List<SimpleAdvertResponse> popularDetailedAdvertRespons = popularAdverts.stream()
+                .map(mapper::toSimpleAdvertResponse)
                 .collect(Collectors.toList());
 
-        return popularAdvertResponses;
+        return popularDetailedAdvertRespons;
     }
 
     // NOT:A05 / getForCustomerById() ************************************************************
@@ -184,14 +214,14 @@ public class AdvertService {
     /**
      * Retrieves a page of AdvertResponse objects based on the specified criteria.
      *
-     * @param page         The page number to retrieve.
-     * @param size         The number of items per page.
-     * @param sort         The sort field.
-     * @param type         The sort order (either "asc" or "desc").
+     * @param page        The page number to retrieve.
+     * @param size        The number of items per page.
+     * @param sort        The sort field.
+     * @param type        The sort order (either "asc" or "desc").
      * @param userDetails The UserDetails of the user making the request.
      * @return A Page object containing AdvertResponse objects.
      */
-    public Page<AdvertResponse> getByCustomerPage(int page, int size, String sort, String type, UserDetails userDetails) {
+    public Page<DetailedAdvertResponse> getByCustomerPage(int page, int size, String sort, String type, UserDetails userDetails) {
         User user = (User) userDetails;
 
         // Create a Pageable object with the specified page, size, and sort field in ascending order
@@ -203,7 +233,7 @@ public class AdvertService {
         }
 
         // Retrieve the page of Advert objects for the specified user ID and map them to AdvertResponse objects
-        return repository.findByUser_Id(user.getId(), pageable).map(mapper::toResponse);
+        return repository.findByUser_Id(user.getId(), pageable).map(mapper::toDetailedAdvertResponse);
     }
 
     // NOT:A06 / getByAdminPage() ************************************************************
@@ -211,23 +241,21 @@ public class AdvertService {
     /**
      * Retrieves a page of AdvertResponse objects for the admin.
      *
-     * @param query         The search query string.
-     * @param categoryId    The ID of the category.
-     * @param advertTypeId  The ID of the advert type.
-     * @param priceStart    The starting price.
-     * @param priceEnd      The ending price.
-     * @param status        The status of the advert.
-     * @param pageable      The pagination information.
-     * @return              A page of AdvertResponse objects.
+     * @param query        The search query string.
+     * @param categoryId   The ID of the category.
+     * @param advertTypeId The ID of the advert type.
+     * @param priceStart   The starting price.
+     * @param priceEnd     The ending price.
+     * @param status       The status of the advert.
+     * @param pageable     The pagination information.
+     * @return A page of AdvertResponse objects.
      * @throws ResourceNotFoundException if priceStart is greater than priceEnd.
      */
-    public Page<AdvertResponse> getForAdmin(String query, Long categoryId, Long advertTypeId,
-                                            Integer priceStart, Integer priceEnd,
-                                            Integer status, Pageable pageable) {
+    public Page<DetailedAdvertResponse> getForAdmin(String query, Long categoryId, Long advertTypeId,
+                                                    Integer priceStart, Integer priceEnd,
+                                                    Integer status, Pageable pageable) {
         // Check if priceStart is greater than priceEnd
-        if (priceStart != null && priceEnd != null && priceStart > priceEnd) {
-            throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.price.start.gt.price.end"));
-        }
+        checkPrice(priceStart, priceEnd);
 
         // Map status to StatusForAdvert enum
         StatusForAdvert statusForAdvert = null;
@@ -241,9 +269,8 @@ public class AdvertService {
 
         // Retrieve the page of AdvertResponse objects using the repository
         return repository.findForAdmin(query, categoryId, advertTypeId, priceStart, priceEnd, statusForAdvert, pageable)
-                .map(mapper::toResponse);
+                .map(mapper::toDetailedAdvertResponse);
     }
-
 
 
     // NOT:A07 / getBySlug() ************************************************************
@@ -255,10 +282,10 @@ public class AdvertService {
      * @return The response entity containing the advert response.
      * @throws ResourceNotFoundException If the advert is not found.
      */
-    public ResponseEntity<AdvertResponse> getBySlug(String slug) {
+    public ResponseEntity<DetailedAdvertResponse> getBySlug(String slug) {
         // Find the advert by slug in the repository
         Advert advert = repository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Advert not found by slug: " + slug));
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found.slug"), slug)));
 
         // Increment the view count of the advert
         advert.setViewCount(advert.getViewCount() + 1);
@@ -267,7 +294,7 @@ public class AdvertService {
         Advert savedAdvert = repository.save(advert);
 
         // Convert the saved advert to a response object
-        AdvertResponse response = mapper.toResponse(savedAdvert);
+        DetailedAdvertResponse response = mapper.toDetailedAdvertResponse(savedAdvert);
 
         // Return the response entity with the advert response
         return ResponseEntity.ok(response);
@@ -279,12 +306,12 @@ public class AdvertService {
     /**
      * Retrieves an Advert by customer ID.
      *
-     * @param id           the ID of the Advert to retrieve
+     * @param id          the ID of the Advert to retrieve
      * @param userDetails the user details of the customer
      * @return the ResponseEntity containing the Advert response
      * @throws ResourceNotFoundException if the Advert is not found or the user does not have permission
      */
-    public ResponseEntity<AdvertResponse> getByCustomer(Long id, UserDetails userDetails) {
+    public ResponseEntity<DetailedAdvertResponse> getByCustomer(Long id, UserDetails userDetails) {
         User user = (User) userDetails;
 
         // Retrieve the list of adverts for the user
@@ -303,11 +330,12 @@ public class AdvertService {
         Advert savedAdvert = repository.save(advert);
 
         // Return the ResponseEntity with the Advert response
-        return ResponseEntity.ok(mapper.toResponse(savedAdvert));
+        return ResponseEntity.ok(mapper.toDetailedAdvertResponse(savedAdvert));
     }
 
 
     // NOT:A09 / getForAdmin() ************************************************************
+
     /**
      * Retrieves an Advert by its ID for an admin user.
      * Increments the view count of the advert and saves the updated advert.
@@ -316,7 +344,7 @@ public class AdvertService {
      * @param id The ID of the advert to retrieve.
      * @return A ResponseEntity with the response body containing the saved advert.
      */
-    public ResponseEntity<AdvertResponse> getByAdmin(Long id) {
+    public ResponseEntity<DetailedAdvertResponse> getByAdmin(Long id) {
         // Retrieve the advert by its ID
         Advert advert = getById(id);
 
@@ -327,9 +355,8 @@ public class AdvertService {
         Advert savedAdvert = repository.save(advert);
 
         // Return a ResponseEntity with the response body containing the saved advert
-        return ResponseEntity.ok(mapper.toResponse(savedAdvert));
+        return ResponseEntity.ok(mapper.toDetailedAdvertResponse(savedAdvert));
     }
-
 
 
     // NOT:A10 / save() ************************************************************
@@ -337,45 +364,33 @@ public class AdvertService {
     /**
      * Creates a new advert based on the given request and user details.
      *
-     * @param request The advert request containing the necessary data.
+     * @param request     The advert request containing the necessary data.
      * @param userDetails The user details of the user creating the advert.
      * @return The response entity containing the created advert.
      * @throws ResourceNotFoundException If the category is not found by id.
      */
-    public ResponseEntity<AdvertResponse> create(AdvertRequest request, UserDetails userDetails) throws ResourceNotFoundException {
+    public ResponseEntity<DetailedAdvertResponse> create(AdvertRequest request, List<MultipartFile> images, UserDetails userDetails) throws ResourceNotFoundException {
         // Get the user from the user details
         User user = (User) userDetails;
 
-        // Get the advert type, country, city, and district based on the request
-        AdvertType advertType = typeService.getById(request.getAdvertTypeId());
-        Country country = countriesService.getById(request.getCountryId());
-        City city = cityService.getById(request.getCityId());
-        District district = districtService.getById(request.getDistrictId());
-
-        // Get the category based on the request
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found by id: " + request.getCategoryId()));
-
-        // Create a new advert entity and set its properties
         Advert advert = mapper.toEntity(request);
-        advert.setAdvertType(advertType);
-        advert.setUser(user);
-        advert.setCountry(country);
-        advert.setCity(city);
-        advert.setDistrict(district);
-        advert.setCategory(category);
+         setAdvertField(advert, user, request);
 
         // Save the advert to the repository
         Advert savedAdvert = repository.save(advert);
 
         // Get the category property keys and property values from the request
-        List<CategoryPropertyKey> propertyIds = category.getCategoryPropertyKeys();
+        List<CategoryPropertyKey> propertyIds = advert.getCategory().getCategoryPropertyKeys();
         List<String> valuesOfProperty = request.getPropertyvalues();
 
         // Save the property values for the advert
         for (int i = 0; i < propertyIds.size(); i++) {
             propertyValueService.saveValue(propertyIds.get(i), valuesOfProperty.get(i), savedAdvert);
         }
+
+        // Save the images for the advert
+        imageService.createImage(images, savedAdvert.getId());
+
 
         // Set the slug for the advert and save it again
         savedAdvert.setSlug(slugMaker(advert.getTitle(), savedAdvert.getId()));
@@ -389,22 +404,21 @@ public class AdvertService {
     }
 
 
-
-
     // NOT:A11 / updateForCustomer() ************************************************************
 
     /**
      * Updates an advert for a customer.
      *
-     * @param id         The ID of the advert to update.
-     * @param request    The request containing the updated advert data.
+     * @param id          The ID of the advert to update.
+     * @param request     The request containing the updated advert data.
      * @param userDetails The details of the authenticated user.
      * @return The response entity containing the updated advert.
      * @throws BuiltInFieldException     If the advert is a built-in advert and cannot be updated.
      * @throws NonDeletableException     If the user does not have permission to update the advert.
      * @throws ResourceNotFoundException If the category specified in the request does not exist.
      */
-    public ResponseEntity<AdvertResponse> updateForCustomer(Long id, AdvertRequestForUpdateByCustomer request, UserDetails userDetails) {
+
+    public ResponseEntity<DetailedAdvertResponse> updateForCustomer(Long id, AdvertRequestForUpdateByCustomer request, UserDetails userDetails) {
         Advert advert = getById(id);
 
         // Check if the advert is a built-in advert
@@ -421,42 +435,36 @@ public class AdvertService {
         }
 
         // Get the advert type, country, city, district, and category specified in the request
-        AdvertType advertType = typeService.getById(request.getAdvertTypeId());
-        Country country = countriesService.getById(request.getCountryId());
-        City city = cityService.getById(request.getCityId());
-        District district = districtService.getById(request.getDistrictId());
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found by id :" + request.getCategoryId()));
+
 
         // Update the advert with the new data
         mapper.toEntityForUpdateCustomer(advert, request);
-        advert.setAdvertType(advertType);
-        advert.setCountry(country);
-        advert.setCity(city);
-        advert.setDistrict(district);
+        setAdvertField(advert, user, request);
         advert.setStatusForAdvert(StatusForAdvert.PENDING);
-        advert.setCategory(category);
-        advert.setUser(advert.getUser());
         advert.setSlug(slugMaker(advert.getTitle(), id));
         Advert savedAdvert = repository.save(advert);
 
         // Update the property values of the advert
-        List<CategoryPropertyKey> propertyKeys = category.getCategoryPropertyKeys();
+        List<CategoryPropertyKey> propertyKeys = advert.getCategory().getCategoryPropertyKeys();
         List<String> valuesOfProperty = request.getPropertyvalues();
         List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream()
                 .map(CategoryPropertyValue::getId)
                 .toList();
+        //KEY SONRADAN EKLENDİĞİNDE HATA NOT TODO
         for (int i = 0; i < propertyKeys.size(); i++) {
-            propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), savedAdvert, propertyValuesIds.get(i));
-        }
+            if(propertyValuesIds.size()<i+1){
+                propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), savedAdvert);
+            }else{
+                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), savedAdvert, propertyValuesIds.get(i));
+
+            }
+         }
 
         // Log the update event
         logService.logMessage("Advert updated by :" + user.getUsername(), savedAdvert, user);
 
-        return ResponseEntity.ok(mapper.toResponse(savedAdvert));
+        return ResponseEntity.ok(mapper.toDetailedAdvertResponse(savedAdvert));
     }
-
-
 
 
     // NOT:A12 / updateForAdmin() ************************************************************
@@ -464,14 +472,14 @@ public class AdvertService {
     /**
      * Updates an advert with the given ID using the provided request data.
      *
-     * @param id The ID of the advert to update.
-     * @param request The request data for the update.
+     * @param id          The ID of the advert to update.
+     * @param request     The request data for the update.
      * @param userDetails The details of the user performing the update.
      * @return The response entity containing the updated advert.
-     * @throws BuiltInFieldException If the advert is a built-in field.
+     * @throws BuiltInFieldException     If the advert is a built-in field.
      * @throws ResourceNotFoundException If the category is not found by ID.
      */
-    public ResponseEntity<AdvertResponse> update(
+    public ResponseEntity<DetailedAdvertResponse> update(
             Long id,
             AdvertRequestForUpdateByAdmin request,
             UserDetails userDetails
@@ -487,45 +495,36 @@ public class AdvertService {
         }
 
         // Get the advert type, country, city, district, and category by ID
-        AdvertType advertType = typeService.getById(request.getAdvertTypeId());
-        Country country = countriesService.getById(request.getCountryId());
-        City city = cityService.getById(request.getCityId());
-        District district = districtService.getById(request.getDistrictId());
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found by id :" + request.getCategoryId()));
-
+        setAdvertField(advert, user, request);
         // Update the advert with the request data
         mapper.toEntityForUpdate(advert, request);
 
         // Set the advert type, country, city, district, category, and slug
-        advert.setAdvertType(advertType);
-        advert.setCountry(country);
-        advert.setCity(city);
-        advert.setDistrict(district);
-        advert.setCategory(category);
-        advert.setUser(advert.getUser());
+
         advert.setSlug(slugMaker(advert.getTitle(), id));
 
         // Save the updated advert
         Advert updatedAdvert = repository.save(advert);
 
         // Update the property values of the advert
-        List<CategoryPropertyKey> propertyKeys = category.getCategoryPropertyKeys();
+        List<CategoryPropertyKey> propertyKeys = advert.getCategory().getCategoryPropertyKeys();
         List<String> valuesOfProperty = request.getPropertyvalues();
         List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream().map(CategoryPropertyValue::getId).toList();
         for (int i = 0; i < propertyKeys.size(); i++) {
-            propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), updatedAdvert, propertyValuesIds.get(i));
-        }
+            if(propertyValuesIds.size()<i+1){
+                propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), updatedAdvert);
+            }else{
+                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), updatedAdvert, propertyValuesIds.get(i));
+
+            }        }
+
 
         // Log the update
         logService.logMessage("Advert updated by: " + user.getUsername(), updatedAdvert, user);
 
         // Return the response entity with the updated advert
-        return ResponseEntity.ok(mapper.toResponse(updatedAdvert));
+        return ResponseEntity.ok(mapper.toDetailedAdvertResponse(updatedAdvert));
     }
-
-
-
 
 
     // NOT:A13 / delete() ************************************************************
@@ -533,12 +532,12 @@ public class AdvertService {
     /**
      * Deletes an advert by its ID.
      *
-     * @param id           the ID of the advert to be deleted
+     * @param id          the ID of the advert to be deleted
      * @param userDetails the details of the user performing the deletion
      * @return a message indicating the success of the deletion
      * @throws BuiltInFieldException if the advert is a built-in field and cannot be deleted
      */
-    @Transactional
+    
     public String delete(Long id, UserDetails userDetails) {
         User user = (User) userDetails;
 
@@ -556,33 +555,9 @@ public class AdvertService {
         // Delete the advert
         repository.delete(advert);
 
-        //TODO LOG EKLENİYOR AMA SİLİNİYOR SİLİNMEZSE HATA VERİYOR BUNA BAK
-
-        // Delete associated values for null properties
-        propertyValueService.deleteValueForNull();
-
-        // Delete tour requests with null advert
-        tourRequestsRepository.deleteByAdvertNull();
-
-        // Delete logs with null advert
-        logService.deleteByAdvertNull();
-
-        // Delete favorites with null advert
-        favoritesRepository.deleteByAdvertNull();
-        //TODO AYNISINI images.forEach(image -> image.setAdvert(null));
-        //İÇİN DE YAP
 
         return "Advert deleted successfully. Title: " + advert.getTitle();
     }
-
-
-
-
-
-
-
-
-
 
 
     // NOT:A06 / getByAdminPage() ************************************************************ (ESKİ VE EKSİK OLAN)
@@ -594,12 +569,14 @@ public class AdvertService {
  */
 
 
-    /** !!!
+    /**
+     * !!!
      * This method created for getting category property keys of specific category !!! for category service
+     *
      * @param categoryId : represent category's id
      * @return : List of category property key
      */
-    public List<Advert> getAdvertsOfCategory(Long categoryId){
+    public List<Advert> getAdvertsOfCategory(Long categoryId) {
 
         return repository.findByCategory_Id(categoryId);
 

@@ -18,7 +18,13 @@ public class LogService {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogService.class);
 
     private final LogRepository logRepository;
-
+    /**
+     * Logs a message along with the advert and user information.
+     * Saves a log entity to the database.
+     * @param message the message to log
+     * @param advert  the advert object
+     * @param user    the user object
+     */
     public void logMessage(String message, Advert advert, User user) {
         LOGGER.info(message, advert, user);
 
@@ -33,8 +39,6 @@ public class LogService {
     }
 
 
-    public void  deleteByAdvertNull(){
-        logRepository.deleteByAdvertNull();
-    }
+
 
 }

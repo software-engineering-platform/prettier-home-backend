@@ -20,7 +20,7 @@ public class AdvertRequest extends AdvertRequestAbs {
 
    private List<String> propertyvalues;
 
-    private List<Integer> imageUrl;
+
 
 
 

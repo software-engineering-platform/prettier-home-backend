@@ -14,6 +14,7 @@ import com.ph.payload.resource.TourRequestResource;
 import com.ph.payload.resource.UserResource;
 import com.ph.repository.*;
 import com.ph.security.role.Role;
+import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class ReportService {
     private final TourRequestsRepository tourRequestsRepository;
     private final CategoryRepository categoryRepository;
     private final ReportMapper reportMapper;
+    private final MessageUtil messageUtil;
 
 
     // Not: get most popular properties
@@ -59,7 +61,7 @@ public class ReportService {
                                         Integer status,
                                         Long typeId, Long categoryId) {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new ValuesNotMatchException("startDate cannot be after endDate");
+            throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
         }
         LocalDateTime startDateTime;
         LocalDateTime endDateTime;
@@ -135,7 +137,7 @@ public class ReportService {
     // Not: get all tour request
     public ResponseEntity<?> getTourRequests(LocalDate startDate, LocalDate endDate, Status status) {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new ValuesNotMatchException("startDate cannot be after endDate");
+            throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
 
         }
         List<TourRequest> tourRequests = tourRequestsRepository.findForExcel(startDate, endDate, status);

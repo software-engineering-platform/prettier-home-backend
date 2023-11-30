@@ -52,7 +52,6 @@ public class TourRequestsController {
             @RequestParam(value = "size", defaultValue = "20", required = false) int size,
             @RequestParam(value = "sort", defaultValue = "advert_id", required = false) String sort,
             @RequestParam(value = "type", defaultValue = "asc", required = false) String type
-
     ) {
         return tourRequestsService.getAllTourRequestByCustomerAsPage(userDetails, page, size, sort, type);
     }
@@ -74,9 +73,10 @@ public class TourRequestsController {
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "size", defaultValue = "20", required = false) int size,
             @RequestParam(value = "sort", defaultValue = "advert_id", required = false) String sort,
-            @RequestParam(value = "type", defaultValue = "asc", required = false) String type
+            @RequestParam(value = "type", defaultValue = "asc", required = false) String type,
+             @RequestParam(value = "query",required = false) String query
     ) {
-        return tourRequestsService.getAllTourRequestByManagerAndAdminAsPage(page, size, sort, type);
+        return tourRequestsService.getAllTourRequestByManagerAndAdminAsPage(page, size, sort, type,query);
     }
 
     // Not :S03 - GetTourRequestByCustomerAsTourId() ********************************************************

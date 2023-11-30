@@ -20,34 +20,32 @@ public abstract class AdvertRequestAbs implements Serializable {
 
 
 
-    @NotNull(message = "Title cannot be null")
-    @Size(min=5, max=150, message = "Your username should be at least 5 chars")
+    @NotNull(message = "{validation.advert.notnull}")
+    @Size(min = 5, max = 150, message = "{validation.advert.size}")
     private String title;
 
     @Nullable
-    @Size( max=300, message = "Your description should be at max  300 chars")
+    @Size(max = 300, message = "{validation.advert.desc.size}")
     private String desc;
-
 
     private String location;
 
-
-    @NotNull(message = "Price cannot be null")
+    @NotNull(message = "{validation.advert.price.notnull}")
     private Double price;
 
-    @NotNull(message = "Advert Type ID cannot be null")
+    @NotNull(message = "{validation.advert.type.notnull}")
     private Long advertTypeId;
 
-    @NotNull(message = "Country ID cannot be null")
+    @NotNull(message = "{validation.advert.country.notnull}")
     private Long countryId;
 
-    @NotNull(message = "City ID cannot be null")
+    @NotNull(message = "{validation.advert.city.notnull}")
     private Long cityId;
 
-    @NotNull(message = "District ID cannot be null")
+    @NotNull(message = "{validation.advert.district.notnull}")
     private Long districtId;
 
-    @NotNull(message = "Category ID cannot be null")
+    @NotNull(message = "{validation.advert.category.notnull}")
     private Long categoryId;
 
 
