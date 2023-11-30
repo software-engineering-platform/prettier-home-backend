@@ -1,15 +1,13 @@
 package com.ph.domain.entities;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.ph.domain.abstracts.Entry;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -24,7 +22,7 @@ public class Category extends Entry implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true,length = 150)
+    @Column(nullable = false, unique = true, length = 150)
     private String title;
 
     @Column(nullable = false, unique = true, length = 200)
@@ -72,6 +70,7 @@ public class Category extends Entry implements Serializable {
                 ", active=" + active +
                 '}';
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,8 +84,8 @@ public class Category extends Entry implements Serializable {
         return Objects.hash(id, title, slug, icon, seq, builtIn, active, adverts, categoryPropertyKeys);
     }
 
-
     /**
      * Equals and HashCode - ToString methods end
      */
+
 }

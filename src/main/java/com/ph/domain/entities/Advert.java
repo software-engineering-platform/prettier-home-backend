@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
- @Entity
+@Entity
 @Getter
 @Setter
 @SuperBuilder
@@ -28,8 +28,8 @@ public class Advert extends Entry implements Serializable {
     @Column(nullable = false)
     private String title;
     @Column(length = 300)
-     private String description;
-    @Column( unique = true)
+    private String description;
+    @Column(unique = true)
     private String slug;
     @Column(nullable = false)
     private Double price;
@@ -40,8 +40,8 @@ public class Advert extends Entry implements Serializable {
     private boolean builtIn;
 
 
-    private boolean isActive=true;
-    private Integer viewCount=0;
+    private boolean isActive = true;
+    private Integer viewCount = 0;
     private String location;
 
     /**
@@ -72,20 +72,21 @@ public class Advert extends Entry implements Serializable {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY ,orphanRemoval = true)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CategoryPropertyValue> categoryPropertyValues;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<TourRequest> tourRequests;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Image> images;
 
     @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Log> logs;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY,orphanRemoval = true)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Favorite> favorites;
+
     /**
      * Entity relationships end
      */

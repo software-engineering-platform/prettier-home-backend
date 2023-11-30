@@ -53,7 +53,6 @@ public class UserController {
         return userService.changeAuthenticatedUserPassword(request, userDetails);
     }
 
-
     @GetMapping("/auth")
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     public ResponseEntity<?> getAuthenticatedUser(@AuthenticationPrincipal UserDetails userDetails) {
@@ -77,7 +76,6 @@ public class UserController {
         return userService.deleteAuthenticatedUser(userDetails);
     }
 
-
     @GetMapping("/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseEntity<?> getUsersPageable(
@@ -86,7 +84,6 @@ public class UserController {
     ) {
         return userService.getUsersPageable(query, pageable);
     }
-
 
     @GetMapping("/{userId}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
@@ -125,10 +122,10 @@ public class UserController {
     @PatchMapping("/photo")
     @PreAuthorize("hasAnyAuthority('ADMIN','CUSTOMER','MANAGER')")
     public ResponseEntity<?> updateUserStatus(
-            @RequestParam(name = "photo")  MultipartFile photo,
+            @RequestParam(name = "photo") MultipartFile photo,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-        return userService.updateUserPhoto( photo, userDetails);
+        return userService.updateUserPhoto(photo, userDetails);
     }
 
     @DeleteMapping("/photo")

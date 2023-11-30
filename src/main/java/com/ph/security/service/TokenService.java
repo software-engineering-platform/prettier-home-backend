@@ -97,5 +97,4 @@ public class TokenService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-
 }

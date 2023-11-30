@@ -15,7 +15,8 @@ import java.util.function.Supplier;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(toBuilder = true) //toBuilder()  yontemi ile mevcut nesnenin bir kopyasini olusturmak icin kullanilir. nesne uzerinden belirli kisimlar degisitirilerek yeni bir nesne olusturulabilir.
+@Builder(toBuilder = true)
+//toBuilder()  yontemi ile mevcut nesnenin bir kopyasini olusturmak icin kullanilir. nesne uzerinden belirli kisimlar degisitirilerek yeni bir nesne olusturulabilir.
 public class CategoryRequest implements Supplier<Category>, Serializable {
 
     @NotNull(message = "{validation.category.title.notnull}")
@@ -32,10 +33,8 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
     @NotNull(message = "{validation.category.is-active.notnull}")
     private Boolean active;
 
-
     @Override
     public Category get() {
-
         return Category.builder()
                 .title(getTitle())
                 .icon(getIcon())
@@ -43,6 +42,5 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
                 .active(getActive())
                 .build();
     }
-
 
 }

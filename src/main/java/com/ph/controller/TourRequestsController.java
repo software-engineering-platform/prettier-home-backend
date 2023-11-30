@@ -5,7 +5,6 @@ import com.ph.payload.request.TourRequestRequest;
 import com.ph.payload.response.TourRequestsFullResponse;
 import com.ph.payload.response.TourRequestsStatusResponse;
 import com.ph.payload.response.TourRequestsResponse;
-import com.ph.service.LogService;
 import com.ph.service.TourRequestsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,22 +22,25 @@ public class TourRequestsController {
 
     private final TourRequestsService tourRequestsService;
 
-
     // Not :S05 - Save() *************************************************************************
     // http://localhost:8080/tour-requests
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PostMapping()
-    public ResponseEntity<?> save(@RequestBody @Valid TourRequestRequest request,
-                                  @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> save(
+            @RequestBody @Valid TourRequestRequest request,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         return tourRequestsService.save(request, userDetails);
     }
 
     // Not :S06 - update() ****************************************************************************
     // http://localhost:8080/tour-requests/2/auth
-
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PutMapping("/{id}/auth")
-    public ResponseEntity<?> update(@PathVariable(name="id") Long tourId, @RequestBody @Valid TourRequestRequest request) {
+    public ResponseEntity<?> update(
+            @PathVariable(name = "id") Long tourId,
+            @RequestBody @Valid TourRequestRequest request
+    ) {
         return tourRequestsService.update(tourId, request);
     }
 
@@ -74,9 +76,9 @@ public class TourRequestsController {
             @RequestParam(value = "size", defaultValue = "20", required = false) int size,
             @RequestParam(value = "sort", defaultValue = "advert_id", required = false) String sort,
             @RequestParam(value = "type", defaultValue = "asc", required = false) String type,
-             @RequestParam(value = "query",required = false) String query
+            @RequestParam(value = "query", required = false) String query
     ) {
-        return tourRequestsService.getAllTourRequestByManagerAndAdminAsPage(page, size, sort, type,query);
+        return tourRequestsService.getAllTourRequestByManagerAndAdminAsPage(page, size, sort, type, query);
     }
 
     // Not :S03 - GetTourRequestByCustomerAsTourId() ********************************************************
@@ -84,7 +86,9 @@ public class TourRequestsController {
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @GetMapping("/{id}/auth")
     public ResponseEntity<TourRequestsFullResponse> getTourRequestByCustomerId(
-            @AuthenticationPrincipal UserDetails userDetails, @PathVariable(name="id") Long tourId) {
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable(name = "id") Long tourId
+    ) {
         return tourRequestsService.getTourRequestByCustomerId(userDetails, tourId);
     }
 
@@ -92,7 +96,7 @@ public class TourRequestsController {
     // http://localhost:8080/tour-requests/7/admin
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping("/{id}/admin")
-    public ResponseEntity<TourRequestsFullResponse> getTourRequestByManagerAndAdminId(@PathVariable(name="id") Long tourId) {
+    public ResponseEntity<TourRequestsFullResponse> getTourRequestByManagerAndAdminId(@PathVariable(name = "id") Long tourId) {
         return tourRequestsService.getTourRequestByManagerAndAdminId(tourId);
 
     }
@@ -102,7 +106,10 @@ public class TourRequestsController {
 
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PatchMapping("/{id}/cancel")
-    public ResponseEntity<TourRequestsResponse> cancelByCustomerAsTourId(@PathVariable(name="id") Long tourId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<TourRequestsResponse> cancelByCustomerAsTourId(
+            @PathVariable(name = "id") Long tourId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         return tourRequestsService.cancelByCustomerAsTourId(tourId, userDetails);
     }
 
@@ -110,7 +117,7 @@ public class TourRequestsController {
     // http://localhost:8080/tour-requests/6/approve
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PatchMapping("/{id}/approve")
-    public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(@PathVariable(name="id") Long tourId) {
+    public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(@PathVariable(name = "id") Long tourId) {
         return tourRequestsService.approveByCustomerAsTourId(tourId);
     }
 
@@ -118,9 +125,8 @@ public class TourRequestsController {
     // http://localhost:8080/tour-requests/6/decline
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PatchMapping("/{id}/decline")
-    public ResponseEntity<TourRequestsStatusResponse> declineByCustomerAsTourId(@PathVariable(name="id") Long tourId) {
+    public ResponseEntity<TourRequestsStatusResponse> declineByCustomerAsTourId(@PathVariable(name = "id") Long tourId) {
         return tourRequestsService.declinedByCustomerAsTourId(tourId);
     }
-
 
 }

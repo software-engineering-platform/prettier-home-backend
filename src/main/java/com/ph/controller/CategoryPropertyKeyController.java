@@ -21,9 +21,10 @@ public class CategoryPropertyKeyController {
     //Not: save() ************************************************************C08
     @PostMapping("/{categoryId}/properties") // http://localhost:8080/categoriesKey/1/properties
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public ResponseEntity<CategoryPropertyKeyResponse> save(@Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest,
-                                                        @PathVariable Long categoryId) {
-
+    public ResponseEntity<CategoryPropertyKeyResponse> save(
+            @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest,
+            @PathVariable Long categoryId
+    ) {
         return propertyKeyService.save(propertyKeyRequest, categoryId);
     }
 
@@ -31,7 +32,6 @@ public class CategoryPropertyKeyController {
     @GetMapping("/{categoryId}/properties") // http://localhost:8080/categoriesKey/1/properties
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<List<CategoryPropertyKeyResponse>> getPropertyKeysOfCategory(@PathVariable Long categoryId) {
-
         //return ResponseEntity.ok(propertyKeyService.getPropertyKeysOfCategory(categoryId));
         return propertyKeyService.getPropertyKeysOfCategory(categoryId);
     }
@@ -47,8 +47,10 @@ public class CategoryPropertyKeyController {
     // Not: updatePropertyKey() *************************************** C09
     @PutMapping("/properties/{propertyId}") // http://localhost:8080/categoriesKey/properties/1
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public ResponseEntity<CategoryPropertyKeyResponse> updatePropertyKey(@PathVariable Long propertyId,
-                                                       @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest) {
+    public ResponseEntity<CategoryPropertyKeyResponse> updatePropertyKey(
+            @PathVariable Long propertyId,
+            @Valid @RequestBody CategoryPropertyKeyRequest propertyKeyRequest
+    ) {
 
         return propertyKeyService.updatePropertyKey(propertyId, propertyKeyRequest);
     }

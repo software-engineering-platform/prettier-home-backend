@@ -2,6 +2,7 @@ package com.ph.payload.response;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -9,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class CategoryResponse {
+public class CategoryResponse implements Serializable {
 
     private Long id;
     private String title;
@@ -19,4 +20,5 @@ public class CategoryResponse {
     private boolean builtIn;
     private boolean active;
     private List<CategoryPropertyKeyResponse> categoryPropertyKeysResponse;
+
 }

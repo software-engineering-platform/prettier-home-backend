@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
+
     private final ImageMapper imageMapper;
 
     public LoginResponse toLoginResponse(User user, String token) {
@@ -47,7 +48,6 @@ public class UserMapper {
                 .phone(user.getPhone())
                 .build();
     }
-
 
     public ContactResponse toContactResponse(Contact contact) {
         return ContactResponse.builder()

@@ -1,15 +1,14 @@
 package com.ph.controller;
 
- import com.ph.payload.response.ImageResponse;
+import com.ph.payload.response.ImageResponse;
 import com.ph.service.ImageService;
-
- import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
- import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-  import java.util.List;
+import java.util.List;
 
 @RestController
 @RequestMapping("/images")
@@ -19,21 +18,18 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping
-    public ResponseEntity<?> uploadImage(@RequestParam("images")List<MultipartFile> images,
-                                       @RequestParam("advert") Long advertId ){
-
-
-
-      ImageResponse response = imageService.createImage(images, advertId );
-        return ResponseEntity.status(HttpStatus.OK)
-                 .body(response);
+    public ResponseEntity<?> uploadImage(
+            @RequestParam("images") List<MultipartFile> images,
+            @RequestParam("advert") Long advertId
+    ) {
+        ImageResponse response = imageService.createImage(images, advertId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getImageById(@PathVariable Long id) {
-
-        return   imageService.getImageById(id);
+        return imageService.getImageById(id);
     }
 
     @GetMapping
@@ -49,19 +45,16 @@ public class ImageController {
     }
 
 
-@PutMapping()
-public ImageResponse updateImage(@RequestParam Long imgId,@RequestParam Long advertId) {
-
-  return  imageService.updateImage(imgId,advertId);
-
-
-}
+    @PutMapping()
+    public ImageResponse updateImage(@RequestParam Long imgId, @RequestParam Long advertId) {
+        return imageService.updateImage(imgId, advertId);
+    }
 
 
-@GetMapping("/advert/{id}")
+    @GetMapping("/advert/{id}")
+    public ResponseEntity<List<ImageResponse>> getAllImagesByAdvertId(@PathVariable Long id) {
+        List<ImageResponse> responses = imageService.getAllImagesByAdvertId(id);
+        return ResponseEntity.ok(responses);
+    }
 
-public ResponseEntity<List<ImageResponse>> getAllImagesByAdvertId(@PathVariable Long id) {
-    List<ImageResponse> responses = imageService.getAllImagesByAdvertId(id);
-    return ResponseEntity.ok(responses);
-}
 }

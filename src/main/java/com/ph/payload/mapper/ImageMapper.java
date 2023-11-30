@@ -20,7 +20,7 @@ public class ImageMapper {
                 .name(savedImage.getName())
                 .type(savedImage.getType())
                 .featured(savedImage.isFeatured())
-                 .data(encodeImage(ImageUtil.decompressImage(savedImage.getData())))
+                .data(encodeImage(ImageUtil.decompressImage(savedImage.getData())))
                 .advertId(savedImage.getAdvert().getId())
                 .build();
     }
@@ -36,10 +36,10 @@ public class ImageMapper {
     }
 
 
-    public ProfilePhoto toProfilePhoto(MultipartFile photo){
+    public ProfilePhoto toProfilePhoto(MultipartFile photo) {
         ProfilePhoto profilePhoto;
         try {
-            profilePhoto=   ProfilePhoto.builder()
+            profilePhoto = ProfilePhoto.builder()
                     .data(ImageUtil.compressImage(photo.getBytes()))
                     .name(photo.getOriginalFilename())
                     .type(photo.getContentType())
@@ -50,14 +50,9 @@ public class ImageMapper {
         return profilePhoto;
     }
 
-
-
-
     private String encodeImage(byte[] imageData) {
         return Base64.getEncoder().encodeToString(imageData);
     }
-
-
 
 
 }

@@ -1,14 +1,10 @@
 package com.ph.payload.request;
 
- import com.ph.payload.request.abstracts.AdvertRequestAbs;
- import jakarta.annotation.Nullable;
- import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import com.ph.payload.request.abstracts.AdvertRequestAbs;
 import lombok.*;
- import lombok.experimental.SuperBuilder;
- import org.springframework.boot.context.properties.bind.DefaultValue;
+import lombok.experimental.SuperBuilder;
 
- import java.util.List;
+import java.util.List;
 
 @Setter
 @Getter
@@ -17,12 +13,6 @@ import lombok.*;
 @NoArgsConstructor
 public class AdvertRequest extends AdvertRequestAbs {
 
-
-   private List<String> propertyvalues;
-
-
-
-
-
+    private List<String> propertyValues;
 
 }

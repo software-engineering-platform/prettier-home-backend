@@ -48,4 +48,5 @@ public abstract class Entry implements Serializable {
                 ", updatedAt=" + updatedAt +
                 '}';
     }
+
 }

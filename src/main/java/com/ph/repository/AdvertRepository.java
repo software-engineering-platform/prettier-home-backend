@@ -19,7 +19,9 @@ import java.util.Optional;
 @Repository
 public interface AdvertRepository extends JpaRepository<Advert, Long> {
     boolean existsByUser_Id(Long id);
+
     Advert findByImages_Id(Long id);
+
     @Query("""
             select a from Advert a
             where (a.createdAt between ?1 and ?2) and (?3 is null or a.category.id = ?3) and (?4 is null or a.advertType.id = ?4) and (?5 is null or a.statusForAdvert = ?5)""")
@@ -29,29 +31,29 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
                               @Nullable StatusForAdvert statusForAdvert);
 
     //Not: AÇIKLAMASI ALTTAKİ NOTTA BULUNMAKTADIR
-     /*
-    NOT: AÇIKLAMA
-    SELECT a FROM Advert a: Bu kısım, Advert sınıfından (a takma adıyla) nesneleri seçiyoruz. Yani sorgu sonucu Advert türünden nesneleri içeren bir liste veya sayfa elde edeceğiz.
 
-"(:query IS NULL OR LOWER(a.title) LIKE LOWER(CONCAT('%', :query, '%'))) ": Bu kısım, :query parametresine dayalı bir başlık (title) filtresi ekler. Eğer query null ise, bu koşul dikkate alınmaz. Aksi takdirde, başlık içinde LIKE kullanılarak case-insensitive (LOWER fonksiyonu ile) bir arama yapılır.
+    //    NOT: AÇIKLAMA
+    //    SELECT a FROM Advert a: Bu kısım, Advert sınıfından (a takma adıyla) nesneleri seçiyoruz. Yani sorgu sonucu Advert türünden nesneleri içeren bir liste veya sayfa elde edeceğiz.
 
-"AND (:categoryId IS NULL OR a.category.id = :categoryId)": Bu kısım, :categoryId parametresine dayalı bir kategori filtresi ekler. Eğer categoryId null ise, bu koşul dikkate alınmaz. Aksi takdirde, kategori ID'sine göre eşleşen ilanlar seçilir.
+    //"(:query IS NULL OR LOWER(a.title) LIKE LOWER(CONCAT('%', :query, '%'))) ": Bu kısım, :query parametresine dayalı bir başlık (title) filtresi ekler. Eğer query null ise, bu koşul dikkate alınmaz. Aksi takdirde, başlık içinde LIKE kullanılarak case-insensitive (LOWER fonksiyonu ile) bir arama yapılır.
+    //
+    //"AND (:categoryId IS NULL OR a.category.id = :categoryId)": Bu kısım, :categoryId parametresine dayalı bir kategori filtresi ekler. Eğer categoryId null ise, bu koşul dikkate alınmaz. Aksi takdirde, kategori ID'sine göre eşleşen ilanlar seçilir.
+    //
+    //"AND (:advertTypeId IS NULL OR a.advertType.id = :advertTypeId)": Bu kısım, :advertTypeId parametresine dayalı bir reklam türü filtresi ekler. Eğer advertTypeId null ise, bu koşul dikkate alınmaz. Aksi takdirde, reklam türü ID'sine göre eşleşen ilanlar seçilir.
+    //
+    //"AND (:priceStart IS NULL OR a.price >= :priceStart)": Bu kısım, :priceStart parametresine dayalı bir fiyat başlangıcı filtresi ekler. Eğer priceStart null ise, bu koşul dikkate alınmaz. Aksi takdirde, belirtilen fiyat başlangıcından yüksek veya eşit fiyatlı ilanlar seçilir.
+    //
+    //"AND (:priceEnd IS NULL OR a.price <= :priceEnd)": Bu kısım, :priceEnd parametresine dayalı bir fiyat bitişi filtresi ekler. Eğer priceEnd null ise, bu koşul dikkate alınmaz. Aksi takdirde, belirtilen fiyat bitişinden düşük veya eşit fiyatlı ilanlar seçilir.
+    //
+    //"AND (:status IS NULL OR a.status = :status)": Bu kısım, :status parametresine dayalı bir durum filtresi ekler. Eğer status null ise, bu koşul dikkate alınmaz. Aksi takdirde, belirtilen duruma sahip ilanlar seçilir.
+    //
+    //Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nesnesi kullanılır.
 
-"AND (:advertTypeId IS NULL OR a.advertType.id = :advertTypeId)": Bu kısım, :advertTypeId parametresine dayalı bir reklam türü filtresi ekler. Eğer advertTypeId null ise, bu koşul dikkate alınmaz. Aksi takdirde, reklam türü ID'sine göre eşleşen ilanlar seçilir.
+    //    NOT: AÇIKLAMA
+    //      "AND (:categoryId IS NULL OR a.category.id = :categoryId) " +
+    //            "AND (:advertTypeId IS NULL OR a.advertType.id = :advertTypeId) " +
+    //    BİR ÖNCEKİ HALİ
 
-"AND (:priceStart IS NULL OR a.price >= :priceStart)": Bu kısım, :priceStart parametresine dayalı bir fiyat başlangıcı filtresi ekler. Eğer priceStart null ise, bu koşul dikkate alınmaz. Aksi takdirde, belirtilen fiyat başlangıcından yüksek veya eşit fiyatlı ilanlar seçilir.
-
-"AND (:priceEnd IS NULL OR a.price <= :priceEnd)": Bu kısım, :priceEnd parametresine dayalı bir fiyat bitişi filtresi ekler. Eğer priceEnd null ise, bu koşul dikkate alınmaz. Aksi takdirde, belirtilen fiyat bitişinden düşük veya eşit fiyatlı ilanlar seçilir.
-
-"AND (:status IS NULL OR a.status = :status)": Bu kısım, :status parametresine dayalı bir durum filtresi ekler. Eğer status null ise, bu koşul dikkate alınmaz. Aksi takdirde, belirtilen duruma sahip ilanlar seçilir.
-
-Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nesnesi kullanılır.
-     */
-    /*NOT: AÇIKLAMA
-      "AND (:categoryId IS NULL OR a.category.id = :categoryId) " +
-            "AND (:advertTypeId IS NULL OR a.advertType.id = :advertTypeId) " +
-            BİR ÖNCEKİ HALİ
-     */
     @Query("select a from Advert a where " +
             // q parametresi boş değilse, reklamın başlığı veya açıklamasında arama yapalım
             "(:q is null or :q = '' or lower(a.title) like lower(concat('%', :q, '%')) or lower(a.description) like lower(concat('%', :q, '%'))) and " +
@@ -95,26 +97,26 @@ Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nes
                               Pageable pageable);
 
 
-//    @Query("select a from Advert a where " +
-//            // category_id parametresi boş değilse, reklamın kategorisini kontrol edelim
-//            "(:category is null or a.category.id = :category) and " +
-//            // advert_type_id parametresi boş değilse, reklamın tipini kontrol edelim
-//            "(:advert_type_id is null or a.advertType.id = :advert_type_id) and " +
-//            // price_start ve price_end parametreleri boş değilse, reklamın fiyatını kontrol edelim
-//            "(:start_date is null or a.createdAt >= :start_date) and " +
-//            "(:end_date is null or a.createdAt <= :end_date) and " +
-//       //  status parametresi boş değilse, reklamın durumunu kontrol edelim
-//            "(:status is null or a.statusForAdvert = :status)" )
-//
-//    List<Advert> findForExcel(
-//            @Param("start_date") LocalDateTime startDate,
-//            @Param("end_date") LocalDateTime endDate,
-//            @Param("status") StatusForAdvert status,
-//            @Param("advert_type_id") Long advertTypeId,
-//            @Param("category") Long categoryId
-//
-//
-//    );
+    //    @Query("select a from Advert a where " +
+    //            // category_id parametresi boş değilse, reklamın kategorisini kontrol edelim
+    //            "(:category is null or a.category.id = :category) and " +
+    //            // advert_type_id parametresi boş değilse, reklamın tipini kontrol edelim
+    //            "(:advert_type_id is null or a.advertType.id = :advert_type_id) and " +
+    //            // price_start ve price_end parametreleri boş değilse, reklamın fiyatını kontrol edelim
+    //            "(:start_date is null or a.createdAt >= :start_date) and " +
+    //            "(:end_date is null or a.createdAt <= :end_date) and " +
+    //       //  status parametresi boş değilse, reklamın durumunu kontrol edelim
+    //            "(:status is null or a.statusForAdvert = :status)" )
+    //
+    //    List<Advert> findForExcel(
+    //            @Param("start_date") LocalDateTime startDate,
+    //            @Param("end_date") LocalDateTime endDate,
+    //            @Param("status") StatusForAdvert status,
+    //            @Param("advert_type_id") Long advertTypeId,
+    //            @Param("category") Long categoryId
+    //
+    //
+    //    );
 
 
     //Start: categoryService için yazıldı
@@ -134,12 +136,10 @@ Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nes
     public List<Advert> findPopularAdverts(@Param("limit") Integer limit);
 
     //NOT: ESKİ QUERY (EKSİK)
-/*
-//    @Query("""
-//            select a from Advert a
-//            where upper(a.title) like upper(concat('%', ?1, '%')) or upper(a.description) like upper(concat('%', ?1, '%'))""")
-//    Page<Advert> searchAdvertByPage(@Nullable String query , Pageable pageable);
- */
+    //    @Query("""
+    //            select a from Advert a
+    //            where upper(a.title) like upper(concat('%', ?1, '%')) or upper(a.description) like upper(concat('%', ?1, '%'))""")
+    //    Page<Advert> searchAdvertByPage(@Nullable String query , Pageable pageable);
 
 
     Page<Advert> findByUser_Id(Long id, Pageable pageable);
@@ -156,4 +156,5 @@ Pageable pageable: Sayfalama ve sıralama işlemlerini yapmak için Pageable nes
      */
     @Query("select a from Advert a where a.builtIn = ?1")
     List<Advert> findAllByBuiltIn(boolean b);
+
 }

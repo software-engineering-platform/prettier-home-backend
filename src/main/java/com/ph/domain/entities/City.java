@@ -59,12 +59,11 @@ public class City implements Serializable {
         return "City{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-               /* ", adverts=" + adverts +
-                ", country=" + country +
-                ", districts=" + districts +*/
                 '}';
     }
+
     /**
      * Equals and HashCode - ToString methods end
      */
+
 }

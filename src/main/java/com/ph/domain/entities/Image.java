@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+
 @Entity
 @Getter
 @Setter
@@ -31,16 +32,9 @@ public class Image implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "advert_id")
     private Advert advert;
+
     /**
      * Entity relationships end
-     */
-
-    /**
-     * Equals and HashCode - ToString methods start
-     */
-
-    /**
-     * Equals and HashCode - ToString methods end
      */
 
 }

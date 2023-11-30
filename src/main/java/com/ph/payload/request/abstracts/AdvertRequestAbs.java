@@ -4,21 +4,18 @@ import jakarta.annotation.Nullable;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 
+@Getter
+@Setter
 @SuperBuilder
 @MappedSuperclass
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class AdvertRequestAbs implements Serializable {
-
-
 
     @NotNull(message = "{validation.advert.notnull}")
     @Size(min = 5, max = 150, message = "{validation.advert.size}")
@@ -47,8 +44,5 @@ public abstract class AdvertRequestAbs implements Serializable {
 
     @NotNull(message = "{validation.advert.category.notnull}")
     private Long categoryId;
-
-
-
 
 }

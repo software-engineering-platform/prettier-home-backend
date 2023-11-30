@@ -20,7 +20,6 @@ public class ContactRequest implements Supplier<Contact>, Serializable {
     private String email;
     private String message;
 
-
     @Override
     public Contact get() {
         return Contact.builder()
@@ -30,4 +29,5 @@ public class ContactRequest implements Supplier<Contact>, Serializable {
                 .message(getMessage())
                 .build();
     }
+
 }

@@ -12,4 +12,5 @@ public class AdvertTypeRequest {
 
     @NotNull(message = "{validation.advert.notnull}")
     private String title;
+
 }

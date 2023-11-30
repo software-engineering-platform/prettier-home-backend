@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 public class AdvertTypeService {
 
     private final AdvertTypeRepository repository;
-
     private final AdvertMapper mapper;
     private final MessageUtil messageUtil;
 
@@ -57,6 +56,7 @@ public class AdvertTypeService {
     /*
     !!! HELPER METHOD START .
      */
+
     /**
      * Retrieves the AdvertType with the specified id.
      *
@@ -76,6 +76,7 @@ public class AdvertTypeService {
     /*
     !!! Get AdvertType by id method start.
      */
+
     /**
      * Retrieves the AdvertType by its id.
      *
@@ -122,6 +123,7 @@ public class AdvertTypeService {
     /*
     !!! Delete AdvertType method start.
      */
+
     /**
      * Deletes an AdvertType by its ID.
      *

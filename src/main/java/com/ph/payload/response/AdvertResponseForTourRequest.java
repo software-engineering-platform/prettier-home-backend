@@ -1,23 +1,15 @@
 package com.ph.payload.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ph.domain.entities.*;
-import com.ph.domain.enums.Status;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.List;
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Data
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class AdvertResponseForTourRequest implements Serializable {
-
 
     private Long id;
     private String title;
@@ -26,5 +18,6 @@ public class AdvertResponseForTourRequest implements Serializable {
     private CountryResponse country;
     private CityResponse city;
     private DistrictResponse district;
-  /*  private List<Image> images;*/
+//    private List<Image> images;
+
 }

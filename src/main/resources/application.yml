@@ -27,5 +27,5 @@ spring:
 export:
   folder:
     path:
-      xls: ${user.home}/Desktop/.excelExport
+      xls: ${user.home}/Desktop/.prettierReports
 

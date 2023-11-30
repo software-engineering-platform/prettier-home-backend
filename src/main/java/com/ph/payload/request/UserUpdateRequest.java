@@ -25,8 +25,10 @@ public class UserUpdateRequest implements Consumer<User>, Serializable {
     private String phone;
 
     @Size(min = 8, max = 30, message = "{validation.password.size}")
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
-            message = "{validation.password.pattern}")
+    @Pattern(
+            regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
+            message = "{validation.password.pattern}"
+    )
     private String password;
 
     @Email(message = "{validation.email.pattern}")
@@ -39,6 +41,5 @@ public class UserUpdateRequest implements Consumer<User>, Serializable {
         if (phone != null) user.setPhone(phone);
         if (email != null) user.setEmail(email);
     }
-
 
 }

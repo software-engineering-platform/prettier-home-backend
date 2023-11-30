@@ -11,5 +11,4 @@ import java.util.List;
 public interface DistrictsRepository extends JpaRepository<District, Long> {
     List<District> findByCity_Id(Long id);
 
-
 }

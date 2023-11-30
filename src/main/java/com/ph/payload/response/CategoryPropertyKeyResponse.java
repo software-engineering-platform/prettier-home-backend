@@ -1,14 +1,15 @@
 package com.ph.payload.response;
 
-import com.ph.domain.entities.Category;
 import lombok.*;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class CategoryPropertyKeyResponse {
+public class CategoryPropertyKeyResponse implements Serializable {
 
     private Long id;
     private String name;

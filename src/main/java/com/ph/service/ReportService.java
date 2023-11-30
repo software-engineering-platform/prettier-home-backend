@@ -30,7 +30,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReportService {
 
-
     private final ExcelWriteService excelWriteService;
     private final AdvertRepository advertRepository;
     private final UserRepository userRepository;
@@ -42,15 +41,13 @@ public class ReportService {
 
 
     // Not: get most popular properties
-
-
-    public ResponseEntity<?> getMostPopularProperties(Integer amount,String path) {
+    public ResponseEntity<?> getMostPopularProperties(Integer amount) {
 
         List<Advert> popularAdverts = advertRepository.findPopularAdverts(amount);
 
         List<AdvertResource> advertResources = popularAdverts.stream().map(reportMapper::mapToResource).toList();
 
-        excelWriteService.writeToExcel(advertResources, "MostPopularProperties", "MostPopularProperties",path);
+        excelWriteService.writeToExcel(advertResources, "MostPopularProperties", "MostPopularProperties");
 
         return ResponseEntity.ok(advertResources);
 
@@ -59,23 +56,22 @@ public class ReportService {
     // Not: get  advert
     public ResponseEntity<?> getAdverts(LocalDate startDate, LocalDate endDate,
                                         Integer status,
-                                        Long typeId, Long categoryId
-    ,String path) {
+                                        Long typeId, Long categoryId) {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
         }
         LocalDateTime startDateTime;
         LocalDateTime endDateTime;
-        if (startDate != null){
-            startDateTime=   startDate.atTime(LocalTime.MIN);
-        } else  {
+        if (startDate != null) {
+            startDateTime = startDate.atTime(LocalTime.MIN);
+        } else {
 
-            startDateTime=   LocalDateTime.of(1900, 1, 1, 0, 0);
+            startDateTime = LocalDateTime.of(1900, 1, 1, 0, 0);
         }
-        if (endDate != null){
-            endDateTime=  endDate.atTime(LocalTime.MIN);
-        }else{
-            endDateTime=  LocalDateTime.of(2400, 1, 1, 0, 0);
+        if (endDate != null) {
+            endDateTime = endDate.atTime(LocalTime.MIN);
+        } else {
+            endDateTime = LocalDateTime.of(2400, 1, 1, 0, 0);
         }
 
         StatusForAdvert statusForAdvert = null;
@@ -88,30 +84,25 @@ public class ReportService {
         }
 
 
-//        List<Advert> adverts = advertRepository.findForExcel( startDateTime, endDateTime, statusForAdvert, typeId, categoryId);
-
+        // List<Advert> adverts = advertRepository.findForExcel( startDateTime, endDateTime, statusForAdvert, typeId, categoryId);
         List<Advert> adverts =
                 advertRepository.
-                        findForExcel(startDateTime,
+                        findForExcel(
+                                startDateTime,
                                 endDateTime,
                                 categoryId,
                                 typeId,
                                 statusForAdvert
-                                );
-
-
-
+                        );
 
         List<AdvertResource> advertResources = adverts.stream().map(reportMapper::mapToResource).toList();
-        excelWriteService.writeToExcel(advertResources, "Adverts", "Adverts", path);
-
+        excelWriteService.writeToExcel(advertResources, "Adverts", "Adverts");
 
         return ResponseEntity.ok(Map.of("advertCount", adverts.size()));
     }
 
 
     // Not: get all
-
     public ResponseEntity<?> getStatistics() {
         Long totalAdverts = advertRepository.count();
         Long totalUsers = userRepository.count();
@@ -124,22 +115,20 @@ public class ReportService {
 
 
     // Not: get all users
-
-    public ResponseEntity<?> getUsersByRole(String role,String path) {
+    public ResponseEntity<?> getUsersByRole(String role) {
         List<User> users = userRepository.findByRole(Role.valueOf(role.toUpperCase(Locale.US)));
 
         List<UserResource> userResources = users.stream().map(reportMapper::toUserResource).toList();
 
-        excelWriteService.writeToExcel(userResources, "Users", role,path);
+        excelWriteService.writeToExcel(userResources, "Users", role);
         return ResponseEntity.ok(Map.of("userCount", users.size()));
     }
 
 
     // Not: get all tour request
-    public ResponseEntity<?> getTourRequests(LocalDate startDate, LocalDate endDate, Status status,String path) {
+    public ResponseEntity<?> getTourRequests(LocalDate startDate, LocalDate endDate, Status status) {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
-
         }
         List<TourRequest> tourRequests = tourRequestsRepository.findForExcel(startDate, endDate, status);
         List<TourRequestResource> tourRequestsResource = tourRequests
@@ -147,12 +136,9 @@ public class ReportService {
                 .map(reportMapper::toTourRequestResource)
                 .toList();
 
-
-        excelWriteService.writeToExcel(tourRequestsResource, "TourRequests", "TourRequests",path);
+        excelWriteService.writeToExcel(tourRequestsResource, "TourRequests", "TourRequests");
 
         return ResponseEntity.ok(Map.of("tourRequestCount", tourRequests.size()));
-
     }
-
 
 }

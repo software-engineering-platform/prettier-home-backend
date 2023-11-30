@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
                 ),
                 contact = @Contact(
                         name = "TechPro_Group_II",
-                        url = "https://github.com/"//This will change into website url
+                        url = "https://github.com/Real-Estate-Internship-Project/prettierHome-backend"
                 )
         ),
         servers = {

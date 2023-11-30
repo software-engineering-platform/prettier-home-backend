@@ -39,10 +39,10 @@ public class Log implements Serializable {
     @NotNull
     @CreationTimestamp
     private LocalDateTime createdAt;
+
     /**
      * Entity relationships end
      */
-
 
     /**
      * Equals and HashCode - ToString methods start
@@ -74,4 +74,5 @@ public class Log implements Serializable {
     /**
      * Equals and HashCode - ToString methods end
      */
+
 }

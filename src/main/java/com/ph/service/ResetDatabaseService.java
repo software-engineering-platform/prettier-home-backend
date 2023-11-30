@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ResetDatabaseService {
 
-
     private final AdvertRepository advertRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
@@ -24,7 +23,6 @@ public class ResetDatabaseService {
     public ResponseEntity<String> resetDatabase() {
 
         // Not: Constraint: Can not delete  builtIn objects
-
         // delete all not builtIn User and related objects
         List<User> users = userRepository.findAllByBuiltIn(false);
         users.forEach(userRepository::delete);
@@ -37,9 +35,7 @@ public class ResetDatabaseService {
         List<Advert> adverts = advertRepository.findAllByBuiltIn(false);
         adverts.forEach(advertRepository::delete);
 
-
         return ResponseEntity.ok("The database has successfully been reset.");
-
-
     }
+
 }

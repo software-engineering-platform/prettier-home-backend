@@ -11,7 +11,6 @@ import com.ph.repository.FavoritesRepository;
 import com.ph.repository.TourRequestsRepository;
 import com.ph.repository.UserRepository;
 import com.ph.security.role.Role;
-import com.ph.utils.ImageUtil;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,6 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class UserService {
+
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final MessageUtil messageUtil;
@@ -41,8 +40,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ProfilePhotoService profilePhotoService;
     private final FavoritesRepository favoritesRepository;
-    private final AdvertService advertService;
-    private final TourRequestsRepository tourRequestsRepository;
+
     /**
      * This method is used to retrieve user for login process and some other methods.
      * Retrieve a user by their email address.
@@ -130,13 +128,14 @@ public class UserService {
         // Return a ResponseEntity with a status of OK
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
     /**
      * Change the password of the authenticated user.
      *
-     * @param request The change password request.
+     * @param request     The change password request.
      * @param userDetails The details of the authenticated user.
      * @return A response entity indicating the success of the password change.
-     * @throws BuiltInFieldException If the user is a built-in user.
+     * @throws BuiltInFieldException   If the user is a built-in user.
      * @throws ValuesNotMatchException If the current password provided does not match the user's password.
      */
     public ResponseEntity<?> changeAuthenticatedUserPassword(ChangePasswordRequest request, UserDetails userDetails) {
@@ -251,7 +250,7 @@ public class UserService {
         if (authenticatedUser.getRole().name().equals("MANAGER") && !foundUser.getRole().name().equals("CUSTOMER")) {
             // Return bad request response
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    Map.of("message",messageUtil.getMessage("error.user.update.unauthorized")));
+                    Map.of("message", messageUtil.getMessage("error.user.update.unauthorized")));
         }
         // Update the found user with the request data
         User updatedUser = updateUser(foundUser, request);
@@ -276,7 +275,7 @@ public class UserService {
         if (authenticatedUser.getRole().name().equals("MANAGER") && !foundUser.getRole().name().equals("CUSTOMER")) {
             // Return a bad request response
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message",messageUtil.getMessage("error.user.delete.unauthorized")));
+                    .body(Map.of("message", messageUtil.getMessage("error.user.delete.unauthorized")));
         }
         // Check if the found user has any built-in and related fields
         checkBuiltInAndRelatedFieldsBeforeDeletion(foundUser);
@@ -387,26 +386,40 @@ public class UserService {
 //        }
     }
 
-     public ResponseEntity<?> updateUserPhoto(MultipartFile photo, UserDetails userDetails) {
-        User user=(User) userDetails;
+    /**
+     * Updates the user's photo.
+     *
+     * @param photo       the photo file to be uploaded
+     * @param userDetails the details of the user
+     * @return the ResponseEntity with the updated user information
+     * @throws BuiltInFieldException if the user is a built-in user
+     */
+    public ResponseEntity<?> updateUserPhoto(MultipartFile photo, UserDetails userDetails) {
+        User user = (User) userDetails;
         if (user.isBuiltIn()) {
             throw new BuiltInFieldException(messageUtil.getMessage("error.user.update.built-in"));
         }
-         ProfilePhoto profilePhoto;
-        if (user.getProfilePhoto()==null){
-            profilePhoto=profilePhotoService.saveProfilePhoto(photo);
-        }else {
-            profilePhoto=profilePhotoService.updateProfilePhoto(user.getProfilePhoto(),photo);
+        ProfilePhoto profilePhoto;
+        if (user.getProfilePhoto() == null) {
+            profilePhoto = profilePhotoService.saveProfilePhoto(photo);
+        } else {
+            profilePhoto = profilePhotoService.updateProfilePhoto(user.getProfilePhoto(), photo);
         }
         user.setProfilePhoto(profilePhoto);
         User updated = userRepository.save(user);
         return ResponseEntity.ok(userMapper.toUserResponse(updated));
 
-
     }
 
+    /**
+     * Deletes the user's profile photo and updates the user in the database.
+     *
+     * @param userDetails The details of the user.
+     * @return A ResponseEntity containing the updated user information.
+     * @throws BuiltInFieldException if the user is a built-in user.
+     */
     public ResponseEntity<?> deleteUserPhoto(UserDetails userDetails) {
-        User user=(User) userDetails;
+        User user = (User) userDetails;
         if (user.isBuiltIn()) {
             throw new BuiltInFieldException(messageUtil.getMessage("error.user.update.built-in"));
         }
@@ -415,6 +428,5 @@ public class UserService {
         User updated = userRepository.save(user);
         return ResponseEntity.ok(userMapper.toUserResponse(updated));
     }
-
 
 }

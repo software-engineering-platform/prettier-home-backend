@@ -13,12 +13,9 @@ import java.util.List;
 public interface CategoryPropertyValueRepository extends JpaRepository<CategoryPropertyValue, Long> {
     List<CategoryPropertyValue> findByAdvert_Id(Long id);
 
-
     @Transactional
     @Modifying
     @Query("delete from CategoryPropertyValue c where c.advert is null")
     void deleteByAdvertNull();
-
-
 
 }

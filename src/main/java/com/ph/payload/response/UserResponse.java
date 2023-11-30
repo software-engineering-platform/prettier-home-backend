@@ -18,4 +18,5 @@ public class UserResponse implements Serializable {
     private String phone;
     private String role;
     private ProfilePhotoResponse profilePhoto;
+
 }

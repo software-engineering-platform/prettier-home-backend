@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class AdvertCategoryResponse {
+public class AdvertCategoryResponse implements Serializable {
+
     private String categoryName;
     private Long categoryQuantity;
-
-
-
 
 }

@@ -15,9 +15,7 @@ import org.springframework.stereotype.Component;
 public class ReportMapper {
 
 
-
     public AdvertResource mapToResource(Advert advert) {
-
         return AdvertResource.builder()
                 .id(advert.getId())
                 .title(advert.getTitle())
@@ -31,10 +29,9 @@ public class ReportMapper {
                 .countryName(advert.getCountry().getName())
                 .cityName(advert.getCity().getName())
                 .districtName(advert.getDistrict().getName())
-                .userName(advert.getUser().getFirstName()+" "+advert.getUser().getLastName())
+                .userName(advert.getUser().getFirstName() + " " + advert.getUser().getLastName())
                 .createdAt(advert.getCreatedAt())
                 .build();
-
     }
 
 
@@ -49,7 +46,6 @@ public class ReportMapper {
     }
 
 
-
     public UserResource toUserResource(User user) {
         return UserResource.builder()
                 .id(user.getId())
@@ -60,7 +56,6 @@ public class ReportMapper {
                 .builtIn(user.isBuiltIn())
                 .role(user.getRole())
                 .build();
-
     }
 
 
@@ -72,9 +67,9 @@ public class ReportMapper {
                 .status(tourRequest.getStatus())
                 .advertId(tourRequest.getAdvert().getId())
                 .advertTitle(tourRequest.getAdvert().getTitle())
-                .ownerFullName(tourRequest.getAdvert().getUser().getFirstName()+" "+tourRequest.getAdvert().getUser().getLastName())
-                .guestFullName(tourRequest.getGuestUser().getFirstName()+" "+tourRequest.getOwnerUser().getLastName())
+                .ownerFullName(tourRequest.getAdvert().getUser().getFirstName() + " " + tourRequest.getAdvert().getUser().getLastName())
+                .guestFullName(tourRequest.getGuestUser().getFirstName() + " " + tourRequest.getOwnerUser().getLastName())
                 .build();
-
     }
+
 }

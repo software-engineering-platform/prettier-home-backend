@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class AdvertCityResponse {
+public class AdvertCityResponse implements Serializable {
+
     private String cityName;
     private Long cityQuantity;
-
-
 
 }

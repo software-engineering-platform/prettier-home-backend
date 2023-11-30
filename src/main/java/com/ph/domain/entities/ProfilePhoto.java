@@ -21,7 +21,15 @@ public class ProfilePhoto {
     private String name;
     private String type;
 
+    /**
+     * Entity relationships start
+     */
 
     @OneToOne(mappedBy = "profilePhoto")
     private User user;
+
+    /**
+     * Entity relationships end
+     */
+
 }

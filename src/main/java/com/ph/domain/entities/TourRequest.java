@@ -20,6 +20,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Table(name = "tour_requests")
 public class TourRequest extends Entry implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,7 +29,7 @@ public class TourRequest extends Entry implements Serializable {
     @NotNull
     private LocalDate tourDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "US")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     @NotNull
     private LocalTime tourTime;//Requarement'ta DateTime diyor biz Time aldık
 
@@ -38,6 +39,7 @@ public class TourRequest extends Entry implements Serializable {
     /**
      * Entity relationships start
      */
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "advert_id")
     @NotNull
@@ -52,6 +54,7 @@ public class TourRequest extends Entry implements Serializable {
     @JoinColumn(name = "guest_user_id")
     @NotNull
     private User guestUser;
+
     /**
      * Entity relationships end
      */
@@ -80,9 +83,6 @@ public class TourRequest extends Entry implements Serializable {
                 ", tourDate=" + tourDate +
                 ", tourTime=" + tourTime +
                 ", status=" + status +
-                /*", advert=" + advert +
-                ", ownerUser=" + ownerUser +
-                ", guestUser=" + guestUser +*/
                 '}';
     }
 

@@ -21,7 +21,9 @@ public class ResetPasswordRequest implements Serializable {
 
     @NotNull(message = "{validation.password.null}")
     @Size(min = 8, max = 30, message = "{validation.password.size}")
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
-            message = "{validation.password.pattern}")
+    @Pattern(
+            regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
+            message = "{validation.password.pattern}"
+    )
     private String password;
 }

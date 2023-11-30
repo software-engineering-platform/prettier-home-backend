@@ -7,7 +7,6 @@ import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.exception.customs.*;
 import com.ph.exception.customs.NonUpdatableException;
 import com.ph.utils.MessageUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +60,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleEmailSendingException(EmailSendingException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", ex.getMessage()));
     }
+
     @ExceptionHandler(ValuesNotMatchException.class)
     public ResponseEntity<?> handleValuesNotMatchException(ValuesNotMatchException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
@@ -80,43 +80,43 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NonDeletableException.class)
-    public ResponseEntity<?> handleNonDeletableException(NonDeletableException ex ) {
+    public ResponseEntity<?> handleNonDeletableException(NonDeletableException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", ex.getMessage()));
 
     }
 
     @ExceptionHandler(NonUpdatableException.class)
-    public ResponseEntity<?> handleNonUpdatableException(NonUpdatableException ex ) {
+    public ResponseEntity<?> handleNonUpdatableException(NonUpdatableException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(MissingArgumentException.class)
-    public ResponseEntity<?> handleMissingArgumentException(MissingArgumentException ex ) {
+    public ResponseEntity<?> handleMissingArgumentException(MissingArgumentException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(DirectoryCreationException.class)
-    public ResponseEntity<?> handleDirectoryCreationException(DirectoryCreationException ex   ) {
+    public ResponseEntity<?> handleDirectoryCreationException(DirectoryCreationException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", ex.getMessage()));
     }
 
     @ExceptionHandler(DataExportException.class)
-    public ResponseEntity<?> handleDataExportException(DataExportException ex ) {
+    public ResponseEntity<?> handleDataExportException(DataExportException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", ex.getMessage()));
     }
 
 
     @ExceptionHandler(ImageException.class)
-    public ResponseEntity<?> handleImageException(ImageException ex ) {
+    public ResponseEntity<?> handleImageException(ImageException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", ex.getMessage()));
     }
 
 
     @ExceptionHandler(JsonValidationException.class)
-    public ResponseEntity<?> handleJsonValidationException(JsonValidationException ex  ) {
+    public ResponseEntity<?> handleJsonValidationException(JsonValidationException ex) {
         Map<String, String> errorResponse = new HashMap<>();
         String[] split = ex.getMessage().split("¨¨");
-        for (int i = 0; i <split.length ; i++) {
+        for (int i = 0; i < split.length; i++) {
             if (i % 2 == 0) {
                 errorResponse.put(split[i], split[i + 1]);
             }
@@ -124,6 +124,5 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
-
 
 }

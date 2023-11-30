@@ -13,8 +13,7 @@ public class LocationMapper {
 
 
     //NOT: COUNTRY MAPPER
-
-    public CountryResponse toCountryResponse(Country country){
+    public CountryResponse toCountryResponse(Country country) {
         return CountryResponse.builder()
                 .id(country.getId())
                 .name(country.getName())
@@ -24,8 +23,7 @@ public class LocationMapper {
     }
 
     //NOT: CITY MAPPER
-
-    public CityResponse toCityResponse(City city){
+    public CityResponse toCityResponse(City city) {
         return CityResponse.builder()
                 .id(city.getId())
                 .name(city.getName())
@@ -35,8 +33,8 @@ public class LocationMapper {
                 .build();
     }
 
-    //NOT: DİSTRICTS MAPPER
-    public DistrictResponse toDistrictResponse(District district){
+    //NOT: DISTRICTS MAPPER
+    public DistrictResponse toDistrictResponse(District district) {
         return DistrictResponse.builder()
                 .id(district.getId())
                 .name(district.getName())
@@ -44,14 +42,6 @@ public class LocationMapper {
                 .cityResponse(cityMapper.toCityResponse(district.getCity()))*/
                 .build();
     }
-
-
-
-
-
-
-
-
 
 
 }

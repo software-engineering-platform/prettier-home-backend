@@ -28,12 +28,14 @@ public class CategoryPropertyKeyService {
     private final MessageUtil messageUtil;
 
     // Not: save() ************************************************************ C08
+
     /**
      * this method created for save category property key
+     *
      * @param propertyKeyRequest: represent category property key containing specific information
      * @return : ResponseEntity with created category property key
      */
-    @CacheEvict( cacheNames = {"category","categoryPropertyKeys"},allEntries = true)
+    @CacheEvict(cacheNames = {"category", "categoryPropertyKeys"}, allEntries = true)
     public ResponseEntity<CategoryPropertyKeyResponse> save(CategoryPropertyKeyRequest propertyKeyRequest, Long categoryId) {
 
         CategoryPropertyKey categoryPropertyKey = propertyKeyRequest.get();
@@ -45,7 +47,7 @@ public class CategoryPropertyKeyService {
         List<CategoryPropertyKey> categoryPropertyKeysOfTheCategory = propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
         // is there same category property key in categoryPropertyKeysOfTheCategory
         for (CategoryPropertyKey key : categoryPropertyKeysOfTheCategory) {
-            if(key.getName().equals(categoryPropertyKey.getName())){
+            if (key.getName().equals(categoryPropertyKey.getName())) {
                 throw new ConflictException(messageUtil.getMessage("error.cpk.save.duplicate.name.in.category"));
             }
         }
@@ -62,8 +64,11 @@ public class CategoryPropertyKeyService {
 
 
     // Not: getPropertyKeysOfCategory() *********************************************************** C09
-    /** !!!
+
+    /**
+     * !!!
      * This method created for getting category property keys of specific category
+     *
      * @param categoryId : represent category's id
      * @return : List of category property key
      */
@@ -83,18 +88,19 @@ public class CategoryPropertyKeyService {
 
     /**
      * This method created for delete category property key
+     *
      * @param propertyId:
      * @return deleted category property key
      */
     //Delete related records in category_property_values table
     // TODO: Check whether category property values deleted
-    @CacheEvict( cacheNames = {"category","categoryPropertyKeys"},allEntries = true)
+    @CacheEvict(cacheNames = {"category", "categoryPropertyKeys"}, allEntries = true)
     public ResponseEntity<CategoryPropertyKeyResponse> deletePropertyKey(Long propertyId) {
 
         CategoryPropertyKey categoryPropertyKey = propertyKeyRepository.findById(propertyId).orElseThrow(()
                 -> new ResourceNotFoundException("Category property key not found"));
 
-        if(categoryPropertyKey.isBuiltIn()){
+        if (categoryPropertyKey.isBuiltIn()) {
             throw new ConflictException(messageUtil.getMessage("error.cpk.delete.built-in"));
         }
 
@@ -104,13 +110,15 @@ public class CategoryPropertyKeyService {
     }
 
     // Not: updatePropertyKey() *************************************** C09
+
     /**
      * This method created for update category property key
-     * @param propertyId: represent category property key id
+     *
+     * @param propertyId:         represent category property key id
      * @param propertyKeyRequest: represent category property key request
      * @return updated category property key
      */
-    @CacheEvict( cacheNames = {"category","categoryPropertyKeys"},allEntries = true)
+    @CacheEvict(cacheNames = {"category", "categoryPropertyKeys"}, allEntries = true)
 
     public ResponseEntity<CategoryPropertyKeyResponse> updatePropertyKey(Long propertyId,
                                                                          CategoryPropertyKeyRequest propertyKeyRequest) {
@@ -120,7 +128,7 @@ public class CategoryPropertyKeyService {
                 -> new ResourceNotFoundException(messageUtil.getMessage("error.cpk.not-found")));
 
         // check if category property key is built in
-        if(categoryPropertyKey.isBuiltIn()){
+        if (categoryPropertyKey.isBuiltIn()) {
             throw new NonDeletableException(messageUtil.getMessage("error.cpk.update.built-in"));
         }
 

@@ -1,16 +1,16 @@
 package com.ph.payload.response;
 
-import com.ph.domain.entities.*;
 import lombok.*;
 
-import java.util.List;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AdvertResponseForFavorite {
+public class AdvertResponseForFavorite implements Serializable {
+
     private Long id;
     private String title;
     private Double price;
@@ -20,5 +20,6 @@ public class AdvertResponseForFavorite {
     private CityResponse city;
     private DistrictResponse district;
     private CategoryResponseForFavorite category;
-    /*private List<Image> images;*/
+//    private List<Image> images;
+
 }

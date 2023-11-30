@@ -13,20 +13,17 @@ import java.util.function.Supplier;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class    CategoryPropertyKeyRequest implements Supplier<CategoryPropertyKey>, Serializable {
+public class CategoryPropertyKeyRequest implements Supplier<CategoryPropertyKey>, Serializable {
 
     @NotNull(message = "{validation.category.name.notnull}")
     @Size(min = 2, max = 80, message = "{validation.category.name.size}")
     private String name;
 
-
     @Override
     public CategoryPropertyKey get() {
-
         return CategoryPropertyKey.builder()
                 .name(getName())
                 .build();
     }
-
 
 }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,8 +27,10 @@ public class FavoritesService {
     private final AdvertMapper advertMapper;
 
     // Not :K01 - GetFavoritesByCustomer() ***************************************************
+
     /**
      * Retrieves the list of favorite adverts for a customer.
+     *
      * @param userDetails the details of the customer
      * @return the ResponseEntity containing the list of favorite adverts
      * @throws ResourceNotFoundException if the user is not found
@@ -41,12 +44,14 @@ public class FavoritesService {
     }
 
     // Not :K02 - GetByUserIdFavoritesByManagerAndAdmin() ***************************************************
+
     /**
      * Retrieves a list of favorite adverts for a manager or admin based on user ID.
+     *
      * @param id The ID of the user
      * @return The list of favorite adverts as a ResponseEntity
      */
-    public ResponseEntity<List<AdvertResponseForFavorite>>getByUserIdFavoritesForManagerAndAdmin(Long id) {
+    public ResponseEntity<List<AdvertResponseForFavorite>> getByUserIdFavoritesForManagerAndAdmin(Long id) {
         // Retrieve the list of favorites for the user ID
         List<Favorite> favorites = favoritesRepository.findByUser_Id(id);
         // Extract the list of adverts from the favorites
@@ -57,9 +62,11 @@ public class FavoritesService {
 
 
     // Not :K03 - FavoriteSave() ***************************************************************************
+
     /**
      * Add the specified advert to the user's favorites.
-     * @param advertId     the ID of the advert to add to favorites
+     *
+     * @param advertId    the ID of the advert to add to favorites
      * @param userDetails the details of the user making the request
      * @return the response entity containing the advert response for the favorite
      * @throws ResourceNotFoundException if the user is not found
@@ -89,8 +96,10 @@ public class FavoritesService {
     }
 
     // Not :K04 - DeleteFavoriteByCustomer() ***************************************************************************
+
     /**
      * Deletes all favorites of a user.
+     *
      * @param userDetails the user details of the user
      * @return a ResponseEntity with a success message
      * @throws ResourceNotFoundException if the user is not found
@@ -106,14 +115,16 @@ public class FavoritesService {
     }
 
     // Not :K05 - DeleteFavoriteIdByAdminAndManager() *********************************************************
+
     /**
      * Deletes all favorites associated with a user by an admin or manager.
+     *
      * @param userId the ID of the user
      * @return a ResponseEntity with a success message
      */
     public ResponseEntity<String> deleteFavoritesByAdminAndManager(Long userId) {
         // Get the user by ID
-        User user=userService.getOneUserById(userId);
+        User user = userService.getOneUserById(userId);
         // Delete all favorites associated with the user
         favoritesRepository.deleteAllById(user.getFavorites().stream().map(Favorite::getId).collect(Collectors.toList()));
         // Return a ResponseEntity with a success message
@@ -121,8 +132,10 @@ public class FavoritesService {
     }
 
     // Not :K06 - DeleteFavoriteIdByAdminAndManager() *********************************************************
+
     /**
      * Deletes a favorite item by admin and manager.
+     *
      * @param favoriteId The ID of the favorite item to be deleted.
      * @return A response entity with a success message.
      */

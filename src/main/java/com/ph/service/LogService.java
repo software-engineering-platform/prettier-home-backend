@@ -16,11 +16,12 @@ import java.time.LocalDateTime;
 public class LogService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogService.class);
-
     private final LogRepository logRepository;
+
     /**
      * Logs a message along with the advert and user information.
      * Saves a log entity to the database.
+     *
      * @param message the message to log
      * @param advert  the advert object
      * @param user    the user object
@@ -37,8 +38,6 @@ public class LogService {
                 .build();
         logRepository.save(log);
     }
-
-
 
 
 }

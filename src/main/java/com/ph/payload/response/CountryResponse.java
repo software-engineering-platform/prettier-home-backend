@@ -1,31 +1,20 @@
 package com.ph.payload.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.ph.domain.entities.Advert;
-import com.ph.domain.entities.City;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
-import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class CountryResponse implements Serializable {
 
-
     private Long id;
-
     private String name;
 
-    /*private List<AdvertResponseForTourRequest> advertsResponse;
+//    private List<AdvertResponseForTourRequest> advertsResponse;
+//    private List<CityResponse> citiesResponse;
 
-    private List<CityResponse> citiesResponse;*/
 }

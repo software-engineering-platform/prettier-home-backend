@@ -1,6 +1,5 @@
 package com.ph.payload.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ph.domain.enums.Status;
 import lombok.*;
 
@@ -13,15 +12,11 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TourRequestsResponse implements Serializable {
 
     private Long id;
-
     private LocalDate tourDate;
-
     private LocalTime tourTime;
-
     private Status status;
 
 }
