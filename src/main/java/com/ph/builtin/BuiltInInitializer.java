@@ -28,6 +28,7 @@ public class BuiltInInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // Initialize built-in data
         initializeUsers();
         initializeAdvertTypes();
         initializeCategories();
