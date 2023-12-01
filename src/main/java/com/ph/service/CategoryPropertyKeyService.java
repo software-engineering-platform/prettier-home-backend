@@ -43,13 +43,9 @@ public class CategoryPropertyKeyService {
         // get category by category id from category service
         Category category = categoryService.getCategoryById(categoryId);
 
-        //
-        List<CategoryPropertyKey> categoryPropertyKeysOfTheCategory = propertyKeyRepository.findAllPropertyKeyByCategoryId(categoryId);
-        // is there same category property key in categoryPropertyKeysOfTheCategory
-        for (CategoryPropertyKey key : categoryPropertyKeysOfTheCategory) {
-            if (key.getName().equals(categoryPropertyKey.getName())) {
-                throw new ConflictException(messageUtil.getMessage("error.cpk.save.duplicate.name.in.category"));
-            }
+        // is there same category key in property key of a category
+        if (propertyKeyRepository.existsByCategory_IdAndNameIgnoreCase(categoryId, categoryPropertyKey.getName())) {
+            throw new ConflictException(messageUtil.getMessage("error.cpk.save.duplicate.name.in.category"));
         }
 
         // set category to category property key
@@ -130,6 +126,13 @@ public class CategoryPropertyKeyService {
         // check if category property key is built in
         if (categoryPropertyKey.isBuiltIn()) {
             throw new NonDeletableException(messageUtil.getMessage("error.cpk.update.built-in"));
+        }
+
+        // is there same category key in property key of a category
+        if (!categoryPropertyKey.getName().equals(propertyKeyRequest.getName()) &&
+                propertyKeyRepository.existsByCategory_IdAndNameIgnoreCase(categoryPropertyKey.getCategory().getId(), categoryPropertyKey.getName())
+        ) {
+            throw new ConflictException(messageUtil.getMessage("error.cpk.save.duplicate.name.in.category"));
         }
 
         // update category property key

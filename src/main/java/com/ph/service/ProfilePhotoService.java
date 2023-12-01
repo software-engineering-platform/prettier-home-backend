@@ -13,10 +13,9 @@ import java.io.IOException;
 @Service
 @RequiredArgsConstructor
 public class ProfilePhotoService {
+
     private final ProfilePhotoRepository profilePhotoRepository;
     private final ImageMapper imageMapper;
-
-
 
 
     public ProfilePhoto saveProfilePhoto(MultipartFile photo) {
@@ -32,6 +31,8 @@ public class ProfilePhotoService {
 
 
     }
+
+    // TODO delete photo
 
     public void deleteProfilePhoto(ProfilePhoto profilePhoto) {
         profilePhotoRepository.deleteById(profilePhoto.getId());

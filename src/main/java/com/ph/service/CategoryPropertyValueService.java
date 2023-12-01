@@ -39,13 +39,8 @@ public class CategoryPropertyValueService {
         categoryPropertyValue.setCategoryPropertyKey(categoryPropertyKey);
         categoryPropertyValue.setValue(s);
         categoryPropertyValue.setId(aLong);
+
         repository.save(categoryPropertyValue);
-
-
     }
 
-
-    public void deleteValueForNull() {
-        repository.deleteByAdvertNull();
-    }
 }

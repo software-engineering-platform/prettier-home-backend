@@ -9,6 +9,8 @@ import java.util.List;
 
 @Repository
 public interface CategoryPropertyKeyRepository extends JpaRepository<CategoryPropertyKey, Long> {
+    boolean existsByCategory_IdAndNameIgnoreCase(Long id, String name);
+    boolean existsByNameIgnoreCaseAndCategory_Id(String name, Long id);
 
     boolean existsByName(String name);
 

@@ -11,6 +11,7 @@ import com.ph.payload.request.CategoryRequest;
 import com.ph.payload.response.CategoryResponse;
 import com.ph.payload.response.CategoryWithoutPropertiesResponse;
 import com.ph.repository.CategoryRepository;
+import com.ph.utils.GeneralUtils;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -49,7 +50,7 @@ public class CategoryService {
     public ResponseEntity<?> save(CategoryRequest categoryRequest) {
 
         Category category = categoryRequest.get();
-        category.setSlug(slugMaker(category.getTitle()));
+        category.setSlug(GeneralUtils.generateSlug(category.getTitle()));
         checkTitle(categoryRequest.getTitle());
 
         // if there is same slug in database then throw ConflictException
@@ -61,11 +62,6 @@ public class CategoryService {
         return ResponseEntity.ok(categoryMapper.mapToCategoryWithoutPropertyResponse(saved));
 
     }
-
-    public static String slugMaker(String title) {
-        return title.toLowerCase().replace(" ", "-") + System.currentTimeMillis();
-    }
-
 
     /**
      * this method created for checking title
@@ -277,7 +273,7 @@ public class CategoryService {
         existingCategory.setIcon(categoryRequest.getIcon());
         existingCategory.setSeq(categoryRequest.getSeq());
         existingCategory.setActive(categoryRequest.getActive());
-        existingCategory.setSlug(slugMaker(categoryRequest.getTitle()));
+        existingCategory.setSlug(GeneralUtils.generateSlug(categoryRequest.getTitle()));
 
         // Save the updated category in the database
         Category saved = categoryRepository.save(existingCategory);

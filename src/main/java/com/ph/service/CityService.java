@@ -35,9 +35,9 @@ public class CityService {
     }
 
     //Not:U02 GetAllCitiesByCountryId() *************************************************************************
-    // Retrieves all cities by country ID.
-    // @param countryId The ID of the country.
-    // @return a list of CityResponse objects representing all cities.
+//     Retrieves all cities by country ID.
+//     @param countryId The ID of the country.
+//     @return a list of CityResponse objects representing all cities.
     @Cacheable(value = "city", key = "#countryId")
     public List<CityResponse> getAllCitiesByCountryId(Long countryId) {
         // Retrieve all cities from the cityRepository based on the country ID

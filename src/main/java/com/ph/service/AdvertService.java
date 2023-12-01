@@ -19,6 +19,7 @@ import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
 import com.ph.payload.response.DetailedAdvertResponse;
 import com.ph.payload.response.SimpleAdvertResponse;
 import com.ph.repository.*;
+import com.ph.utils.GeneralUtils;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -73,28 +74,6 @@ public class AdvertService {
         advert.setDistrict(district);
         advert.setUser(user);
     }
-
-    // NOT:  helperMethodSlugMaker() ************************************************************
-
-    /**
-     * Generates a slug by combining the lowercased title, current timestamp, and id.
-     * Replaces spaces in the title with hyphens.
-     *
-     * @param title The title to generate the slug from.
-     * @param id    The id to include in the slug.
-     * @return The generated slug.
-     */
-    public static String slugMaker(String title, Long id) {
-        String slug = title.toLowerCase().replace(" ", "-");
-        slug += System.currentTimeMillis() + id;
-        return slug;
-    }
-
-
-    // NOT:  helperMethodRoles() ************************************************************
-    //    public static List<String> roles(User  user){
-    //        return user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-    //    }
 
 
     // NOT:  helperMethodGetById() ************************************************************
@@ -391,7 +370,7 @@ public class AdvertService {
 
 
         // Set the slug for the advert and save it again
-        savedAdvert.setSlug(slugMaker(advert.getTitle(), savedAdvert.getId()));
+        savedAdvert.setSlug(GeneralUtils.generateSlug(advert.getTitle()));
         repository.save(savedAdvert);
 
         // Log the creation of the advert
@@ -439,7 +418,7 @@ public class AdvertService {
         mapper.toEntityForUpdateCustomer(advert, request);
         setAdvertField(advert, user, request);
         advert.setStatusForAdvert(StatusForAdvert.PENDING);
-        advert.setSlug(slugMaker(advert.getTitle(), id));
+        advert.setSlug(GeneralUtils.generateSlug(advert.getTitle()));
 
 
         // Update the property values of the advert
@@ -501,7 +480,7 @@ public class AdvertService {
 
         // Set the advert type, country, city, district, category, and slug
 
-        advert.setSlug(slugMaker(advert.getTitle(), id));
+        advert.setSlug(GeneralUtils.generateSlug(advert.getTitle()));
 
         // Save the updated advert
 
