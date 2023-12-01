@@ -27,6 +27,7 @@ public class CountriesService {
      *
      * @return the list of country responses
      */
+    @Cacheable(value = "country")
     public List<CountryResponse> getAllCountries() {
         return countriesRepository.findAll().stream().map(locationMapper::toCountryResponse).collect(Collectors.toList());
     }
@@ -40,7 +41,7 @@ public class CountriesService {
      * @return The country with the specified ID.
      * @throws ResourceNotFoundException if no country is found with the given ID.
      */
-    @Cacheable(value = "country", key = "#id")
+
     public Country getById(Long id) {
         return countriesRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.country.not-found")));

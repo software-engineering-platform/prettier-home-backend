@@ -38,6 +38,7 @@ public class CityService {
     // Retrieves all cities by country ID.
     // @param countryId The ID of the country.
     // @return a list of CityResponse objects representing all cities.
+    @Cacheable(value = "city", key = "#countryId")
     public List<CityResponse> getAllCitiesByCountryId(Long countryId) {
         // Retrieve all cities from the cityRepository based on the country ID
         return cityRepository.findByCountry_Id(countryId).stream().map(locationMapper::toCityResponse).collect(Collectors.toList());
@@ -52,7 +53,7 @@ public class CityService {
      * @return The City object with the specified ID.
      * @throws ResourceNotFoundException if the City with the specified ID is not found.
      */
-    @Cacheable(value = "city", key = "#id")
+
     public City getById(Long id) {
         return cityRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.city.not-found")));

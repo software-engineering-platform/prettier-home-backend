@@ -43,6 +43,7 @@ public class DistrictsService {
      * @param cityId The ID of the city.
      * @return A list of district responses.
      */
+    @Cacheable(value = "district", key = "#cityId")
     public List<DistrictResponse> getAllDistrictsByCityId(Long cityId) {
         return districtsRepository.findByCity_Id(cityId)
                 .stream()
@@ -59,7 +60,7 @@ public class DistrictsService {
      * @return The district with the specified ID.
      * @throws ResourceNotFoundException if the district with the specified ID is not found.
      */
-    @Cacheable(value = "district", key = "#id")
+
     public District getById(Long id) {
         return districtsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.district.not-found")));
