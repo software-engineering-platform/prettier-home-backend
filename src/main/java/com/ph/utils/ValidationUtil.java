@@ -6,9 +6,15 @@ import com.ph.exception.customs.JsonValidationException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import lombok.RequiredArgsConstructor;
+
+import java.util.ResourceBundle;
 import java.util.Set;
 
+@RequiredArgsConstructor
 public class ValidationUtil {
+    private final MessageUtil messageUtil;
+    private static ResourceBundle bundle = ResourceBundle.getBundle("messages");
 
     public static <T> T convertAndValidate(String jsonString, Class<T> clazz) {
 
@@ -33,7 +39,7 @@ public class ValidationUtil {
             for (ConstraintViolation<T> violation : violations) {
 
                 errorMessage.append(violation.getPropertyPath().toString()).append("¨¨")
-                        .append(violation.getMessage()).append("¨¨");
+                        .append(bundle.getString(violation.getMessage())).append("¨¨");
 
             }
 

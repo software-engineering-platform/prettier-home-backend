@@ -19,33 +19,33 @@ import java.io.Serializable;
 @NoArgsConstructor
 public abstract class AdvertRequestAbs implements Serializable {
 
-    @NotNull(message = "{validation.advert.notnull}")
-    @Size(min = 5, max = 150, message = "{validation.advert.size}")
+    @NotNull(message = "validation.advert.notnull")
+    @Size(min = 5, max = 150, message = "validation.advert.size")
     private String title;
 
     @Nullable
-    @Size(max = 300, message = "{validation.advert.desc.size}")
+    @Size(max = 300, message = "validation.advert.desc.size")
     private String desc;
 
     @Valid
     private Location location;
 
-    @NotNull(message = "{validation.advert.price.notnull}")
+    @NotNull(message = "validation.advert.price.notnull")
     private Double price;
 
-    @NotNull(message = "{validation.advert.type.notnull}")
+    @NotNull(message = "validation.advert.type.notnull")
     private Long advertTypeId;
 
-    @NotNull(message = "{validation.advert.country.notnull}")
+    @NotNull(message = "validation.advert.country.notnull")
     private Long countryId;
 
-    @NotNull(message = "{validation.advert.city.notnull}")
+    @NotNull(message = "validation.advert.city.notnull")
     private Long cityId;
 
-    @NotNull(message = "{validation.advert.district.notnull}")
+    @NotNull(message = "validation.advert.district.notnull")
     private Long districtId;
 
-    @NotNull(message = "{validation.advert.category.notnull}")
+    @NotNull(message = "validation.advert.category.notnull")
     private Long categoryId;
 
 }
