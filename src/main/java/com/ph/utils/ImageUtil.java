@@ -9,9 +9,6 @@ import java.util.zip.Inflater;
 
 public class ImageUtil {
 
-
-
-
     public static byte[] compressImage(byte[] data) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length)) {
             Deflater deflater = new Deflater();
@@ -31,9 +28,6 @@ public class ImageUtil {
             throw new ImageException("Cannot compress image");
         }
     }
-
-
-
 
     public static byte[] decompressImage(byte[] data) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length)) {

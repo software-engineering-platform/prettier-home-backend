@@ -23,7 +23,7 @@ public class DetailedAdvertResponse implements Serializable {
     private boolean builtIn;
     private boolean isActive;
     private int viewCount;
-    private String location;
+    private Location location;
     private AdvertTypeResponse advertType;
     private CountryResponse country;
     private CityResponse city;

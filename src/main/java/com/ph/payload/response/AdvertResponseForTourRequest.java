@@ -1,5 +1,6 @@
 package com.ph.payload.response;
 
+import com.ph.domain.entities.Location;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ public class AdvertResponseForTourRequest implements Serializable {
     private Long id;
     private String title;
     private Double price;
-    private String location;
+    private Location location;
     private CountryResponse country;
     private CityResponse city;
     private DistrictResponse district;

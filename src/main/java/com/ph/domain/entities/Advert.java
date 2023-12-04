@@ -42,7 +42,9 @@ public class Advert extends Entry implements Serializable {
 
     private boolean isActive = true;
     private Integer viewCount = 0;
-    private String location;
+
+    @Embedded
+    private Location location;
 
     /**
      * Entity relationships start

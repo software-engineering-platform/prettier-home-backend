@@ -55,6 +55,9 @@ public class CategoryMapper {
         return CategoryPropertyKeyResponse.builder()
                 .id(categoryPropertyKey.getId())
                 .name(categoryPropertyKey.getName())
+                .keyType(categoryPropertyKey.getKeyType())
+                .prefix(categoryPropertyKey.getPrefix())
+                .suffix(categoryPropertyKey.getSuffix())
                 .builtIn(categoryPropertyKey.isBuiltIn())
                 .build();
     }

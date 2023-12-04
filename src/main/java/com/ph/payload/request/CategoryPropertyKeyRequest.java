@@ -1,6 +1,7 @@
 package com.ph.payload.request;
 
 import com.ph.domain.entities.CategoryPropertyKey;
+import com.ph.domain.enums.KeyType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -19,10 +20,20 @@ public class CategoryPropertyKeyRequest implements Supplier<CategoryPropertyKey>
     @Size(min = 2, max = 80, message = "{validation.category.name.size}")
     private String name;
 
+    @NotNull(message = "{validation.category.key-type.notnull}")// messages.properties handle this
+    private KeyType keyType;
+
+    private String prefix;
+
+    private String suffix;
+
     @Override
     public CategoryPropertyKey get() {
         return CategoryPropertyKey.builder()
                 .name(getName())
+                .keyType(getKeyType())
+                .prefix(getPrefix())
+                .suffix(getSuffix())
                 .build();
     }
 

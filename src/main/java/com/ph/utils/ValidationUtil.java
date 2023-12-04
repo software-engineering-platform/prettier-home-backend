@@ -10,8 +10,8 @@ import java.util.Set;
 
 public class ValidationUtil {
 
-
     public static <T> T convertAndValidate(String jsonString, Class<T> clazz) {
+
         ObjectMapper mapper = new ObjectMapper();
 
         T requestObject ;

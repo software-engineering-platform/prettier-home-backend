@@ -4,6 +4,7 @@ import com.ph.domain.entities.AdvertType;
 import com.ph.domain.entities.Category;
 import com.ph.domain.entities.CategoryPropertyKey;
 import com.ph.domain.entities.User;
+import com.ph.domain.enums.KeyType;
 import com.ph.repository.AdvertTypeRepository;
 import com.ph.repository.CategoryPropertyKeyRepository;
 import com.ph.repository.CategoryRepository;
@@ -99,74 +100,74 @@ public class BuiltInInitializer implements CommandLineRunner {
         if (!propertyKeyRepository.existsBy()) {
             //For House
             List<CategoryPropertyKey> houseProperties = List.of(
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Size").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Bedrooms").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Bathrooms").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Garage").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Year of Build").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Furniture").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Maintenance Fee").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Terrace").builtIn(true).build());
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Size").keyType(KeyType.NUMBER).prefix(null).suffix("m²").builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Bedrooms").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Bathrooms").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Garage").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Year of Build").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Furniture").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Maintenance Fee").keyType(KeyType.NUMBER).prefix("$").suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(1L).get()).name("Terrace").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build());
 
             propertyKeyRepository.saveAll(houseProperties);
 
             //For Apartment
             List<CategoryPropertyKey> apartmentProperties = List.of(
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Size").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Bedrooms").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Bathrooms").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Parking Space").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Year of Build").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Furniture").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Maintenance Fee").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Balcony").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Elevator").builtIn(true).build());
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Size").keyType(KeyType.NUMBER).prefix(null).suffix("m²").builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Bedrooms").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Bathrooms").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Parking Space").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Year of Build").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Furniture").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Maintenance Fee").keyType(KeyType.NUMBER).prefix("$").suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Balcony").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(2L).get()).name("Elevator").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build());
 
             propertyKeyRepository.saveAll(apartmentProperties);
 
 
             //For Office
             List<CategoryPropertyKey> officeProperties = List.of(
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Size").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Parking Space").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Year of Build").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Furniture").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Maintenance Fee").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Elevator").builtIn(true).build());
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Size").keyType(KeyType.NUMBER).prefix(null).suffix("m²").builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Parking Space").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Year of Build").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Furniture").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Maintenance Fee").keyType(KeyType.NUMBER).prefix("$").suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(3L).get()).name("Elevator").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build());
 
             propertyKeyRepository.saveAll(officeProperties);
 
             //For Villa
             List<CategoryPropertyKey> villaProperties = List.of(
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Size").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Bedrooms").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Bathrooms").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Garage").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Land Area").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Year of Build").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Furniture").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Swimming Pool").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("View").builtIn(true).build());
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Size").keyType(KeyType.NUMBER).prefix(null).suffix("m²").builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Bedrooms").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Bathrooms").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Garage").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Land Area").keyType(KeyType.NUMBER).prefix(null).suffix("m²").builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Year of Build").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Furniture").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("Swimming Pool").keyType(KeyType.TEXT).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(4L).get()).name("View").keyType(KeyType.TEXT).prefix(null).suffix(null).builtIn(true).build());
 
             propertyKeyRepository.saveAll(villaProperties);
 
             //For Land
             List<CategoryPropertyKey> landProperties = List.of(
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(5L).get()).name("Size").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(5L).get()).name("Zoning").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(5L).get()).name("Access Road").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(5L).get()).name("Legal Status").builtIn(true).build());
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(5L).get()).name("Size").keyType(KeyType.NUMBER).prefix(null).suffix("m²").builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(5L).get()).name("Zoning").keyType(KeyType.TEXT).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(5L).get()).name("Access Road").keyType(KeyType.TEXT).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(5L).get()).name("Legal Status").keyType(KeyType.TEXT).prefix(null).suffix(null).builtIn(true).build());
 
             propertyKeyRepository.saveAll(landProperties);
 
             //For Shop
             List<CategoryPropertyKey> shopProperties = List.of(
                     CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Size").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Parking Space").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Year of Build").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Furniture").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Maintenance Fee").builtIn(true).build(),
-                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Elevator").builtIn(true).build());
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Parking Space").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Year of Build").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Furniture").keyType(KeyType.BOOLEAN).prefix(null).suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Maintenance Fee").keyType(KeyType.NUMBER).prefix("$").suffix(null).builtIn(true).build(),
+                    CategoryPropertyKey.builder().category(categoryRepository.findById(6L).get()).name("Elevator").keyType(KeyType.NUMBER).prefix(null).suffix(null).builtIn(true).build());
 
             propertyKeyRepository.saveAll(shopProperties);
         }

@@ -1,7 +1,9 @@
 package com.ph.payload.request.abstracts;
 
+import com.ph.domain.entities.Location;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -25,7 +27,8 @@ public abstract class AdvertRequestAbs implements Serializable {
     @Size(max = 300, message = "{validation.advert.desc.size}")
     private String desc;
 
-    private String location;
+    @Valid
+    private Location location;
 
     @NotNull(message = "{validation.advert.price.notnull}")
     private Double price;
