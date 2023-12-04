@@ -22,6 +22,7 @@ public class TourRequestsMapper {
                 .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .status(tourRequest.getStatus())
+                .tourTime(tourRequest.getTourTime())
                 .build();
     }
 
