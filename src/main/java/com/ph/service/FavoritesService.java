@@ -8,6 +8,7 @@ import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.response.AdvertResponseForFavorite;
 import com.ph.repository.FavoritesRepository;
 import com.ph.utils.MessageUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,6 +36,7 @@ public class FavoritesService {
      * @return the ResponseEntity containing the list of favorite adverts
      * @throws ResourceNotFoundException if the user is not found
      */
+    @Transactional
     public ResponseEntity<List<AdvertResponseForFavorite>> getFavoritesByCustomer(UserDetails userDetails) {
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));

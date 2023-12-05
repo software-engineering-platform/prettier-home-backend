@@ -147,6 +147,7 @@ public class AdvertMapper {
                 .city(locationMapper.toCityResponse(advert.getCity()))
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
                 .category(categoryMapper.toCategoryResponseForFavorite(advert.getCategory()))
+                .images(advert.getImages().stream().map(imageMapper::toImageResponse).toList())
                 .build();
     }
 

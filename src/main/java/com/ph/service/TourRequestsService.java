@@ -14,6 +14,7 @@ import com.ph.payload.response.TourRequestsStatusResponse;
 import com.ph.payload.response.TourRequestsResponse;
 import com.ph.repository.TourRequestsRepository;
 import com.ph.utils.MessageUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -141,7 +142,8 @@ public class TourRequestsService {
      * @param type        the type of sorting (asc/desc)
      * @return a pageable response of tour request status
      * @throws ResourceNotFoundException if the user is not found
-     */
+    */
+    @Transactional
     public Page<TourRequestsStatusResponse> getAllTourRequestByCustomerAsPage(UserDetails userDetails, int page, int size, String sort, String type) {
         // Retrieve the user by email
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
