@@ -2,6 +2,7 @@ package com.ph.controller;
 
 import com.ph.payload.response.ImageResponse;
 import com.ph.service.ImageService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,11 @@ public class ImageController {
     private final ImageService imageService;
 
     @PostMapping
-    public ResponseEntity<?> uploadImage(
+     public ResponseEntity<?> uploadImage(
             @RequestParam("images") List<MultipartFile> images,
             @RequestParam("advert") Long advertId
     ) {
-        ImageResponse response = imageService.createImage(images, advertId);
+        List<ImageResponse> response = imageService.createImage(images, advertId);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

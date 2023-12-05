@@ -21,6 +21,7 @@ public class SimpleAdvertResponse implements Serializable {
     private ImageResponse image;
     private CityResponse city;
     private DistrictResponse district;
+    private CountryResponse country;
     private String slug;
 
 }
