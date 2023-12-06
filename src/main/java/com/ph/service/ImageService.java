@@ -5,6 +5,7 @@ import com.ph.domain.entities.Image;
 import com.ph.exception.customs.ImageException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.ImageMapper;
+import com.ph.payload.request.ImageUpdateRequest;
 import com.ph.payload.response.ImageResponse;
 import com.ph.repository.AdvertRepository;
 import com.ph.repository.ImageRepository;
@@ -92,19 +93,19 @@ public class ImageService {
     }
 
     @Transactional
-    public ImageResponse updateImage(Long imgId, Long advertId) {
-        Advert advert = advertRepository.findById(advertId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found"), advertId)));
+    public ImageResponse updateImage(ImageUpdateRequest request) {
+        Advert advert = advertRepository.findById(request.getAdvertId())
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found"), request.getAdvertId())));
 
         List<Image> advertImages = advert.getImages();
 
-        boolean match = advertImages.stream().anyMatch(image -> image.getId().equals(imgId));
+        boolean match = advertImages.stream().anyMatch(image -> image.getId().equals(request.getImgId()));
         if (!match) {
-            throw new ResourceNotFoundException(String.format(messageUtil.getMessage("error.image.not.found.id"), imgId));
+            throw new ResourceNotFoundException(String.format(messageUtil.getMessage("error.image.not.found.id"), request.getImgId()));
         }
 
-        Image found = imageRepository.findById(imgId)
-                .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.image.not.found.id"), imgId)));
+        Image found = imageRepository.findById(request.getImgId())
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.image.not.found.id"), request.getImgId())));
 
 
         Image featuredImage = advertImages.stream().filter(Image::isFeatured).findFirst().orElse(null);
