@@ -38,4 +38,7 @@ public interface TourRequestsRepository extends JpaRepository<TourRequest, Long>
             @Param("status") Status status
     );
 
+    // Not: getTour\requestCount
+//    @Query("select count(t) from TourRequest t where t.advert.id = :advertId and t.owner.user.id = :id")
+    Long countByAdvert_IdAndOwnerUser_Id(Long advertId, Long id);
 }

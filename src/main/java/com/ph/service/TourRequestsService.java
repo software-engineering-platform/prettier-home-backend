@@ -335,4 +335,40 @@ public class TourRequestsService {
         return tourRequestsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
     }
+
+    // Not: getTourRequestCount
+    /**
+     * Retrieve the count of tour requests for a specific advertisement.
+     *
+     * @param advertId      the ID of the advertisement
+     * @param userDetails  the details of the authenticated user
+     * @return              the count of tour requests
+     * @throws ResourceNotFoundException if the user or advertisement is not found
+     */
+    public ResponseEntity<Long> getTourRequestCount(Long advertId, UserDetails userDetails) {
+        // Retrieve the user by email from the user service
+        User user = userService.getUserByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found")));
+
+        // Retrieve the advertisement by ID from the advert service
+        Advert advert = advertService.getById(advertId);
+
+        // Retrieve all advertowned by the user
+        List<Advert> advertList = advertService.getAllAdvertsByUserId(user.getId());
+
+        if (advertList.isEmpty()) {
+            throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
+        }
+
+        // Check if the specified advertisement is in the user's list of advert
+        if (!advertList.contains(advert)) {
+            throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
+        }
+
+        // Retrieve the count of tour requests for the specified advert and user
+        Long tourRequestCount = tourRequestsRepository.countByAdvert_IdAndOwnerUser_Id(advertId, user.getId());
+
+        // Return the count of tour requests as a ResponseEntity
+        return ResponseEntity.ok(tourRequestCount);
+    }
 }
