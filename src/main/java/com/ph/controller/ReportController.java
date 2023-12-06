@@ -41,7 +41,7 @@ public class ReportController {
 
 
     // Not: get all
-    @GetMapping
+    @GetMapping()
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
     public ResponseEntity<?> getStatistics() { //http://localhost:8080/report
         return reportService.getStatistics();
