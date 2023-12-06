@@ -286,6 +286,7 @@ public class TourRequestsService {
      * @return The status response of the approved tour request.
      * @throws ResourceNotFoundException If the tour request is not found.
      */
+    @Transactional
     public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(Long tourId) {
         // Find the tour request by ID or throw an exception if not found
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
@@ -309,6 +310,7 @@ public class TourRequestsService {
      * @return The response entity containing the declined tour request.
      * @throws ResourceNotFoundException If the tour request is not found.
      */
+    @Transactional
     public ResponseEntity<TourRequestsStatusResponse> declinedByCustomerAsTourId(Long tourId) {
         // Find the tour request by ID or throw an exception if not found
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->

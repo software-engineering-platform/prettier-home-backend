@@ -5,6 +5,8 @@ import com.ph.payload.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 @RequiredArgsConstructor
 public class TourRequestsMapper {
@@ -20,7 +22,7 @@ public class TourRequestsMapper {
                 .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .status(tourRequest.getStatus())
-                .images(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).toList())
+                .images(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).collect(Collectors.toList()))
                 .tourTime(tourRequest.getTourTime())
                 .build();
     }

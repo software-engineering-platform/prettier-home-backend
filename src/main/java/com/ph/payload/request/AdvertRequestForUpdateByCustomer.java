@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AdvertRequestForUpdateByCustomer  extends AdvertRequestAbs {
 
-    private boolean isActive;
+    private Boolean active;
     private List<String> propertyValues;
 
 }

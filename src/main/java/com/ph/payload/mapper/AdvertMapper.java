@@ -97,7 +97,7 @@ public class AdvertMapper {
         pojo.setTitle(request.getTitle());
         pojo.setDescription(request.getDesc());
         pojo.setPrice(request.getPrice());
-        pojo.setActive(request.isActive());
+        pojo.setActive(request.getActive());
         pojo.setLocation(request.getLocation());
 
     }

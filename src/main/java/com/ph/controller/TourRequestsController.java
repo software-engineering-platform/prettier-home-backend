@@ -120,7 +120,7 @@ public class TourRequestsController {
     // Not :S08 - ApproveByCustomerAsTourId() *******************************************************************
     // http://localhost:8080/tour-requests/6/approve
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    @PatchMapping("/{id}/approve")
+    @GetMapping("/{id}/approve")
     public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(@PathVariable(name = "id") Long tourId) {
         return tourRequestsService.approveByCustomerAsTourId(tourId);
     }
@@ -128,11 +128,12 @@ public class TourRequestsController {
     // Not :S09 - DeclineByCustomerAsTourId() *******************************************************************
     // http://localhost:8080/tour-requests/6/decline
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    @PatchMapping("/{id}/decline")
+    @GetMapping("/{id}/decline")
     public ResponseEntity<TourRequestsStatusResponse> declineByCustomerAsTourId(@PathVariable(name = "id") Long tourId) {
         return tourRequestsService.declinedByCustomerAsTourId(tourId);
     }
 
+    // Not :Helper - getTourRequestsByAdvertId() *******************************************************************
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @GetMapping("/page/{advertId}")
     public Page<TourRequestResponseSimple> getTourRequestsByAdvertId(
