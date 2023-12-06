@@ -1,5 +1,6 @@
 package com.ph.domain.entities;
 
+import com.ph.domain.enums.KeyType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,16 @@ public class CategoryPropertyKey implements Serializable {
     @Column(name = "built_in")
     private boolean builtIn;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 10)
+    private KeyType keyType;
+
+    @Column(length = 5)
+    private String prefix;
+
+    @Column(length = 5)
+    private String suffix;
+
     /**
      * Entity relationships start
      */
@@ -36,8 +47,8 @@ public class CategoryPropertyKey implements Serializable {
 
 
     @OneToMany(mappedBy = "categoryPropertyKey", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    //TODO: check on the postman whether keys value has been deleted or not
     private List<CategoryPropertyValue> categoryPropertyValues;
+
     /**
      * Entity relationships end
      */

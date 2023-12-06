@@ -15,34 +15,34 @@ import java.util.stream.Collectors;
 public class CategoryMapper {
 
 
-    public CategoryWithoutPropertiesResponse mapToCategoryWithoutPropertyResponse(Category category){
+    public CategoryWithoutPropertiesResponse mapToCategoryWithoutPropertyResponse(Category category) {
         return CategoryWithoutPropertiesResponse.builder()
-                        .id(category.getId())
-                        .title(category.getTitle())
-                        .slug(category.getSlug())
-                        .icon(category.getIcon())
-                        .seq(category.getSeq())
-                        .builtIn(category.isBuiltIn())
-                        .active(category.isActive())
-                        .build();
+                .id(category.getId())
+                .title(category.getTitle())
+                .slug(category.getSlug())
+                .icon(category.getIcon())
+                .seq(category.getSeq())
+                .builtIn(category.isBuiltIn())
+                .active(category.isActive())
+                .build();
     }
 
-    public CategoryResponse mapToCategoryResponsewithPropertyKeys(Category category){
+    public CategoryResponse mapToCategoryResponsewithPropertyKeys(Category category) {
         return CategoryResponse.builder()
-                        .id(category.getId())
-                        .title(category.getTitle())
-                        .slug(category.getSlug())
-                        .icon(category.getIcon())
-                        .seq(category.getSeq())
-                        .builtIn(category.isBuiltIn())
-                        .active(category.isActive())
-                        .categoryPropertyKeysResponse(category.getCategoryPropertyKeys().stream().map(this::mapToCategoryPropertyKeyResponse).toList())
-                                                        // we'l get an exception if we set cotegoryPropertyKeys object that's why we usegetCategoryPropertyKeysResponse
-                        .build();
+                .id(category.getId())
+                .title(category.getTitle())
+                .slug(category.getSlug())
+                .icon(category.getIcon())
+                .seq(category.getSeq())
+                .builtIn(category.isBuiltIn())
+                .active(category.isActive())
+                .categoryPropertyKeysResponse(category.getCategoryPropertyKeys().stream().map(this::mapToCategoryPropertyKeyResponse).toList())
+                // we'l get an exception if we set cotegoryPropertyKeys object that's why we usegetCategoryPropertyKeysResponse
+                .build();
     }
 
 
-    public CategoryResponseForFavorite toCategoryResponseForFavorite(Category category){
+    public CategoryResponseForFavorite toCategoryResponseForFavorite(Category category) {
         return CategoryResponseForFavorite.builder()
                 .id(category.getId())
                 .title(category.getTitle())
@@ -50,16 +50,17 @@ public class CategoryMapper {
     }
 
 
-
-    public CategoryPropertyKeyResponse mapToCategoryPropertyKeyResponse(CategoryPropertyKey categoryPropertyKey){
+    public CategoryPropertyKeyResponse mapToCategoryPropertyKeyResponse(CategoryPropertyKey categoryPropertyKey) {
 
         return CategoryPropertyKeyResponse.builder()
                 .id(categoryPropertyKey.getId())
                 .name(categoryPropertyKey.getName())
+                .keyType(categoryPropertyKey.getKeyType())
+                .prefix(categoryPropertyKey.getPrefix())
+                .suffix(categoryPropertyKey.getSuffix())
                 .builtIn(categoryPropertyKey.isBuiltIn())
                 .build();
     }
-
 
 
     public List<PropertyValueResponse> entityToResponse(List<CategoryPropertyValue> entities) {

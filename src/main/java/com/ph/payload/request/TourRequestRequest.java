@@ -31,7 +31,6 @@ public class TourRequestRequest implements Supplier<TourRequest>, Serializable {
     @NotNull(message = "{validation.advert.id.notnull}")
     private Long advertId;
 
-
     @Override
     public TourRequest get() {
         return TourRequest.builder()

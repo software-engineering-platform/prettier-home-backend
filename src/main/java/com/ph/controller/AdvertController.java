@@ -1,43 +1,41 @@
 package com.ph.controller;
 
- import com.ph.exception.customs.ValuesNotMatchException;
- import com.ph.payload.response.AdvertCategoryResponse;
- import com.ph.payload.response.AdvertCityResponse;
- import com.ph.payload.request.AdvertRequest;
+import com.ph.exception.customs.ValuesNotMatchException;
+import com.ph.payload.response.AdvertCategoryResponse;
+import com.ph.payload.response.AdvertCityResponse;
+import com.ph.payload.request.AdvertRequest;
 import com.ph.payload.request.AdvertRequestForUpdateByAdmin;
 import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
 import com.ph.payload.response.DetailedAdvertResponse;
- import com.ph.payload.response.SimpleAdvertResponse;
- import com.ph.service.AdvertService;
- import com.ph.utils.MessageUtil;
- import com.ph.utils.ValidationUtil;
- import jakarta.validation.Valid;
+import com.ph.payload.response.SimpleAdvertResponse;
+import com.ph.service.AdvertService;
+import com.ph.utils.MessageUtil;
+import com.ph.utils.ValidationUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
- import org.springframework.data.domain.PageRequest;
- import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
- import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
- import java.util.List;
+import java.util.List;
 
 @RestController
 @RequestMapping("/adverts")
 @RequiredArgsConstructor
 public class AdvertController {
+
     private final AdvertService service;
     private final MessageUtil messageUtil;
 
 
-
-
     // NOT:A01 / getByAdminPage() ************************************************************
-
     @GetMapping()
     public Page<SimpleAdvertResponse> getByAnonymusPage(
             @RequestParam(value = "q", defaultValue = "", required = false) String query,
@@ -50,7 +48,7 @@ public class AdvertController {
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "sort", defaultValue = "category.id") String sort,
             @RequestParam(value = "type", defaultValue = "asc") String type
-    )   {
+    ) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         if (type.equals("desc")) {
             pageable = PageRequest.of(page, size, Sort.by(sort).descending());
@@ -65,38 +63,30 @@ public class AdvertController {
                 status,
                 pageable
         );
-
     }
 
     // NOT:A02 / getAdvertsByCities() ************************************************************
-
     @GetMapping("/cities")
-    public List<AdvertCityResponse> getAdvertsByCities(){
+    public List<AdvertCityResponse> getAdvertsByCities() {
         return service.getAdvertsByCities();
-
-
     }
 
 
     // NOT:A03 / getAdvertsByCategories() ************************************************************
-
     @GetMapping("/categories")
     public List<AdvertCategoryResponse> getAdvertsByCategories() {
         return service.getAdvertsByCategories();
-
     }
 
 
     // NOT:A04 / getMostPopularAdverts() ************************************************************
     @GetMapping("/popular/{amount}")
-    public List<SimpleAdvertResponse> getMostPopularAdverts(@PathVariable Integer amount){
+    public List<SimpleAdvertResponse> getMostPopularAdverts(@PathVariable Integer amount) {
         return service.getMostPopularAdverts(amount);
     }
 
 
-
     // NOT:A05 / getForCustomerById() ************************************************************
-
     @GetMapping("/auth")
     @PreAuthorize("hasAuthority('CUSTOMER')")
     public Page<DetailedAdvertResponse> getByCustomerPage(
@@ -106,14 +96,12 @@ public class AdvertController {
             @RequestParam(value = "sort", defaultValue = "category_id", required = false) String sort,
             @RequestParam(value = "type", defaultValue = "asc", required = false) String type,
             @AuthenticationPrincipal UserDetails userDetails
-
     ) {
-        return service.getByCustomerPage(page, size, sort, type, userDetails );
+        return service.getByCustomerPage(page, size, sort, type, userDetails);
     }
 
 
     // NOT:A06 / getByAdminPage() ************************************************************
-
     @GetMapping("/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public Page<DetailedAdvertResponse> getByAdminPage(
@@ -150,11 +138,7 @@ public class AdvertController {
     }
 
 
-
-
-
     // NOT:A07 / getBySlug() ************************************************************
-
     @GetMapping("/{slug}")
     public ResponseEntity<DetailedAdvertResponse> getBySlug(@PathVariable String slug) {
         return service.getBySlug(slug);
@@ -162,18 +146,17 @@ public class AdvertController {
 
 
     // NOT:A08 / getForCustomer() ************************************************************
-
     @GetMapping("/{id}/auth")
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    public ResponseEntity<DetailedAdvertResponse> getByCustomer(@PathVariable Long id,
-                                                                @AuthenticationPrincipal UserDetails userDetails     ) {
+    public ResponseEntity<DetailedAdvertResponse> getByCustomer(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         return service.getByCustomer(id, userDetails);
     }
 
 
-
     // NOT:A09 / getForAdmin() ************************************************************
-
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<DetailedAdvertResponse> getByAdmin(@PathVariable Long id) {
@@ -181,16 +164,16 @@ public class AdvertController {
     }
 
 
-
     // NOT:A10 / save() ************************************************************
-
     @PostMapping
     @PreAuthorize("hasAnyAuthority('CUSTOMER')")
-    public ResponseEntity<DetailedAdvertResponse> create(@RequestParam(value = "advert")  String advert,
-                                                         @RequestParam(value = "images")  List<MultipartFile> images,
-                                                         @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<DetailedAdvertResponse> create(
+            @RequestParam(value = "advert") String advert,
+            @RequestParam(value = "images") List<MultipartFile> images,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         AdvertRequest request = ValidationUtil.convertAndValidate(advert, AdvertRequest.class);
-        return service.create(request,images, userDetails );
+        return service.create(request, images, userDetails);
     }
 
 
@@ -198,52 +181,47 @@ public class AdvertController {
 
     @PutMapping("/auth/{id}")
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    public ResponseEntity<DetailedAdvertResponse> updateForCustomer(@PathVariable Long id,
-                                                                    @AuthenticationPrincipal UserDetails userDetails,
-                                                                    @RequestBody @Valid AdvertRequestForUpdateByCustomer request) {
-        return service.updateForCustomer(id, request, userDetails );
+    public ResponseEntity<DetailedAdvertResponse> updateForCustomer(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody @Valid AdvertRequestForUpdateByCustomer request
+    ) {
+        return service.updateForCustomer(id, request, userDetails);
     }
 
     // NOT:A12 / updateForAdmin() ************************************************************
 
     @PutMapping("/admin/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public ResponseEntity<DetailedAdvertResponse> update(@PathVariable Long id,
-                                                         @RequestBody @Valid AdvertRequestForUpdateByAdmin request
-    , @AuthenticationPrincipal UserDetails userDetails
-
+    public ResponseEntity<DetailedAdvertResponse> update(
+            @PathVariable Long id,
+            @RequestBody @Valid AdvertRequestForUpdateByAdmin request,
+            @AuthenticationPrincipal UserDetails userDetails
     ) {
         return service.update(id, request, userDetails);
     }
 
 
-
     // NOT:A13 / delete() ************************************************************
-
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public String delete(@PathVariable Long id,
-                         @AuthenticationPrincipal UserDetails userDetails) {
+    public String delete(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         return service.delete(id, userDetails);
     }
 
 
-
-
-
-
-
     // NOT:A06 / getByAdminPage() ************************************************************ (ESKİ VE EKSİK OLAN)
-/*
-//            @GetMapping("/adverts/admin")
-//    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-//    public Page<AdvertResponse> getByAdminPage(
-//            @RequestParam(value = "query", defaultValue = "" ) String query,
-//            @PageableDefault(sort = "category_id", direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable) {
-//        return service.getByAdminPage(pageable,query);
-//            }
- */
 
+    //            @GetMapping("/adverts/admin")
+    //    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    //    public Page<AdvertResponse> getByAdminPage(
+    //            @RequestParam(value = "query", defaultValue = "" ) String query,
+    //            @PageableDefault(sort = "category_id", direction = Sort.Direction.DESC, page = 0, size = 20) Pageable pageable) {
+    //        return service.getByAdminPage(pageable,query);
+    //            }
 
 
 }

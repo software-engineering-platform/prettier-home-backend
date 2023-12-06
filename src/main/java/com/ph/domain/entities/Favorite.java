@@ -56,12 +56,11 @@ public class Favorite extends Entry implements Serializable {
         return "Favorite{" +
                 "id=" + id +
                 ", user=" + user +
-                /*", advert=" + advert +*/
                 '}';
     }
+
     /**
      * Equals and HashCode - ToString methods end
      */
-
 
 }

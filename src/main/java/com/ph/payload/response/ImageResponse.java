@@ -19,5 +19,4 @@ public class ImageResponse implements Serializable {
     private Long advertId;
     private String data;
 
-
 }

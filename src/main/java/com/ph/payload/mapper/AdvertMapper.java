@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AdvertMapper {
+
     private final CategoryMapper categoryMapper;
     private final UserMapper userMapper;
     private final LocationMapper locationMapper;
@@ -30,7 +31,6 @@ public class AdvertMapper {
                 .viewCount(0)
                 .builtIn(false)
                 .isActive(true)
-
                 .build();
     }
 
@@ -44,7 +44,7 @@ public class AdvertMapper {
                 .categoryPropertyValue(categoryMapper.entityToResponse(advert.getCategoryPropertyValues()))
                 .price(advert.getPrice())
                 .statusForAdvert(advert.getStatusForAdvert())
-                .advertType( toResponse(advert.getAdvertType()))
+                .advertType(toResponse(advert.getAdvertType()))
                 .viewCount(advert.getViewCount())
                 .builtIn(advert.isBuiltIn())
                 .isActive(advert.isActive())
@@ -90,7 +90,6 @@ public class AdvertMapper {
         pojo.setPrice(request.getPrice());
         pojo.setLocation(request.getLocation());
         pojo.setStatusForAdvert(request.getStatusForAdvert());
-
     }
 
     public void toEntityForUpdateCustomer(Advert pojo, AdvertRequestForUpdateByCustomer request) {
@@ -112,11 +111,10 @@ public class AdvertMapper {
                 .statusForAdvert(advert.getStatusForAdvert())
                 .city(locationMapper.toCityResponse(advert.getCity()))
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
+                .country(locationMapper.toCountryResponse(advert.getCountry()))
                 .image(imageMapper.toImageResponse(advert.getImages().get(0)))
                 .slug(advert.getSlug())
                 .build();
-
-
     }
 
     //NOT ADVERT TYPE
@@ -137,27 +135,27 @@ public class AdvertMapper {
     //NOT ADVERT TYPE
 
 
+    //NOT FAVOURITE
 
-//NOT FAVOURITE
-
-    public AdvertResponseForFavorite toAdvertResponseForFavorite(Advert advert){
+    public AdvertResponseForFavorite toAdvertResponseForFavorite(Advert advert) {
         return AdvertResponseForFavorite.builder()
                 .id(advert.getId())
                 .title(advert.getTitle())
                 .price(advert.getPrice())
                 .location(advert.getLocation())
-                .advertType( toResponse(advert.getAdvertType()))
+                .advertType(toResponse(advert.getAdvertType()))
                 .country(locationMapper.toCountryResponse(advert.getCountry()))
                 .city(locationMapper.toCityResponse(advert.getCity()))
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
                 .category(categoryMapper.toCategoryResponseForFavorite(advert.getCategory()))
+                .images(advert.getImages().stream().map(imageMapper::toImageResponse).toList())
                 .build();
     }
 
 
     //NOT TOURREQUEST
 
-    public AdvertResponseForTourRequest toAdvertResponseForTourRequest(Advert advert){
+    public AdvertResponseForTourRequest toAdvertResponseForTourRequest(Advert advert) {
         return AdvertResponseForTourRequest.builder()
                 .id(advert.getId())
                 .price(advert.getPrice())
@@ -169,7 +167,6 @@ public class AdvertMapper {
                 .country(locationMapper.toCountryResponse(advert.getCountry()))
                 .build();
     }
-
 
 
 }

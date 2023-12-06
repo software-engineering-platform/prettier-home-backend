@@ -59,11 +59,11 @@ public class Country implements Serializable {
         return "Country{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                /* ", adverts=" + adverts +*/
-               /* ", cities=" + cities +*/
                 '}';
     }
+
     /**
      * Equals and HashCode - ToString methods end
      */
+
 }

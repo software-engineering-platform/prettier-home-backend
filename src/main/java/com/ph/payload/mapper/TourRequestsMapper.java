@@ -9,11 +9,9 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TourRequestsMapper {
 
-   private final UserMapper userMapper;
-
-
-
-   private final AdvertMapper advertMapper;
+    private final UserMapper userMapper;
+    private final AdvertMapper advertMapper;
+    private final ImageMapper imageMapper;
 
     public TourRequestsStatusResponse toTourRequestsResponse(TourRequest tourRequest) {
         return TourRequestsStatusResponse.builder()
@@ -22,6 +20,7 @@ public class TourRequestsMapper {
                 .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .status(tourRequest.getStatus())
+                .images(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).toList())
                 .tourTime(tourRequest.getTourTime())
                 .build();
     }
@@ -45,8 +44,5 @@ public class TourRequestsMapper {
                 .status(tourRequest.getStatus())
                 .build();
     }
-
-
-
 
 }

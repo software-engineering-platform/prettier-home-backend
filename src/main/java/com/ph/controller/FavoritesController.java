@@ -36,7 +36,9 @@ public class FavoritesController {
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")//http://localhost:8080/favorites/1/auth
     @PostMapping("{id}/auth")
     public ResponseEntity<AdvertResponseForFavorite> addToFavorites(
-            @PathVariable(name = "id") Long advertId, @AuthenticationPrincipal UserDetails userDetails) {
+            @PathVariable(name = "id") Long advertId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         return favoritesService.addToFavorites(advertId, userDetails);
     }
 
@@ -48,7 +50,8 @@ public class FavoritesController {
     }
 
     // Not :K05 - DeleteFavoriteIdByAdminAndManager() *********************************************************
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")//http://localhost:8080/favorites/1/admin TODO: Endpoint'i kontrol edilecek
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    //http://localhost:8080/favorites/1/admin
     @DeleteMapping("/{id}/admin")
     public ResponseEntity<String> deleteFavoritesByAdminAndManager(@PathVariable(name = "id") Long userId) {
         return favoritesService.deleteFavoritesByAdminAndManager(userId);

@@ -18,4 +18,5 @@ public class LoginResponse implements Serializable {
     private String lastName;
     private String role;
     private ProfilePhotoResponse profilePhoto;
+
 }

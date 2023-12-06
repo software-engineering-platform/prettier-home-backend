@@ -3,7 +3,6 @@ package com.ph.controller;
 
 import com.ph.service.ResetDatabaseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,9 +20,7 @@ public class ResetDatabaseController {
     @DeleteMapping("/db-reset")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> resetDatabase() {
-
         return resetDatabaseService.resetDatabase();
-
     }
 
 

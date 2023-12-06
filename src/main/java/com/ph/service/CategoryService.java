@@ -11,6 +11,7 @@ import com.ph.payload.request.CategoryRequest;
 import com.ph.payload.response.CategoryResponse;
 import com.ph.payload.response.CategoryWithoutPropertiesResponse;
 import com.ph.repository.CategoryRepository;
+import com.ph.utils.GeneralUtils;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -37,16 +38,19 @@ public class CategoryService {
 
     //NOT: saveCategory **************************************************  C04
 
-    /**!!!
-     *
+    /**
+     * !!!
+     * <p>
      * This method create an category.
+     *
      * @param categoryRequest : represent category containing specific information
      * @return : ResponseEntity with created category
      */
+    @CacheEvict(value = "category", allEntries = true)
     public ResponseEntity<?> save(CategoryRequest categoryRequest) {
 
         Category category = categoryRequest.get();
-        category.setSlug(slugMaker(category.getTitle()));
+        category.setSlug(GeneralUtils.generateSlug(category.getTitle()));
         checkTitle(categoryRequest.getTitle());
 
         // if there is same slug in database then throw ConflictException
@@ -59,26 +63,22 @@ public class CategoryService {
 
     }
 
-    public static String slugMaker(String title){
-        return title.toLowerCase().replace(" ", "-")+System.currentTimeMillis();
-    }
-
-
     /**
      * this method created for checking title
+     *
      * @param title : represent  title of category
      */
-    public  void checkTitle( String title){
+    public void checkTitle(String title) {
 
         // if the title contains character except a-zA-Z then throw ConflictException
-        if(!title.matches("^[a-zA-Z ]+$")) {
+        if (!title.matches("^[a-zA-Z ]+$")) {
             throw new ConflictException(messageUtil.getMessage("error.category.save.not-alphabetic"));
         }
         // get all Title in database
         List<String> titles = categoryRepository.findAllTitle();
         // if there is same title in database then throw ConflictException
-        for(String t : titles){
-            if(t.equalsIgnoreCase(title)){
+        for (String t : titles) {
+            if (t.equalsIgnoreCase(title)) {
                 throw new ConflictException(messageUtil.getMessage("error.category.save.exist"));
             }
         }
@@ -87,10 +87,11 @@ public class CategoryService {
 
     /**
      * This method created for check duplicate slug
+     *
      * @param slug : represent customized title of category
      */
-    public void checkDuplicateForSlug(String slug){
-        if(categoryRepository.existsBySlug(slug)) {
+    public void checkDuplicateForSlug(String slug) {
+        if (categoryRepository.existsBySlug(slug)) {
             throw new ConflictException(messageUtil.getMessage("error.category.save.duplicate.slug"));
         }
     }
@@ -119,6 +120,7 @@ public class CategoryService {
 
     /**
      * This method created for getting all categories which active field is true
+     *
      * @return : all categories without properties
      */
     public ResponseEntity<List<CategoryWithoutPropertiesResponse>> getAllCategory() {
@@ -140,18 +142,20 @@ public class CategoryService {
 
 
     //NOT: getAllCategoryWithPageAndWithAdmin **************************************************C02
+
     /**
      * This method created for getting all categories with page for admin and manager
-     * @param page represent page number
-     * @param size represent page size
-     * @param sort represent sort type
-     * @param type represent type of sort
+     *
+     * @param page  represent page number
+     * @param size  represent page size
+     * @param sort  represent sort type
+     * @param type  represent type of sort
      * @param query represent search query
      * @return all categories with pageable type
      */
 
     public Page<CategoryWithoutPropertiesResponse>
-                              getAllCategoryWithPageAndWithAdmin(  int page,  int size, String sort, String type, String query) {
+    getAllCategoryWithPageAndWithAdmin(int page, int size, String sort, String type, String query) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         if (type.equals("desc")) {
@@ -180,25 +184,26 @@ public class CategoryService {
 
     /**
      * this method created for deleting the category
+     *
      * @param categoryId : represent the category id
      * @return : ResponseEntity with deleted category
      */
-    @CacheEvict(value = "category", key = "#categoryId" )
+    @CacheEvict(value = "category", key = "#categoryId")
     public ResponseEntity<?> deleteCategory(Long categoryId) {
 
         //  check if category exists
-        Optional<Category> category =  categoryRepository.findById(categoryId);
-        if (category.isEmpty()){
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        if (category.isEmpty()) {
             throw new ResourceNotFoundException(messageUtil.getMessage("error.category.not-found"));
         }
         // check if category is built in
-        if(category.get().isBuiltIn()){ // we used get() method because of Optional
+        if (category.get().isBuiltIn()) { // we used get() method because of Optional
             throw new NonDeletableException(messageUtil.getMessage("error.category.delete.built-in"));
         }
 
         // if there is any advert related to the category then it cannot be deleted
         List<Advert> adverts = advertService.getAdvertsOfCategory(categoryId);
-        if(!adverts.isEmpty()){
+        if (!adverts.isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageUtil.getMessage("error.category.delete.advert"));
         }
         // delete category
@@ -212,8 +217,10 @@ public class CategoryService {
 
 
     //Not: getById  ******************************************************************* CO3
+
     /**
      * This method created for getting category by id with category property keys
+     *
      * @param categoryId : represent category id
      * @return : ResponseEntity with category that is asked
      */
@@ -230,15 +237,17 @@ public class CategoryService {
 
 
     //Not: updateById ************************************************************************ C05
+
     /**
      * this method created for updating category
-     * @param categoryId : represent category id
-     * @param categoryRequest  : represent category request object
+     *
+     * @param categoryId      : represent category id
+     * @param categoryRequest : represent category request object
      * @return : ResponseEntity with updated category
      */
 
     @CacheEvict(value = "category", key = "#categoryId")
-    public ResponseEntity<?> updateById(Long categoryId, CategoryRequest categoryRequest)  {
+    public ResponseEntity<?> updateById(Long categoryId, CategoryRequest categoryRequest) {
         // Check if the category with the given ID exists in the database
         Optional<Category> category = categoryRepository.findById(categoryId);
 
@@ -252,7 +261,7 @@ public class CategoryService {
         Category existingCategory = category.get();
 
         // check the category is built_in
-        if(existingCategory.isBuiltIn()){
+        if (existingCategory.isBuiltIn()) {
             throw new NonUpdatableException(messageUtil.getMessage("error.category.update.built-in"));
         }
 
@@ -264,7 +273,7 @@ public class CategoryService {
         existingCategory.setIcon(categoryRequest.getIcon());
         existingCategory.setSeq(categoryRequest.getSeq());
         existingCategory.setActive(categoryRequest.getActive());
-        existingCategory.setSlug(slugMaker(categoryRequest.getTitle()));
+        existingCategory.setSlug(GeneralUtils.generateSlug(categoryRequest.getTitle()));
 
         // Save the updated category in the database
         Category saved = categoryRepository.save(existingCategory);
@@ -276,6 +285,7 @@ public class CategoryService {
 
     /**
      * this method created for getting category object for category property key service
+     *
      * @param categoryId : represent category id
      * @return : Category object
      */

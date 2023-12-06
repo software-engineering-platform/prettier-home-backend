@@ -38,9 +38,6 @@ public class AuthEntryPoint implements AuthenticationEntryPoint {
         body.put("error", "Unauthorized");
         body.put("message", authException.getLocalizedMessage());
 
-        authException.printStackTrace();
-
-
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
 

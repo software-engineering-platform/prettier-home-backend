@@ -14,12 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AdvertRequestForUpdateByAdmin extends AdvertRequestAbs {
 
-
-
     private StatusForAdvert statusForAdvert;
-    private List<String>  propertyvalues;
-
-
-
+    private List<String> propertyValues;
 
 }

@@ -19,6 +19,7 @@ import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
 import com.ph.payload.response.DetailedAdvertResponse;
 import com.ph.payload.response.SimpleAdvertResponse;
 import com.ph.repository.*;
+import com.ph.utils.GeneralUtils;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +60,7 @@ public class AdvertService {
         }
     }
 
-    private Advert setAdvertField (Advert advert, User user, AdvertRequestAbs requestAbs) {
+    private void setAdvertField(Advert advert, User user, AdvertRequestAbs requestAbs) {
         AdvertType type = typeService.getById(requestAbs.getAdvertTypeId());
         Country country = countriesService.getById(requestAbs.getCountryId());
         City city = cityService.getById(requestAbs.getCityId());
@@ -71,36 +73,7 @@ public class AdvertService {
         advert.setCity(city);
         advert.setDistrict(district);
         advert.setUser(user);
-         return advert;
-
     }
-
-
-
-        //NOT: TODO  CACHEEVİCT POPULAR İÇİN Bİ DÜŞÜN
-
-    // NOT:  helperMethodSlugMaker() ************************************************************
-
-    /**
-     * Generates a slug by combining the lowercased title, current timestamp, and id.
-     * Replaces spaces in the title with hyphens.
-     *
-     * @param title The title to generate the slug from.
-     * @param id    The id to include in the slug.
-     * @return The generated slug.
-     */
-    public static String slugMaker(String title, Long id) {
-        String slug = title.toLowerCase().replace(" ", "-");
-        slug += System.currentTimeMillis() + id;
-        return slug;
-    }
-
-
-    // NOT:  helperMethodRoles() ************************************************************
-
-//    public static List<String> roles(User  user){
-//        return user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-//    }
 
 
     // NOT:  helperMethodGetById() ************************************************************
@@ -133,16 +106,16 @@ public class AdvertService {
      * @return A page of AdvertResponse objects.
      * @throws ResourceNotFoundException If the start price is greater than the end price.
      */
-    
-    public Page<SimpleAdvertResponse> getForAnyms(String query, Long categoryId, Long advertTypeId,
-                                                  Integer priceStart, Integer priceEnd,
-                                                  Integer status, Pageable pageable) throws ResourceNotFoundException {
 
+    public Page<SimpleAdvertResponse> getForAnyms(
+            String query, Long categoryId, Long advertTypeId,
+            Integer priceStart, Integer priceEnd,
+            Integer status, Pageable pageable
+    ) throws ResourceNotFoundException {
 
         checkPrice(priceStart, priceEnd);
 
         StatusForAdvert statusForAdvert = null;
-
         // Map the status parameter to the corresponding enum value
         if (status != null) {
             switch (status) {
@@ -156,7 +129,6 @@ public class AdvertService {
         return repository.findForAnyms(query, categoryId, advertTypeId, priceStart, priceEnd, statusForAdvert, pageable)
                 .map(mapper::toSimpleAdvertResponse);
     }
-
 
 
     // NOT:A02 / getAdvertsByCities() ************************************************************
@@ -202,11 +174,9 @@ public class AdvertService {
         List<Advert> popularAdverts = repository.findPopularAdverts(amount);
 
         // Convert the Advert objects to AdvertResponse objects
-        List<SimpleAdvertResponse> popularDetailedAdvertRespons = popularAdverts.stream()
+        return popularAdverts.stream()
                 .map(mapper::toSimpleAdvertResponse)
                 .collect(Collectors.toList());
-
-        return popularDetailedAdvertRespons;
     }
 
     // NOT:A05 / getForCustomerById() ************************************************************
@@ -222,6 +192,7 @@ public class AdvertService {
      * @return A Page object containing AdvertResponse objects.
      */
     public Page<DetailedAdvertResponse> getByCustomerPage(int page, int size, String sort, String type, UserDetails userDetails) {
+
         User user = (User) userDetails;
 
         // Create a Pageable object with the specified page, size, and sort field in ascending order
@@ -251,9 +222,12 @@ public class AdvertService {
      * @return A page of AdvertResponse objects.
      * @throws ResourceNotFoundException if priceStart is greater than priceEnd.
      */
-    public Page<DetailedAdvertResponse> getForAdmin(String query, Long categoryId, Long advertTypeId,
-                                                    Integer priceStart, Integer priceEnd,
-                                                    Integer status, Pageable pageable) {
+    public Page<DetailedAdvertResponse> getForAdmin(
+            String query, Long categoryId, Long advertTypeId,
+            Integer priceStart, Integer priceEnd,
+            Integer status, Pageable pageable
+    ) {
+
         // Check if priceStart is greater than priceEnd
         checkPrice(priceStart, priceEnd);
 
@@ -283,6 +257,7 @@ public class AdvertService {
      * @throws ResourceNotFoundException If the advert is not found.
      */
     public ResponseEntity<DetailedAdvertResponse> getBySlug(String slug) {
+
         // Find the advert by slug in the repository
         Advert advert = repository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found.slug"), slug)));
@@ -312,6 +287,7 @@ public class AdvertService {
      * @throws ResourceNotFoundException if the Advert is not found or the user does not have permission
      */
     public ResponseEntity<DetailedAdvertResponse> getByCustomer(Long id, UserDetails userDetails) {
+
         User user = (User) userDetails;
 
         // Retrieve the list of adverts for the user
@@ -345,6 +321,7 @@ public class AdvertService {
      * @return A ResponseEntity with the response body containing the saved advert.
      */
     public ResponseEntity<DetailedAdvertResponse> getByAdmin(Long id) {
+
         // Retrieve the advert by its ID
         Advert advert = getById(id);
 
@@ -374,14 +351,14 @@ public class AdvertService {
         User user = (User) userDetails;
 
         Advert advert = mapper.toEntity(request);
-         setAdvertField(advert, user, request);
+        setAdvertField(advert, user, request);
 
         // Save the advert to the repository
         Advert savedAdvert = repository.save(advert);
 
         // Get the category property keys and property values from the request
         List<CategoryPropertyKey> propertyIds = advert.getCategory().getCategoryPropertyKeys();
-        List<String> valuesOfProperty = request.getPropertyvalues();
+        List<String> valuesOfProperty = request.getPropertyValues();
 
         // Save the property values for the advert
         for (int i = 0; i < propertyIds.size(); i++) {
@@ -393,7 +370,7 @@ public class AdvertService {
 
 
         // Set the slug for the advert and save it again
-        savedAdvert.setSlug(slugMaker(advert.getTitle(), savedAdvert.getId()));
+        savedAdvert.setSlug(GeneralUtils.generateSlug(advert.getTitle()));
         repository.save(savedAdvert);
 
         // Log the creation of the advert
@@ -417,8 +394,8 @@ public class AdvertService {
      * @throws NonDeletableException     If the user does not have permission to update the advert.
      * @throws ResourceNotFoundException If the category specified in the request does not exist.
      */
-
     public ResponseEntity<DetailedAdvertResponse> updateForCustomer(Long id, AdvertRequestForUpdateByCustomer request, UserDetails userDetails) {
+
         Advert advert = getById(id);
 
         // Check if the advert is a built-in advert
@@ -441,25 +418,26 @@ public class AdvertService {
         mapper.toEntityForUpdateCustomer(advert, request);
         setAdvertField(advert, user, request);
         advert.setStatusForAdvert(StatusForAdvert.PENDING);
-        advert.setSlug(slugMaker(advert.getTitle(), id));
-        Advert savedAdvert = repository.save(advert);
+        advert.setSlug(GeneralUtils.generateSlug(advert.getTitle()));
+
 
         // Update the property values of the advert
         List<CategoryPropertyKey> propertyKeys = advert.getCategory().getCategoryPropertyKeys();
-        List<String> valuesOfProperty = request.getPropertyvalues();
+        List<String> valuesOfProperty = request.getPropertyValues();
         List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream()
                 .map(CategoryPropertyValue::getId)
                 .toList();
-        //KEY SONRADAN EKLENDİĞİNDE HATA NOT TODO
+
         for (int i = 0; i < propertyKeys.size(); i++) {
-            if(propertyValuesIds.size()<i+1){
-                propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), savedAdvert);
-            }else{
-                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), savedAdvert, propertyValuesIds.get(i));
-
+            if (propertyValuesIds.size() < i + 1) {
+                var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
+                advert.getCategoryPropertyValues().add(categoryPropertyValue);
+            } else {
+                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), advert, propertyValuesIds.get(i));
             }
-         }
+        }
 
+        Advert savedAdvert = repository.save(advert);
         // Log the update event
         logService.logMessage("Advert updated by :" + user.getUsername(), savedAdvert, user);
 
@@ -484,6 +462,7 @@ public class AdvertService {
             AdvertRequestForUpdateByAdmin request,
             UserDetails userDetails
     ) {
+
         User user = (User) userDetails;
 
         // Get the advert by ID
@@ -501,24 +480,24 @@ public class AdvertService {
 
         // Set the advert type, country, city, district, category, and slug
 
-        advert.setSlug(slugMaker(advert.getTitle(), id));
+        advert.setSlug(GeneralUtils.generateSlug(advert.getTitle()));
 
         // Save the updated advert
-        Advert updatedAdvert = repository.save(advert);
 
         // Update the property values of the advert
         List<CategoryPropertyKey> propertyKeys = advert.getCategory().getCategoryPropertyKeys();
-        List<String> valuesOfProperty = request.getPropertyvalues();
+        List<String> valuesOfProperty = request.getPropertyValues();
         List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream().map(CategoryPropertyValue::getId).toList();
         for (int i = 0; i < propertyKeys.size(); i++) {
-            if(propertyValuesIds.size()<i+1){
-                propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), updatedAdvert);
-            }else{
-                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), updatedAdvert, propertyValuesIds.get(i));
+            if (propertyValuesIds.size() < i + 1) {
+                var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
+                advert.getCategoryPropertyValues().add(categoryPropertyValue);
+            } else {
+                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), advert, propertyValuesIds.get(i));
+            }
+        }
 
-            }        }
-
-
+        Advert updatedAdvert = repository.save(advert);
         // Log the update
         logService.logMessage("Advert updated by: " + user.getUsername(), updatedAdvert, user);
 
@@ -537,8 +516,9 @@ public class AdvertService {
      * @return a message indicating the success of the deletion
      * @throws BuiltInFieldException if the advert is a built-in field and cannot be deleted
      */
-    
+
     public String delete(Long id, UserDetails userDetails) {
+
         User user = (User) userDetails;
 
         // Retrieve the advert by its ID
@@ -555,18 +535,15 @@ public class AdvertService {
         // Delete the advert
         repository.delete(advert);
 
-
         return "Advert deleted successfully. Title: " + advert.getTitle();
     }
 
 
     // NOT:A06 / getByAdminPage() ************************************************************ (ESKİ VE EKSİK OLAN)
-/*
-/    public Page<AdvertResponse> getByAdminPage(Pageable pageable,String query) {
-//        return
-//         repository.searchAdvertByPage(query,pageable).map(mapper::toResponse);
-//    }
- */
+    //   public Page<AdvertResponse> getByAdminPage(Pageable pageable,String query) {
+    //        return
+    //         repository.searchAdvertByPage(query,pageable).map(mapper::toResponse);
+    //    }
 
 
     /**
@@ -581,4 +558,9 @@ public class AdvertService {
         return repository.findByCategory_Id(categoryId);
 
     }
+
+    public boolean isHaveUserAdvert(Long id) {
+        return repository.existsByUser_Id(id);
+    }
+
 }

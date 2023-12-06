@@ -1,12 +1,9 @@
 package com.ph.security.service;
 
 import com.ph.domain.entities.User;
-import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.UserMapper;
 import com.ph.payload.request.LoginRequest;
 import com.ph.payload.response.LoginResponse;
-import com.ph.service.UserService;
-import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,10 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final UserService userService;
+
     private final TokenService tokenService;
     private final UserMapper userMapper;
-    private final MessageUtil messageUtil;
     private final AuthenticationManager authenticationManager;
 
     /**

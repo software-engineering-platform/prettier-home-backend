@@ -14,6 +14,7 @@ import com.ph.payload.response.TourRequestsStatusResponse;
 import com.ph.payload.response.TourRequestsResponse;
 import com.ph.repository.TourRequestsRepository;
 import com.ph.utils.MessageUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class TourRequestsService {
+
     private final TourRequestsRepository tourRequestsRepository;
     private final TourRequestsMapper tourRequestsMapper;
     private final UserService userService;
@@ -38,7 +40,6 @@ public class TourRequestsService {
 
 
     // Not :S05 - Save() *************************************************************************
-
 
     /**
      * Saves a tour request.
@@ -54,11 +55,11 @@ public class TourRequestsService {
         TourRequest tourRequest = request.get();
         // Check if there is a conflict with the tour date and time
         if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw  new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
+            throw new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
         // Check if the tour time is valid
-        if (!isValidTourTime(tourRequest.getTourTime()) ){
-            throw  new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
+        if (!isValidTourTime(tourRequest.getTourTime())) {
+            throw new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
         }
         // Get the advert and user
         Advert advert = advertService.getById(request.getAdvertId());
@@ -83,6 +84,7 @@ public class TourRequestsService {
     /**
      * Check if the given tour time is valid.
      * A valid tour time has minutes set to either 00 or 30.
+     *
      * @param tourTime the time of the tour
      * @return true if the tour time is valid, false otherwise
      */
@@ -95,6 +97,7 @@ public class TourRequestsService {
 
     /**
      * Update a tour request.
+     *
      * @param tourId  The ID of the tour request to update.
      * @param request The updated tour request data.
      * @return The response entity with the updated tour request.
@@ -113,10 +116,10 @@ public class TourRequestsService {
         }
         // Check if there is a conflict in tour time
         if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw  new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
+            throw new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
-        if (!isValidTourTime(tourRequest.getTourTime()) ){
-            throw  new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
+        if (!isValidTourTime(tourRequest.getTourTime())) {
+            throw new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
         }
         // Update the tour request data and save it
         tourRequest.setTourDate(request.getTourDate());
@@ -139,7 +142,8 @@ public class TourRequestsService {
      * @param type        the type of sorting (asc/desc)
      * @return a pageable response of tour request status
      * @throws ResourceNotFoundException if the user is not found
-     */
+    */
+    @Transactional
     public Page<TourRequestsStatusResponse> getAllTourRequestByCustomerAsPage(UserDetails userDetails, int page, int size, String sort, String type) {
         // Retrieve the user by email
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
@@ -175,8 +179,10 @@ public class TourRequestsService {
     }
 
     // Not :S02 - GetAllTourRequestByManagerAndAdminAsPage() ***************************************************
+
     /**
      * Retrieves all tour requests by manager and admin as a pageable response.
+     *
      * @param page  the page number
      * @param size  the number of items per page
      * @param sort  the sort order
@@ -184,7 +190,7 @@ public class TourRequestsService {
      * @param query the query to filter tour requests by advert title
      * @return a pageable response of tour requests
      */
-    public Page<TourRequestsFullResponse> getAllTourRequestByManagerAndAdminAsPage(int page, int size, String sort, String type,String query) {
+    public Page<TourRequestsFullResponse> getAllTourRequestByManagerAndAdminAsPage(int page, int size, String sort, String type, String query) {
         // Create a pageable object with the specified page, size, and sort order
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         // Check if the sort type is descending and update the pageable object accordingly
@@ -317,8 +323,10 @@ public class TourRequestsService {
     }
 
     // Not : GetById() ***************************************************************************************
+
     /**
      * Retrieves a tour request by its ID.
+     *
      * @param id the ID of the tour request to retrieve
      * @return the tour request with the given ID
      * @throws ResourceNotFoundException if the tour request is not found

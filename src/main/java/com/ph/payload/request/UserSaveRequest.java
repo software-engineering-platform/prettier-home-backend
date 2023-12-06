@@ -49,4 +49,5 @@ public class UserSaveRequest implements Supplier<User>, Serializable {
                 .passwordHash(getPassword())
                 .build();
     }
+
 }

@@ -1,26 +1,25 @@
 package com.ph.service;
 
- import com.ph.domain.entities.Advert;
- import com.ph.domain.entities.Image;
+import com.ph.domain.entities.Advert;
+import com.ph.domain.entities.Image;
 import com.ph.exception.customs.ImageException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.ImageMapper;
-
- import com.ph.payload.response.ImageResponse;
+import com.ph.payload.response.ImageResponse;
 import com.ph.repository.AdvertRepository;
 import com.ph.repository.ImageRepository;
 import com.ph.utils.ImageUtil;
- import com.ph.utils.MessageUtil;
- import jakarta.transaction.Transactional;
- import lombok.RequiredArgsConstructor;
-
+import com.ph.utils.MessageUtil;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
- import java.util.Comparator;
- import java.util.List;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +30,8 @@ public class ImageService {
     private final AdvertRepository advertRepository;
     private final MessageUtil messageUtil;
 
-
-    public Image saveImage(MultipartFile request ,Long advertId){
-        Image image ;
+    public Image saveImage(MultipartFile request, Long advertId) {
+        Image image;
         try {
             image = Image.builder()
                     .name(request.getOriginalFilename())
@@ -50,42 +48,30 @@ public class ImageService {
     }
 
 
+    @Transactional
+    public List<ImageResponse> createImage(List<MultipartFile> request, Long advertId) {
 
+        if (request.isEmpty()) {
+            throw new ImageException(String.format(messageUtil.getMessage("error.image.not.found")));
+        }
 
-    public ImageResponse createImage(List<MultipartFile> request, Long advertId  )   {
+        Advert advert = advertRepository.findById(advertId)
+                .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found"), advertId)));
 
+        List<Image> images = advert.getImages();
 
+        if (images != null && images.size() + request.size() > 10) {
+            throw new ImageException(String.format(messageUtil.getMessage("error.image.too.many")));
+        }
 
-    if (request.isEmpty()) {
-    throw new ImageException(String.format(messageUtil.getMessage("error.image.not.found")));
-    }
-            //NOT : BURAYA BAK
-  Advert advert =  advertRepository.findById(advertId)
-            .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found"), advertId)));
-
-    List<Image> images= advert.getImages();
-
-    if(images!=null &&images.size()+request.size()>10){
-        throw new ImageException(String.format(messageUtil.getMessage("error.image.too.many")));
-    }
-
-  List<Image> savedImage =  request.stream().map(t->saveImage(t, advertId)).toList();
-
-
-        return imageMapper.toImageResponse(savedImage.get(0));
-
-
+        List<Image> savedImage = request.stream().map(t -> saveImage(t, advertId)).toList();
+       return savedImage.stream().map(imageMapper::toImageResponse).collect(Collectors.toList());
     }
 
     public ResponseEntity<?> getImageById(Long id) {
         Image found = imageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.image.not.found.id"), id)));
-
-
-
         return ResponseEntity.ok(imageMapper.toImageResponse(found));
-
-
     }
 
     public List<ImageResponse> getAllImages() {
@@ -93,23 +79,24 @@ public class ImageService {
         return images.stream().map(imageMapper::toImageResponse).toList();
     }
 
-    public void deleteImage(List<Long> id) {
-      Advert advert=  advertRepository.findByImages_Id(id.get(0));
 
-      if (advert.getImages().size()==id.size()){
-          throw new ImageException(String.format(messageUtil.getMessage("error.image.not.delete")));
-      }
+    public void deleteImage(List<Long> id) {
+        Advert advert = advertRepository.findByImages_Id(id.get(0));
+
+
+        if (imageRepository.countByAdvert_Id(advert.getId()) == id.size()) {
+            throw new ImageException(String.format(messageUtil.getMessage("error.image.not.delete")));
+        }
 
         imageRepository.deleteAllById(id);
     }
 
-
     @Transactional
     public ImageResponse updateImage(Long imgId, Long advertId) {
-      Advert advert =  advertRepository.findById(advertId)
+        Advert advert = advertRepository.findById(advertId)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found"), advertId)));
 
-      List<Image> advertImages = advert.getImages();
+        List<Image> advertImages = advert.getImages();
 
         boolean match = advertImages.stream().anyMatch(image -> image.getId().equals(imgId));
         if (!match) {
@@ -120,29 +107,21 @@ public class ImageService {
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.image.not.found.id"), imgId)));
 
 
-         Image featuredImage =   advertImages.stream().filter(Image::isFeatured).findFirst().orElse(null);
+        Image featuredImage = advertImages.stream().filter(Image::isFeatured).findFirst().orElse(null);
         if (featuredImage != null) {
             featuredImage.setFeatured(false);
             imageRepository.save(featuredImage);
         }
 
-
         found.setFeatured(true);
         imageRepository.save(found);
 
         return imageMapper.toImageResponse(found);
-
-
-
-
-
-
-
     }
 
     @Transactional
     public List<ImageResponse> getAllImagesByAdvertId(Long id) {
-        Advert advert =  advertRepository.findById(id)
+        Advert advert = advertRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found"), id)));
         List<Image> advertImages = advert.getImages();
 
@@ -150,4 +129,5 @@ public class ImageService {
 
         return advertImages.stream().map(imageMapper::toImageResponse).toList();
     }
+
 }

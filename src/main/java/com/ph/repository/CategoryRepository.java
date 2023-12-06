@@ -19,9 +19,12 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     /**
      * This method created for getting all categories which active field is true
+     *
      * @param b : represent builtIn
      * @return : all builtIn categories
      */
     @Query("select c from Category c where c.builtIn = ?1")
     List<Category> findAllByBuiltIn(boolean b);
+
+    boolean existsBy();
 }

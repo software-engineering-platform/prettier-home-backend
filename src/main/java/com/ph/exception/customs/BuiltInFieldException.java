@@ -1,6 +1,6 @@
 package com.ph.exception.customs;
 
-public class BuiltInFieldException extends RuntimeException{
+public class BuiltInFieldException extends RuntimeException {
     public BuiltInFieldException(String message) {
         super(message);
     }

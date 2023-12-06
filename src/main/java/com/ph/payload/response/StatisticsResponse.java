@@ -2,12 +2,14 @@ package com.ph.payload.response;
 
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class StatisticsResponse {
+public class StatisticsResponse implements Serializable {
 
     private Long totalAdverts;
     private Long totalUsers;

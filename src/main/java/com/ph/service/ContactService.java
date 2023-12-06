@@ -1,4 +1,5 @@
 package com.ph.service;
+
 import com.ph.domain.entities.Contact;
 import com.ph.payload.mapper.UserMapper;
 import com.ph.payload.request.ContactRequest;
@@ -25,14 +26,16 @@ public class ContactService {
     // Not :J02 - Save() *************************************************************************
     // Save the contact and return a response entity with a success message
     public ResponseEntity<String> save(ContactRequest request) {
-      Contact contact= request.get();
-      contactRepository.save(contact);
+        Contact contact = request.get();
+        contactRepository.save(contact);
         return ResponseEntity.ok(messageUtil.getMessage("success.contact.saved"));
     }
 
     // Not :J01 - GetAll() *************************************************************************
+
     /**
      * Retrieves all contacts with pagination, sorting, and filtering options.
+     *
      * @param page The page number to retrieve.
      * @param size The number of contacts per page.
      * @param sort The sorting criteria for the contacts.

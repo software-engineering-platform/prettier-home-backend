@@ -3,21 +3,16 @@ package com.ph.payload.request;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
 @Setter
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-public class ResetPasswordRequest implements Serializable {
+@NoArgsConstructor
+public class ChangePasswordRequest implements Serializable {
 
-    @NotNull(message = "{validation.reset-code.null}")
-    private String code;
 
     @NotNull(message = "{validation.password.null}")
     @Size(min = 8, max = 30, message = "{validation.password.size}")
@@ -25,5 +20,14 @@ public class ResetPasswordRequest implements Serializable {
             regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
             message = "{validation.password.pattern}"
     )
-    private String password;
+    private String currentPassword;
+
+    @NotNull(message = "{validation.password.null}")
+    @Size(min = 8, max = 30, message = "{validation.password.size}")
+    @Pattern(
+            regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
+            message = "{validation.password.pattern}"
+    )
+    private String newPassword;
+
 }

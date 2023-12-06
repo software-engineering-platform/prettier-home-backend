@@ -7,13 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface CategoryPropertyValueRepository extends JpaRepository<CategoryPropertyValue, Long> {
-    @Transactional
-    @Modifying
-    @Query("delete from CategoryPropertyValue c where c.advert is null")
-    void deleteByAdvertNull();
-
-
+    List<CategoryPropertyValue> findByAdvert_Id(Long id);
 
 }

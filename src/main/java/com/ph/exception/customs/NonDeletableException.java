@@ -6,4 +6,7 @@ public class NonDeletableException extends RuntimeException {
         super(message);
     }
 
+    public NonDeletableException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

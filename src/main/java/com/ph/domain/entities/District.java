@@ -32,6 +32,7 @@ public class District implements Serializable {
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
+
     /**
      * Entity relationships end
      */
@@ -56,8 +57,6 @@ public class District implements Serializable {
         return "District{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-              /*  ", adverts=" + adverts +
-                ", city=" + city +*/
                 '}';
     }
 

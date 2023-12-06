@@ -20,9 +20,7 @@ public class ContactController {
     // Not :J02 - Save() *************************************************************************
     @PostMapping()
     public ResponseEntity<String> save(@RequestBody @Valid ContactRequest request) {
-
         return contactService.save(request);
-
     }
 
     // Not :J01 - GetAll() *************************************************************************

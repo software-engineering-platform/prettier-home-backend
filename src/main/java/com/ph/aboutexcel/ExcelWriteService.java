@@ -25,7 +25,6 @@ public class ExcelWriteService extends AbstractExcelExporter {
         return excelFilePath;
     }
 
-
     @Override
     protected CellStyle buildHeaderStyle(Workbook workbook) {
 

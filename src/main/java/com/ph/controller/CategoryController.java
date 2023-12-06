@@ -24,40 +24,37 @@ public class CategoryController {
     @PostMapping() // http://localhost:8080/categories
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<?> save(@Valid @RequestBody CategoryRequest categoryRequest) {
-
         return categoryService.save(categoryRequest);
-
     }
 
     //NOT: getAllCategoryWithPage **************************************************C01
-//    @GetMapping()  //http://localhost:8080/categories?page=0&size=10&sort=id&type=asc
-//    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'CUSTOMER')")
-//    public Page<CategoryResponse> getAllCategoryWithPage(
-//            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-//            @RequestParam(value = "size", defaultValue = "10", required = false ) int size,
-//            @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
-//            @RequestParam(value = "type", defaultValue = "asc",required = false) String type
-//    ) {
-//        return categoryService.getAllCategoryWithPage(page, size, sort, type);
-//    }
+    //    @GetMapping()  //http://localhost:8080/categories?page=0&size=10&sort=id&type=asc
+    //    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'CUSTOMER')")
+    //    public Page<CategoryResponse> getAllCategoryWithPage(
+    //            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+    //            @RequestParam(value = "size", defaultValue = "10", required = false ) int size,
+    //            @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+    //            @RequestParam(value = "type", defaultValue = "asc",required = false) String type
+    //    ) {
+    //        return categoryService.getAllCategoryWithPage(page, size, sort, type);
+    //    }
 
     //NOT: getAllCategoryWithList **************************************************C01 WithList
     @GetMapping() //http://localhost:8080/categories
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'CUSTOMER')")
-    public ResponseEntity<List<CategoryWithoutPropertiesResponse>> getAllCategory(){
+    public ResponseEntity<List<CategoryWithoutPropertiesResponse>> getAllCategory() {
         return categoryService.getAllCategory();
     }
-
 
     //NOT: getAllCategoryWithPageAndWithAdmin **************************************************C02
     @GetMapping("/admin")  // http://localhost:8080/categories/admin?page=0&size=10&sort=id&type=asc
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public Page<CategoryWithoutPropertiesResponse> getAllCategoryWithPageAndWithAdmin(
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-            @RequestParam(value = "size", defaultValue = "10", required = false ) int size,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size,
             @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
-            @RequestParam(value = "type", defaultValue = "asc",required = false) String type,
-            @RequestParam(value = "query",required = false) String query
+            @RequestParam(value = "type", defaultValue = "asc", required = false) String type,
+            @RequestParam(value = "query", required = false) String query
     ) {
         return categoryService.getAllCategoryWithPageAndWithAdmin(page, size, sort, type, query);
     }
@@ -65,14 +62,14 @@ public class CategoryController {
     //NOT: deleteCategory **************************************************C06
     @DeleteMapping("/{categoryId}") //http://localhost:8080/categories/1
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId){
+    public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId) {
         return categoryService.deleteCategory(categoryId);
     }
 
     //NOT: getById **************************************************C03
     @GetMapping("/{categoryId}") //http://localhost:8080/categories/1
     //@PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'CUSTOMER')")
-    public ResponseEntity<CategoryResponse> getById(@PathVariable Long categoryId){
+    public ResponseEntity<CategoryResponse> getById(@PathVariable Long categoryId) {
         return categoryService.getById(categoryId);
     }
 
@@ -80,8 +77,10 @@ public class CategoryController {
     //NOT: updateById **************************************************C05
     @PutMapping("/{categoryId}") //http://localhost:8080/categories/1
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public ResponseEntity<?> updateById(@PathVariable Long categoryId,
-                                                       @Valid @RequestBody CategoryRequest categoryRequest){
+    public ResponseEntity<?> updateById(
+            @PathVariable Long categoryId,
+            @Valid @RequestBody CategoryRequest categoryRequest
+    ) {
         return categoryService.updateById(categoryId, categoryRequest);
     }
 

@@ -1,9 +1,6 @@
 package com.ph.controller;
 
-import com.ph.domain.entities.City;
-import com.ph.domain.entities.District;
 import com.ph.payload.response.DistrictResponse;
-import com.ph.service.CityService;
 import com.ph.service.DistrictsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,18 +18,16 @@ public class DistrictsController {
     private final DistrictsService districtsService;
 
     //Not:U04 GetAllDistricts() *************************************************************************
-
     // http://localhost:8080/districts
     @GetMapping("/search")
     public List<DistrictResponse> getAllDistricts() {
-
         return districtsService.getAllDistricts();
     }
 
     //Not:U03 GetAllDistrictsByCityId() *************************************************************************
     @GetMapping("/{cityId}")
     public List<DistrictResponse> getAllDistrictsByCityId(@PathVariable Long cityId) {
-
         return districtsService.getAllDistrictsByCityId(cityId);
     }
+
 }
