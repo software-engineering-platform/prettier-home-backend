@@ -111,6 +111,7 @@ public class AdvertMapper {
                 .statusForAdvert(advert.getStatusForAdvert())
                 .city(locationMapper.toCityResponse(advert.getCity()))
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
+                .country(locationMapper.toCountryResponse(advert.getCountry()))
                 .image(imageMapper.toImageResponse(advert.getImages().get(0)))
                 .slug(advert.getSlug())
                 .build();

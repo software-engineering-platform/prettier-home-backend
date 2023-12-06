@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +48,8 @@ public class ImageService {
     }
 
 
-    public ImageResponse createImage(List<MultipartFile> request, Long advertId) {
+    @Transactional
+    public List<ImageResponse> createImage(List<MultipartFile> request, Long advertId) {
 
         if (request.isEmpty()) {
             throw new ImageException(String.format(messageUtil.getMessage("error.image.not.found")));
@@ -63,8 +65,7 @@ public class ImageService {
         }
 
         List<Image> savedImage = request.stream().map(t -> saveImage(t, advertId)).toList();
-
-        return imageMapper.toImageResponse(savedImage.get(0));
+       return savedImage.stream().map(imageMapper::toImageResponse).collect(Collectors.toList());
     }
 
     public ResponseEntity<?> getImageById(Long id) {
@@ -78,16 +79,17 @@ public class ImageService {
         return images.stream().map(imageMapper::toImageResponse).toList();
     }
 
+
     public void deleteImage(List<Long> id) {
         Advert advert = advertRepository.findByImages_Id(id.get(0));
 
-        if (advert.getImages().size() == id.size()) {
+
+        if (imageRepository.countByAdvert_Id(advert.getId()) == id.size()) {
             throw new ImageException(String.format(messageUtil.getMessage("error.image.not.delete")));
         }
 
         imageRepository.deleteAllById(id);
     }
-
 
     @Transactional
     public ImageResponse updateImage(Long imgId, Long advertId) {
