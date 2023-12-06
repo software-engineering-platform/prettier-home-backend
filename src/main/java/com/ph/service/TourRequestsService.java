@@ -9,6 +9,7 @@ import com.ph.exception.customs.RelatedFieldException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.TourRequestsMapper;
 import com.ph.payload.request.TourRequestRequest;
+import com.ph.payload.response.TourRequestResponseSimple;
 import com.ph.payload.response.TourRequestsFullResponse;
 import com.ph.payload.response.TourRequestsStatusResponse;
 import com.ph.payload.response.TourRequestsResponse;
@@ -334,5 +335,10 @@ public class TourRequestsService {
     public TourRequest getById(Long id) {
         return tourRequestsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
+    }
+
+    public Page<TourRequestResponseSimple> getTourRequestByAdvertId(Pageable pageable, Long advertId) {
+        Page<TourRequest> tourRequests = tourRequestsRepository.findByAdvert_Id(advertId, pageable);
+        return tourRequests.map(tourRequestsMapper::toResponseSimple);
     }
 }

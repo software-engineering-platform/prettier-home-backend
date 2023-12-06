@@ -45,4 +45,19 @@ public class TourRequestsMapper {
                 .build();
     }
 
-}
+
+    public TourRequestResponseSimple toResponseSimple(TourRequest tourRequest) {
+        return TourRequestResponseSimple.builder()
+                .id(tourRequest.getId())
+                .tourDate(tourRequest.getTourDate())
+                .tourTime(tourRequest.getTourTime())
+                .guestUserFullName( getFullName(tourRequest))
+                .status(tourRequest.getStatus())
+                .build();
+    }
+
+
+    private String getFullName(TourRequest tourRequest) {
+        return tourRequest.getGuestUser().getFirstName() + " " + tourRequest.getGuestUser().getLastName();
+    }
+    }

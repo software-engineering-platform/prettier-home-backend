@@ -2,6 +2,7 @@ package com.ph.controller;
 
 
 import com.ph.payload.request.TourRequestRequest;
+import com.ph.payload.response.TourRequestResponseSimple;
 import com.ph.payload.response.TourRequestsFullResponse;
 import com.ph.payload.response.TourRequestsStatusResponse;
 import com.ph.payload.response.TourRequestsResponse;
@@ -9,6 +10,9 @@ import com.ph.service.TourRequestsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -128,5 +132,14 @@ public class TourRequestsController {
     public ResponseEntity<TourRequestsStatusResponse> declineByCustomerAsTourId(@PathVariable(name = "id") Long tourId) {
         return tourRequestsService.declinedByCustomerAsTourId(tourId);
     }
+
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
+    @GetMapping("/page/{advertId}")
+    public Page<TourRequestResponseSimple> getTourRequestsByAdvertId(
+            @PathVariable(value = "advertId") Long advertId,
+            @PageableDefault(page = 0, size = 10, sort = "tourDate", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return tourRequestsService.getTourRequestByAdvertId(pageable, advertId);
+     }
 
 }
