@@ -2,6 +2,7 @@ package com.ph.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "category_property_values")
+
 public class CategoryPropertyValue implements Serializable {
 
     @Id

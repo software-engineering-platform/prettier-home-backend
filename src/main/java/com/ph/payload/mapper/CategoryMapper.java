@@ -7,6 +7,7 @@ import com.ph.payload.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,6 +65,7 @@ public class CategoryMapper {
 
 
     public List<PropertyValueResponse> entityToResponse(List<CategoryPropertyValue> entities) {
+         entities.sort(Comparator.comparing(entity -> entity.getCategoryPropertyKey().getId()));
         return entities.stream()
                 .map(entity -> PropertyValueResponse.builder()
                         .id(entity.getId())

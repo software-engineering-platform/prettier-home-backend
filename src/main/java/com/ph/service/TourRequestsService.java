@@ -116,7 +116,7 @@ public class TourRequestsService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.pending-or-declined"));
         }
         // Check if there is a conflict in tour time
-        if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
+        if (tourRequestsRepository.existsByTourDateAndTourTime(request.getTourDate(), request.getTourTime())) {
             throw new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
         if (!isValidTourTime(tourRequest.getTourTime())) {

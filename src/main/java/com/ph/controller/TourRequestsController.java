@@ -10,6 +10,7 @@ import com.ph.service.TourRequestsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -138,9 +141,17 @@ public class TourRequestsController {
     @GetMapping("/page/{advertId}")
     public Page<TourRequestResponseSimple> getTourRequestsByAdvertId(
             @PathVariable(value = "advertId") Long advertId,
-            @PageableDefault(page = 0, size = 10, sort = "tourDate", direction = Sort.Direction.DESC) Pageable pageable
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(value = "sort", defaultValue = "tourDate", required = false) String sort,
+            @RequestParam(value = "type", defaultValue = "DESC", required = false) String type
     ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(sort), Sort.Order.desc("tourTime")));
+        if (Objects.equals(type, "ASC")) {
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort), Sort.Order.asc("tourTime")));
+        }
         return tourRequestsService.getTourRequestByAdvertId(pageable, advertId);
-     }
 
+
+    }
 }

@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -426,22 +427,38 @@ public class AdvertService {
         List<String> valuesOfProperty = request.getPropertyValues();
         List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream()
                 .map(CategoryPropertyValue::getId)
+                .sorted()
                 .toList();
+
+        List<CategoryPropertyValue> propertyValues = advert.getCategoryPropertyValues().stream()
+                .toList();
+
+
+        IntStream.range(0, propertyKeys.size())
+                .forEach(i -> System.err.println(
+                        propertyKeys.get(i).getId() + "," + propertyKeys.get(i).getName() + "---" +
+                                propertyValues.get(i).getId() + "," + propertyValues.get(i).getValue() +
+                                "---->" + valuesOfProperty.get(i)
+                ));
+
+
+
+
 
         for (int i = 0; i < propertyKeys.size(); i++) {
             if (propertyValuesIds.size() < i + 1) {
                 var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
                 advert.getCategoryPropertyValues().add(categoryPropertyValue);
             } else {
-                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), advert, propertyValuesIds.get(i));
-            }
+                propertyValueService.updateValue(  valuesOfProperty.get(i),  propertyValuesIds.get(i));
+             }
         }
 
         Advert savedAdvert = repository.save(advert);
-        // Log the update event
+         // Log the update event
         logService.logMessage("Advert updated by :" + user.getUsername(), savedAdvert, user);
-
-        return ResponseEntity.ok(mapper.toDetailedAdvertResponse(savedAdvert));
+        DetailedAdvertResponse detailedAdvertResponse = mapper.toDetailedAdvertResponse(savedAdvert);
+         return ResponseEntity.ok(detailedAdvertResponse);
     }
 
 
@@ -493,7 +510,7 @@ public class AdvertService {
                 var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
                 advert.getCategoryPropertyValues().add(categoryPropertyValue);
             } else {
-                propertyValueService.updateValue(propertyKeys.get(i), valuesOfProperty.get(i), advert, propertyValuesIds.get(i));
+                propertyValueService.updateValue(  valuesOfProperty.get(i),  propertyValuesIds.get(i));
             }
         }
 
