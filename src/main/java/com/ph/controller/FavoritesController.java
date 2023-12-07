@@ -71,4 +71,15 @@ public class FavoritesController {
     public ResponseEntity<?> getFavCountForAdvert(@PathVariable(name = "advertId") Long advertId,@AuthenticationPrincipal UserDetails userDetails) {
         return favoritesService.getFavCountForAdvert(advertId, userDetails);
     }
+
+
+    // Not: deleteFavorite
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")//http://localhost:8080/favorites/1
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteFavorite(
+            @PathVariable(name = "id") Long advertId,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return favoritesService.deleteFavorite(advertId, userDetails);
+    }
 }

@@ -10,6 +10,7 @@ import com.ph.repository.FavoritesRepository;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -169,5 +170,24 @@ public class FavoritesService {
         // Return the favorite count as a ResponseEntity
         return ResponseEntity.ok(favCount);
     }
+
+    // Not: deleteFavorite
+    public ResponseEntity<String> deleteFavorite(Long advertId, UserDetails userDetails) {
+        // Get the user based on the provided user details
+        User user = userService.getUserByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
+        // Check if the favorite already exists
+        Optional<Favorite> favorite = favoritesRepository.findByUser_IdAndAdvert_Id(user.getId(), advertId);
+
+        if (favorite.isPresent()) {
+            // If the favorite exists, delete it and return the response entity
+            favoritesRepository.delete(favorite.get());
+            return ResponseEntity.ok().body(messageUtil.getMessage("success.favorite.successfully.deleted"));
+        } else {
+            // If the favorite does not exist, return an error response
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageUtil.getMessage("error.favorite.not-found"));
+        }
+    }
+
 }
 
