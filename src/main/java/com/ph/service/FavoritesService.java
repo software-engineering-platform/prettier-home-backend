@@ -179,14 +179,12 @@ public class FavoritesService {
         // Check if the favorite already exists
         Optional<Favorite> favorite = favoritesRepository.findByUser_IdAndAdvert_Id(user.getId(), advertId);
 
-        if (favorite.isPresent()) {
-            // If the favorite exists, delete it and return the response entity
+        if (!favorite.isPresent()) {
+            throw new ResourceNotFoundException(messageUtil.getMessage("error.favorite.not.found"));
+        }
+            // If the favorite exists, delete it and return the response entit
             favoritesRepository.delete(favorite.get());
             return ResponseEntity.ok().body(messageUtil.getMessage("success.favorite.successfully.deleted"));
-        } else {
-            // If the favorite does not exist, return an error response
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageUtil.getMessage("error.favorite.not-found"));
-        }
     }
 
 }

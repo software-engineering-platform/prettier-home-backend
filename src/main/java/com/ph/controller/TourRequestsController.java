@@ -60,7 +60,7 @@ public class TourRequestsController {
 
     // Not:S10 - deleteTourRequest() *******************************************************************
     // http://localhost:8080/tour-requests/2
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')") //CUSTOMER EKLENDİ
     @DeleteMapping("/{id}")
     public ResponseEntity<TourRequestsResponse> deleteTourRequest(@PathVariable Long id) {
         return tourRequestsService.deleteTourRequest(id);
