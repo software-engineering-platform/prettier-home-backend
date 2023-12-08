@@ -2,6 +2,7 @@ package com.ph.payload.mapper;
 
 import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.AdvertType;
+import com.ph.domain.entities.Image;
 import com.ph.domain.enums.StatusForAdvert;
 import com.ph.payload.request.AdvertRequest;
 import com.ph.payload.request.AdvertRequestForUpdateByAdmin;
@@ -10,6 +11,10 @@ import com.ph.payload.request.AdvertTypeRequest;
 import com.ph.payload.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -51,7 +56,7 @@ public class AdvertMapper {
                 .country(locationMapper.toCountryResponse(advert.getCountry()))
                 .city(locationMapper.toCityResponse(advert.getCity()))
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
-                .images(advert.getImages().stream().map(imageMapper::toImageResponse).toList())
+                .images(sortedByFeatured(advert.getImages()))
                 .location(advert.getLocation())
                 .user(userMapper.toUserResponse(advert.getUser()))
                 .category(categoryMapper.mapToCategoryResponsewithPropertyKeys(advert.getCategory()))
@@ -104,6 +109,7 @@ public class AdvertMapper {
 
 
     public SimpleAdvertResponse toSimpleAdvertResponse(Advert advert) {
+
         return SimpleAdvertResponse.builder()
                 .id(advert.getId())
                 .title(advert.getTitle())
@@ -112,10 +118,11 @@ public class AdvertMapper {
                 .city(locationMapper.toCityResponse(advert.getCity()))
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
                 .country(locationMapper.toCountryResponse(advert.getCountry()))
-                .image(imageMapper.toImageResponse(advert.getImages().get(0)))
+                .image(imageMapper.toImageResponse(getFeaturedImage(advert.getImages())))
                 .slug(advert.getSlug())
                 .build();
     }
+
 
     //NOT ADVERT TYPE
 
@@ -132,7 +139,6 @@ public class AdvertMapper {
                 .build();
     }
 
-    //NOT ADVERT TYPE
 
 
     //NOT FAVOURITE
@@ -149,6 +155,7 @@ public class AdvertMapper {
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
                 .category(categoryMapper.toCategoryResponseForFavorite(advert.getCategory()))
                 .images(advert.getImages().stream().map(imageMapper::toImageResponse).toList())
+//                .images(sortedByFeatured(advert.getImages()))
                 .build();
     }
 
@@ -168,5 +175,19 @@ public class AdvertMapper {
                 .build();
     }
 
+    //Not Helper Method to get featured image
+    private Image getFeaturedImage(List<Image> images) {
+        return images.stream()
+                .filter(Image::isFeatured)
+                .findFirst()
+                .orElse(images.get(0));
+    }
+
+
+    //Not Helper Method to get sorted by featured
+    private List<ImageResponse> sortedByFeatured(List<Image> images) {
+        images.sort(Comparator.comparing(Image::isFeatured).reversed());
+        return images.stream().map(imageMapper::toImageResponse).toList();
+    }
 
 }

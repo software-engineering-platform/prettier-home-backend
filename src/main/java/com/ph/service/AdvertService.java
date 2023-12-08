@@ -430,21 +430,6 @@ public class AdvertService {
                 .sorted()
                 .toList();
 
-        List<CategoryPropertyValue> propertyValues = advert.getCategoryPropertyValues().stream()
-                .toList();
-
-
-        IntStream.range(0, propertyKeys.size())
-                .forEach(i -> System.err.println(
-                        propertyKeys.get(i).getId() + "," + propertyKeys.get(i).getName() + "---" +
-                                propertyValues.get(i).getId() + "," + propertyValues.get(i).getValue() +
-                                "---->" + valuesOfProperty.get(i)
-                ));
-
-
-
-
-
         for (int i = 0; i < propertyKeys.size(); i++) {
             if (propertyValuesIds.size() < i + 1) {
                 var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
@@ -504,7 +489,9 @@ public class AdvertService {
         // Update the property values of the advert
         List<CategoryPropertyKey> propertyKeys = advert.getCategory().getCategoryPropertyKeys();
         List<String> valuesOfProperty = request.getPropertyValues();
-        List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream().map(CategoryPropertyValue::getId).toList();
+        List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream().map(CategoryPropertyValue::getId)
+                .sorted()
+                .toList();
         for (int i = 0; i < propertyKeys.size(); i++) {
             if (propertyValuesIds.size() < i + 1) {
                 var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
