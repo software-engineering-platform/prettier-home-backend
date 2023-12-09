@@ -139,6 +139,7 @@ public class AdvertService {
      *
      * @return The list of AdvertCityDTO objects.
      */
+    @Cacheable(value = "advertsByCities")
     public List<AdvertCityResponse> getAdvertsByCities() {
         return repository.getAdvertsByCities();
     }
@@ -148,6 +149,7 @@ public class AdvertService {
      *
      * @return the list of AdvertCategoryDTO objects
      */
+    @Cacheable(value = "advertsByCategories")
     // NOT:A03 / getAdvertsByCategories() ************************************************************
     public List<AdvertCategoryResponse> getAdvertsByCategories() {
         return repository.getAdvertsByCategories();

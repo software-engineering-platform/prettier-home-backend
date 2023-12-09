@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -134,6 +136,14 @@ public class UserController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return userService.deleteUserPhoto(userDetails);
+    }
+
+
+    @GetMapping("/fav")
+    public List<Long> getFavoriteAdvertIdList(
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return userService.getFavoriteAdvertIdList(userDetails);
     }
 
 }
