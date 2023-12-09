@@ -30,17 +30,18 @@ public class CategoryPropertyValueService {
 
     }
 
-    public void updateValue(CategoryPropertyKey categoryPropertyKey, String s, Advert savedAdvert, Long aLong) {
+    public void updateValue(String newValue, Long propValueId) {
 
-        CategoryPropertyValue categoryPropertyValue = repository.findById(aLong).orElseThrow(() ->
-                new ResourceNotFoundException(String.format(messageUtil.getMessage("error.category.property.value.not.found"), aLong)));
+        CategoryPropertyValue categoryPropertyValue = repository.findById(propValueId).orElseThrow(() ->
+                new ResourceNotFoundException(String.format(messageUtil.getMessage("error.category.property.value.not.found"), propValueId)));
 
-        categoryPropertyValue.setAdvert(savedAdvert);
-        categoryPropertyValue.setCategoryPropertyKey(categoryPropertyKey);
-        categoryPropertyValue.setValue(s);
-        categoryPropertyValue.setId(aLong);
 
-        repository.save(categoryPropertyValue);
+        categoryPropertyValue.setValue(newValue);
+
+
+        CategoryPropertyValue save = repository.save(categoryPropertyValue);
+        System.err.println(save);
+
     }
 
 }

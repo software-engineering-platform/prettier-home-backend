@@ -1,8 +1,10 @@
 package com.ph.controller;
 
+import com.ph.payload.request.ImageUpdateRequest;
 import com.ph.payload.response.ImageResponse;
 import com.ph.service.ImageService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +49,9 @@ public class ImageController {
 
 
     @PutMapping()
-    public ImageResponse updateImage(@RequestParam Long imgId, @RequestParam Long advertId) {
-        return imageService.updateImage(imgId, advertId);
+    public ImageResponse updateImage(@RequestBody @Valid ImageUpdateRequest request) {
+
+        return imageService.updateImage(request);
     }
 
 

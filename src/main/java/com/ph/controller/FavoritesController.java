@@ -2,6 +2,7 @@ package com.ph.controller;
 
 import com.ph.payload.response.AdvertResponseForFavorite;
 import com.ph.service.FavoritesService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,6 +36,7 @@ public class FavoritesController {
     // Not :K03 - FavoriteSave() ***************************************************************************
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")//http://localhost:8080/favorites/1/auth
     @PostMapping("{id}/auth")
+    @Transactional
     public ResponseEntity<AdvertResponseForFavorite> addToFavorites(
             @PathVariable(name = "id") Long advertId,
             @AuthenticationPrincipal UserDetails userDetails

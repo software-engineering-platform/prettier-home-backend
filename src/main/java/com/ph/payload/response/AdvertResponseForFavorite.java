@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class AdvertResponseForFavorite implements Serializable {
+    //TODO RESPONSE DA İMAGE DÖNÜNCE 4.5 MB'LİK BİR RESPONSE OLUYOR
 
     private Long id;
     private String title;

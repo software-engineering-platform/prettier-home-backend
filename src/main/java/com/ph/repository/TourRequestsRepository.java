@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Repository
 public interface TourRequestsRepository extends JpaRepository<TourRequest, Long> {
+    Page<TourRequest> findByAdvert_Id(Long id, Pageable pageable);
     boolean existsByOwnerUser_Id(Long id);
 
     boolean existsByGuestUser_Id(Long id);

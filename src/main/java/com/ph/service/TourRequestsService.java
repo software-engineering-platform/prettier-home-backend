@@ -9,6 +9,7 @@ import com.ph.exception.customs.RelatedFieldException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.TourRequestsMapper;
 import com.ph.payload.request.TourRequestRequest;
+import com.ph.payload.response.TourRequestResponseSimple;
 import com.ph.payload.response.TourRequestsFullResponse;
 import com.ph.payload.response.TourRequestsStatusResponse;
 import com.ph.payload.response.TourRequestsResponse;
@@ -115,7 +116,7 @@ public class TourRequestsService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.pending-or-declined"));
         }
         // Check if there is a conflict in tour time
-        if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
+        if (tourRequestsRepository.existsByTourDateAndTourTime(request.getTourDate(), request.getTourTime())) {
             throw new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
         }
         if (!isValidTourTime(tourRequest.getTourTime())) {
@@ -285,6 +286,7 @@ public class TourRequestsService {
      * @return The status response of the approved tour request.
      * @throws ResourceNotFoundException If the tour request is not found.
      */
+    @Transactional
     public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(Long tourId) {
         // Find the tour request by ID or throw an exception if not found
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
@@ -308,6 +310,7 @@ public class TourRequestsService {
      * @return The response entity containing the declined tour request.
      * @throws ResourceNotFoundException If the tour request is not found.
      */
+    @Transactional
     public ResponseEntity<TourRequestsStatusResponse> declinedByCustomerAsTourId(Long tourId) {
         // Find the tour request by ID or throw an exception if not found
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
@@ -335,6 +338,10 @@ public class TourRequestsService {
         return tourRequestsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
     }
+
+    public Page<TourRequestResponseSimple> getTourRequestByAdvertId(Pageable pageable, Long advertId) {
+        Page<TourRequest> tourRequests = tourRequestsRepository.findByAdvert_Id(advertId, pageable);
+        return tourRequests.map(tourRequestsMapper::toResponseSimple);
 
     // Not: getTourRequestCount
     /**
@@ -370,5 +377,6 @@ public class TourRequestsService {
 
         // Return the count of tour requests as a ResponseEntity
         return ResponseEntity.ok(tourRequestCount);
+
     }
 }

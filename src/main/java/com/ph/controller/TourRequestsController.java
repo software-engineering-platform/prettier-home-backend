@@ -2,6 +2,7 @@ package com.ph.controller;
 
 
 import com.ph.payload.request.TourRequestRequest;
+import com.ph.payload.response.TourRequestResponseSimple;
 import com.ph.payload.response.TourRequestsFullResponse;
 import com.ph.payload.response.TourRequestsStatusResponse;
 import com.ph.payload.response.TourRequestsResponse;
@@ -9,11 +10,17 @@ import com.ph.service.TourRequestsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -116,7 +123,7 @@ public class TourRequestsController {
     // Not :S08 - ApproveByCustomerAsTourId() *******************************************************************
     // http://localhost:8080/tour-requests/6/approve
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    @PatchMapping("/{id}/approve")
+    @GetMapping("/{id}/approve")
     public ResponseEntity<TourRequestsStatusResponse> approveByCustomerAsTourId(@PathVariable(name = "id") Long tourId) {
         return tourRequestsService.approveByCustomerAsTourId(tourId);
     }
@@ -124,9 +131,29 @@ public class TourRequestsController {
     // Not :S09 - DeclineByCustomerAsTourId() *******************************************************************
     // http://localhost:8080/tour-requests/6/decline
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    @PatchMapping("/{id}/decline")
+    @GetMapping("/{id}/decline")
     public ResponseEntity<TourRequestsStatusResponse> declineByCustomerAsTourId(@PathVariable(name = "id") Long tourId) {
         return tourRequestsService.declinedByCustomerAsTourId(tourId);
+    }
+
+
+    // Not :Helper - getTourRequestsByAdvertId() *******************************************************************
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
+    @GetMapping("/page/{advertId}")
+    public Page<TourRequestResponseSimple> getTourRequestsByAdvertId(
+            @PathVariable(value = "advertId") Long advertId,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+            @RequestParam(value = "sort", defaultValue = "tourDate", required = false) String sort,
+            @RequestParam(value = "type", defaultValue = "DESC", required = false) String type
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc(sort), Sort.Order.desc("tourTime")));
+        if (Objects.equals(type, "ASC")) {
+            pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc(sort), Sort.Order.asc("tourTime")));
+        }
+        return tourRequestsService.getTourRequestByAdvertId(pageable, advertId);
+
+
     }
 
     // Not: getTourRequestCount for spesific advert
@@ -135,5 +162,6 @@ public class TourRequestsController {
     public ResponseEntity<?> getTourRequestCount(@PathVariable(name = "id") Long advertId, @AuthenticationPrincipal UserDetails userDetails) {
         return tourRequestsService.getTourRequestCount(advertId, userDetails);
     }
+
 
 }

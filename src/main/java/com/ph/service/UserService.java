@@ -1,6 +1,7 @@
 package com.ph.service;
 
 
+import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.Favorite;
 import com.ph.domain.entities.ProfilePhoto;
 import com.ph.domain.entities.User;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -429,4 +431,12 @@ public class UserService {
         return ResponseEntity.ok(userMapper.toUserResponse(updated));
     }
 
+    public List<Long> getFavoriteAdvertIdList(UserDetails userDetails) {
+        User user = (User) userDetails;
+       return favoritesRepository
+               .findByUser_Id(user.getId())
+               .stream().map(Favorite::getAdvert)
+               .map(Advert::getId)
+               .collect(Collectors.toList());
+      }
 }
