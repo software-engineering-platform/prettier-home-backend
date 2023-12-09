@@ -17,4 +17,7 @@ public interface FavoritesRepository extends JpaRepository<Favorite, Long> {
 
     List<Favorite> findByUser_Id(Long id);
 
+    // Not: getFavCountForAdvertOfTheUser
+    Long countByUser_IdAndAdvert_Id(Long id, Long id1);
+
 }

@@ -204,7 +204,7 @@ public class AdvertController {
 
     // NOT:A13 / delete() ************************************************************
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER', 'ADMIN', 'MANAGER')") //CUSTOMER EKLENDİ
     public String delete(
             @PathVariable Long id,
             @AuthenticationPrincipal UserDetails userDetails

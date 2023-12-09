@@ -24,5 +24,6 @@ public class AdvertResponseForFavorite implements Serializable {
     private DistrictResponse district;
     private CategoryResponseForFavorite category;
     private List<ImageResponse> images;
+    private String slug;
 
 }

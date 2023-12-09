@@ -12,7 +12,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TourRequestsFullResponse implements Serializable {
+public class  TourRequestsFullResponse implements Serializable {
 
     private Long id;
     private LocalDate tourDate;

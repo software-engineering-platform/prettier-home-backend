@@ -60,7 +60,7 @@ public class TourRequestsController {
 
     // Not:S10 - deleteTourRequest() *******************************************************************
     // http://localhost:8080/tour-requests/2
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')") //CUSTOMER EKLENDİ
     @DeleteMapping("/{id}")
     public ResponseEntity<TourRequestsResponse> deleteTourRequest(@PathVariable Long id) {
         return tourRequestsService.deleteTourRequest(id);
@@ -127,6 +127,13 @@ public class TourRequestsController {
     @PatchMapping("/{id}/decline")
     public ResponseEntity<TourRequestsStatusResponse> declineByCustomerAsTourId(@PathVariable(name = "id") Long tourId) {
         return tourRequestsService.declinedByCustomerAsTourId(tourId);
+    }
+
+    // Not: getTourRequestCount for spesific advert
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
+    @GetMapping("/auth/count/{id}")
+    public ResponseEntity<?> getTourRequestCount(@PathVariable(name = "id") Long advertId, @AuthenticationPrincipal UserDetails userDetails) {
+        return tourRequestsService.getTourRequestCount(advertId, userDetails);
     }
 
 }

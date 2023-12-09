@@ -563,4 +563,14 @@ public class AdvertService {
         return repository.existsByUser_Id(id);
     }
 
+
+    /**
+     * Retrieves all adverts associated with a specific user ID.
+     *
+     * @param userId The ID of the user.
+     * @return A list of adverts associated with the specified user ID.
+     */
+    public List<Advert> getAllAdvertsByUserId(Long userId) {
+        return repository.findByUser_Id(userId);
+    }
 }
