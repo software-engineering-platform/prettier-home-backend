@@ -10,6 +10,7 @@ import com.ph.repository.FavoritesRepository;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,7 @@ public class FavoritesService {
      * @param id The ID of the user
      * @return The list of favorite adverts as a ResponseEntity
      */
+
     public ResponseEntity<List<AdvertResponseForFavorite>> getByUserIdFavoritesForManagerAndAdmin(Long id) {
         // Retrieve the list of favorites for the user ID
         List<Favorite> favorites = favoritesRepository.findByUser_Id(id);
@@ -73,6 +75,7 @@ public class FavoritesService {
      * @return the response entity containing the advert response for the favorite
      * @throws ResourceNotFoundException if the user is not found
      */
+    @Transactional
     public ResponseEntity<AdvertResponseForFavorite> addToFavorites(Long advertId, UserDetails userDetails) {
         // Get the user based on the provided user details
         User user = userService.getUserByEmail(userDetails.getUsername())
@@ -145,5 +148,44 @@ public class FavoritesService {
         favoritesRepository.deleteById(favoriteId);
         return ResponseEntity.ok().body(messageUtil.getMessage("success.favorite.successfully.deleted"));
     }
+
+
+    // Not: getFavCountForAdvert
+    /**
+     * Retrieves the favorite count for a specific advert.
+     *
+     * @param advertId     the ID of the advert
+     * @param userDetails the user details of the user
+     * @return a ResponseEntity with the favorite count
+     * @throws ResourceNotFoundException if the user is not found
+     */
+    public ResponseEntity<Long> getFavCountForAdvert(Long advertId, UserDetails userDetails) {
+        // Get the user by email
+        User user = userService.getUserByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
+
+        // Retrieve the favorite count for the advert
+        Long favCount = favoritesRepository.countByUser_IdAndAdvert_Id(user.getId(), advertId);
+
+        // Return the favorite count as a ResponseEntity
+        return ResponseEntity.ok(favCount);
+    }
+
+    // Not: deleteFavorite
+    public ResponseEntity<String> deleteFavorite(Long advertId, UserDetails userDetails) {
+        // Get the user based on the provided user details
+        User user = userService.getUserByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
+        // Check if the favorite already exists
+        Optional<Favorite> favorite = favoritesRepository.findByUser_IdAndAdvert_Id(user.getId(), advertId);
+
+        if (!favorite.isPresent()) {
+            throw new ResourceNotFoundException(messageUtil.getMessage("error.favorite.not.found"));
+        }
+            // If the favorite exists, delete it and return the response entit
+            favoritesRepository.delete(favorite.get());
+            return ResponseEntity.ok().body(messageUtil.getMessage("success.favorite.successfully.deleted"));
+    }
+
 }
 

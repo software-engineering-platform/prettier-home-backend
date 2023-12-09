@@ -156,6 +156,7 @@ public class AdvertMapper {
                 .category(categoryMapper.toCategoryResponseForFavorite(advert.getCategory()))
                 .images(advert.getImages().stream().map(imageMapper::toImageResponse).toList())
 //                .images(sortedByFeatured(advert.getImages()))
+                .slug(advert.getSlug())
                 .build();
     }
 
