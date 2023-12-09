@@ -29,7 +29,7 @@ public class TourRequest extends Entry implements Serializable {
     @NotNull
     private LocalDate tourDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     @NotNull
     private LocalTime tourTime;//Requarement'ta DateTime diyor biz Time aldık
 

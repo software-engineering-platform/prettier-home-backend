@@ -25,7 +25,7 @@ public class TourRequestRequest implements Supplier<TourRequest>, Serializable {
     private LocalDate tourDate;
 
     @NotNull(message = "{validation.tour.request.tour.time.notnull}")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "US")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm", timezone = "US")
     private LocalTime tourTime;
 
     @NotNull(message = "{validation.advert.id.notnull}")

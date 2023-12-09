@@ -159,7 +159,7 @@ public class TourRequestsController {
     // Not: getTourRequestCount for spesific advert
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @GetMapping("/auth/count/{id}")
-    public ResponseEntity<?> getTourRequestCount(@PathVariable(name = "id") Long advertId, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Long> getTourRequestCount(@PathVariable(name = "id") Long advertId, @AuthenticationPrincipal UserDetails userDetails) {
         return tourRequestsService.getTourRequestCount(advertId, userDetails);
     }
 
