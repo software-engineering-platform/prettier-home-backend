@@ -20,5 +20,6 @@ public class AdvertResponseForTourRequest implements Serializable {
     private CityResponse city;
     private DistrictResponse district;
 //    private List<Image> images;
+    private String slug;
 
 }

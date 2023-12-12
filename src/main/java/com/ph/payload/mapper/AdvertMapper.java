@@ -173,6 +173,7 @@ public class AdvertMapper {
                 .location(advert.getLocation())
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
                 .country(locationMapper.toCountryResponse(advert.getCountry()))
+                .slug(advert.getSlug())
                 .build();
     }
 
