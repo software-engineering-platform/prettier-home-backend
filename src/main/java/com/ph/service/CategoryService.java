@@ -51,7 +51,7 @@ public class CategoryService {
 
         Category category = categoryRequest.get();
         category.setSlug(GeneralUtils.generateSlug(category.getTitle()));
-        checkTitle(categoryRequest.getTitle());
+        checkTitle(categoryRequest.getTitle(), categoryRequest);
 
         // if there is same slug in database then throw ConflictException
         checkDuplicateForSlug(category.getSlug());//NOT: is it required to check for duplicate slug???
@@ -68,7 +68,7 @@ public class CategoryService {
      *
      * @param title : represent  title of category
      */
-    public void checkTitle(String title) {
+    public void checkTitle(String title, CategoryRequest categoryRequest) {
 
         // if the title contains character except a-zA-Z then throw ConflictException
         if (!title.matches("^[a-zA-Z ]+$")) {
@@ -76,13 +76,20 @@ public class CategoryService {
         }
         // get all Title in database
         List<String> titles = categoryRepository.findAllTitle();
+
+        Category category = categoryRequest.get();
+
         // if there is same title in database then throw ConflictException
+        if (title != null && !category.getTitle().equalsIgnoreCase(title) && categoryRepository.existsByTitle(title)) {
+            throw new ConflictException(messageUtil.getMessage("error.category.save.exist"));
+        }
+        /*
         for (String t : titles) {
             if (t.equalsIgnoreCase(title)) {
                 throw new ConflictException(messageUtil.getMessage("error.category.save.exist"));
             }
         }
-
+        */
     }
 
     /**
@@ -266,7 +273,7 @@ public class CategoryService {
         }
 
         // check title for duplicate and constraint
-        checkTitle(categoryRequest.getTitle());
+        checkTitle(categoryRequest.getTitle(), categoryRequest);
 
         // Update the existing category with the new values
         existingCategory.setTitle(categoryRequest.getTitle());
