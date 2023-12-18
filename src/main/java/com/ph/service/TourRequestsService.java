@@ -191,6 +191,7 @@ public class TourRequestsService {
      * @param query the query to filter tour requests by advert title
      * @return a pageable response of tour requests
      */
+    @Transactional
     public Page<TourRequestsFullResponse> getAllTourRequestByManagerAndAdminAsPage(int page, int size, String sort, String type, String query) {
         // Create a pageable object with the specified page, size, and sort order
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());

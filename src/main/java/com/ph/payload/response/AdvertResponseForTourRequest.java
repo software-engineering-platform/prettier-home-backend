@@ -1,9 +1,11 @@
 package com.ph.payload.response;
 
+import com.ph.domain.entities.Image;
 import com.ph.domain.entities.Location;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +21,7 @@ public class AdvertResponseForTourRequest implements Serializable {
     private CountryResponse country;
     private CityResponse city;
     private DistrictResponse district;
-//    private List<Image> images;
+    private List<Image> images;
+    private String slug;
 
 }

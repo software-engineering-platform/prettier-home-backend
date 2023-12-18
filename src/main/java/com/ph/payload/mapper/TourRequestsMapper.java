@@ -24,7 +24,6 @@ public class TourRequestsMapper {
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .status(tourRequest.getStatus())
                 .images(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).collect(Collectors.toList()))
-                .tourTime(tourRequest.getTourTime())
                 .build();
     }
 
@@ -37,6 +36,7 @@ public class TourRequestsMapper {
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .guestUser(userMapper.toUserResponse(tourRequest.getGuestUser()))
                 .status(tourRequest.getStatus())
+                .images(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).collect(Collectors.toList()))
                 .build();
     }
 
