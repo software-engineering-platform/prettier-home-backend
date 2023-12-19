@@ -120,9 +120,9 @@ public class AdvertService {
         // Map the status parameter to the corresponding enum value
         if (status != null) {
             switch (status) {
-                case 0 -> statusForAdvert = StatusForAdvert.PENDING;
-                case 1 -> statusForAdvert = StatusForAdvert.ACTIVATED;
-                case 2 -> statusForAdvert = StatusForAdvert.REJECTED;
+                case 1 -> statusForAdvert = StatusForAdvert.PENDING;
+                case 2 -> statusForAdvert = StatusForAdvert.ACTIVATED;
+                case 3 -> statusForAdvert = StatusForAdvert.REJECTED;
             }
         }
 
@@ -238,9 +238,9 @@ public class AdvertService {
         StatusForAdvert statusForAdvert = null;
         if (status != null) {
             switch (status) {
-                case 0 -> statusForAdvert = StatusForAdvert.PENDING;
-                case 1 -> statusForAdvert = StatusForAdvert.ACTIVATED;
-                case 2 -> statusForAdvert = StatusForAdvert.REJECTED;
+                case 1 -> statusForAdvert = StatusForAdvert.PENDING;
+                case 2 -> statusForAdvert = StatusForAdvert.ACTIVATED;
+                case 3 -> statusForAdvert = StatusForAdvert.REJECTED;
             }
         }
 
