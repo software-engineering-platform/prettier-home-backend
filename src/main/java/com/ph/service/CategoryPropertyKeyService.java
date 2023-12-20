@@ -128,9 +128,8 @@ public class CategoryPropertyKeyService {
         }
 
         // is there same category key in property key of a category
-        if (categoryPropertyKey.getName().equalsIgnoreCase(propertyKeyRequest.getName()) &&
-                propertyKeyRepository.existsByCategory_IdAndNameIgnoreCase(categoryPropertyKey.getCategory().getId(), categoryPropertyKey.getName())
-        ) {
+        if (propertyKeyRepository.existsByCategory_IdAndNameIgnoreCase(categoryPropertyKey.getCategory().getId(), propertyKeyRequest.getName())
+                && !categoryPropertyKey.getName().equalsIgnoreCase(propertyKeyRequest.getName())) {
             throw new ConflictException(messageUtil.getMessage("error.cpk.save.duplicate.name.in.category"));
         }
 
