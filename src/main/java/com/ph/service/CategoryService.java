@@ -49,12 +49,20 @@ public class CategoryService {
     @CacheEvict(value = "category", allEntries = true)
     public ResponseEntity<?> save(CategoryRequest categoryRequest) {
 
+
         Category category = categoryRequest.get();
+
+        // generate slug
         category.setSlug(GeneralUtils.generateSlug(category.getTitle()));
+
+        // check title constraint
         checkTitle(categoryRequest.getTitle());
 
-        // if there is same slug in database then throw ConflictException
-        checkDuplicateForSlug(category.getSlug());//NOT: is it required to check for duplicate slug???
+        // check title for duplicate if there is same title in database then throw ConflictException
+        if (categoryRepository.existsByTitle(categoryRequest.getTitle()) &&
+                !category.getTitle().equalsIgnoreCase(categoryRequest.getTitle())) {
+            throw new ConflictException(messageUtil.getMessage("error.category.save.exist"));
+        }
 
         // save category in database
         Category saved = categoryRepository.save(category);
@@ -73,14 +81,6 @@ public class CategoryService {
         // if the title contains character except a-zA-Z then throw ConflictException
         if (!title.matches("^[a-zA-Z ]+$")) {
             throw new ConflictException(messageUtil.getMessage("error.category.save.not-alphabetic"));
-        }
-        // get all Title in database
-        List<String> titles = categoryRepository.findAllTitle();
-        // if there is same title in database then throw ConflictException
-        for (String t : titles) {
-            if (t.equalsIgnoreCase(title)) {
-                throw new ConflictException(messageUtil.getMessage("error.category.save.exist"));
-            }
         }
 
     }
@@ -209,7 +209,6 @@ public class CategoryService {
         // delete category
         categoryRepository.deleteById(categoryId);
 
-
         // return deleted category
         return ResponseEntity.ok(categoryMapper.mapToCategoryWithoutPropertyResponse(category.get()));
 
@@ -249,34 +248,34 @@ public class CategoryService {
     @CacheEvict(value = "category", key = "#categoryId")
     public ResponseEntity<?> updateById(Long categoryId, CategoryRequest categoryRequest) {
         // Check if the category with the given ID exists in the database
-        Optional<Category> category = categoryRepository.findById(categoryId);
-
-        if (category.isEmpty()) {
-            // If the category doesn't exist
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(messageUtil.getMessage("error.category.not-found"));
-        }
-
-        // Get the existing category from the optional
-        Category existingCategory = category.get();
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new ResourceNotFoundException(messageUtil.getMessage("error.category.not-found"))
+        );
 
         // check the category is built_in
-        if (existingCategory.isBuiltIn()) {
+        if (category.isBuiltIn()) {
             throw new NonUpdatableException(messageUtil.getMessage("error.category.update.built-in"));
         }
 
-        // check title for duplicate and constraint
+        // check title for duplicate if there is same title in database then throw ConflictException
+        if (categoryRepository.existsByTitle(categoryRequest.getTitle()) &&
+                !category.getTitle().equalsIgnoreCase(categoryRequest.getTitle())) {
+            throw new ConflictException(messageUtil.getMessage("error.category.save.exist"));
+        }
+
+        // check title  constraint
         checkTitle(categoryRequest.getTitle());
 
+
         // Update the existing category with the new values
-        existingCategory.setTitle(categoryRequest.getTitle());
-        existingCategory.setIcon(categoryRequest.getIcon());
-        existingCategory.setSeq(categoryRequest.getSeq());
-        existingCategory.setActive(categoryRequest.getActive());
-        existingCategory.setSlug(GeneralUtils.generateSlug(categoryRequest.getTitle()));
+        category.setTitle(categoryRequest.getTitle());
+        category.setIcon(categoryRequest.getIcon());
+        category.setSeq(categoryRequest.getSeq());
+        category.setActive(categoryRequest.getActive());
+        category.setSlug(GeneralUtils.generateSlug(categoryRequest.getTitle()));
 
         // Save the updated category in the database
-        Category saved = categoryRepository.save(existingCategory);
+        Category saved = categoryRepository.save(category);
 
         // Return the updated category
         return ResponseEntity.ok(categoryMapper.mapToCategoryWithoutPropertyResponse(saved));
