@@ -70,6 +70,7 @@ public class SecurityFilterConfiguration {
             "/users/register",
             "/users/forgot-password",
             "/users/reset-password",
+            "/adverts/search",
             "/index*",
             "/static/**",
             "/*.js",
