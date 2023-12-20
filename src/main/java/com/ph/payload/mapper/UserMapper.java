@@ -55,6 +55,7 @@ public class UserMapper {
                 .lastName(contact.getLastName())
                 .email(contact.getEmail())
                 .message(contact.getMessage())
+                .createdAt(contact.getCreatedAt())
                 .build();
     }
 
