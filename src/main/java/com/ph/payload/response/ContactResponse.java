@@ -1,6 +1,8 @@
 package com.ph.payload.response;
 
 import lombok.*;
+import java.time.LocalDateTime;
+
 
 @Getter
 @Setter
@@ -13,5 +15,7 @@ public class ContactResponse {
     private String lastName;
     private String email;
     private String message;
+    private LocalDateTime createdAt;
+
 
 }
