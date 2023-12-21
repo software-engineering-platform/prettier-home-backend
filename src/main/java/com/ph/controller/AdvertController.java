@@ -36,14 +36,14 @@ public class AdvertController {
 
 
     // NOT:A01 / getByAdminPage() ************************************************************
-    @GetMapping()
+    @GetMapping("/search")
     public Page<SimpleAdvertResponse> getByAnonymusPage(
             @RequestParam(value = "q", defaultValue = "", required = false) String query,
-            @RequestParam(value = "category.id", required = false) Long categoryId,
-            @RequestParam(value = "advert_type_id", required = false) Long advertTypeId,
-            @RequestParam(value = "price_start", required = false) Integer priceStart,
-            @RequestParam(value = "price_end", required = false) Integer priceEnd,
-            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "c", required = false) Long categoryId,
+            @RequestParam(value = "at", required = false) Long advertTypeId,
+            @RequestParam(value = "ps", required = false) Integer priceStart,
+            @RequestParam(value = "pe", required = false) Integer priceEnd,
+            @RequestParam(value = "s", required = false) Integer status,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "sort", defaultValue = "category.id") String sort,
@@ -106,7 +106,7 @@ public class AdvertController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public Page<DetailedAdvertResponse> getByAdminPage(
             @RequestParam(value = "q", defaultValue = "", required = false) String query,
-            @RequestParam(value = "category.id", required = false) Long categoryId,
+            @RequestParam(value = "category_id", required = false) Long categoryId,
             @RequestParam(value = "advert_type_id", required = false) Long advertTypeId,
             @RequestParam(value = "price_start", required = false) Integer priceStart,
             @RequestParam(value = "price_end", required = false) Integer priceEnd,

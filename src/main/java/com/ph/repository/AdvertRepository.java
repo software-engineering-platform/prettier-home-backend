@@ -129,7 +129,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     List<AdvertCityResponse> getAdvertsByCities();
 
 
-    @Query("SELECT new com.ph.payload.response.AdvertCategoryResponse(a.category.title, COUNT(a.id)) FROM Advert a GROUP BY a.category.title")
+    @Query("SELECT new com.ph.payload.response.AdvertCategoryResponse(a.category.title,a.category.icon, COUNT(a.id)) FROM Advert a GROUP BY a.category.title, a.category.icon")
     List<AdvertCategoryResponse> getAdvertsByCategories();
 
 
