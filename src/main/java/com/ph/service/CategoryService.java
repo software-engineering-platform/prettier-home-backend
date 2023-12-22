@@ -163,20 +163,13 @@ public class CategoryService {
         }
 
         // if query is null or empty then return all categories
-        if (query == null || query.isEmpty()) {
-            return categoryRepository.findAll(pageable).map(categoryMapper::mapToCategoryWithoutPropertyResponse);
-        }
+//        if (query == null || query.isEmpty()) {
+//            return categoryRepository.findAll(pageable).map(categoryMapper::mapToCategoryWithoutPropertyResponse);
+//        }
 
         // if query is't null then return list of filtered categories which contains query
-        List<CategoryWithoutPropertiesResponse> categoryResponses = categoryRepository.findAll(pageable)
-                .stream()
-                .filter(category -> category.getTitle().toLowerCase().contains(query.toLowerCase()))
-                .map(categoryMapper::mapToCategoryWithoutPropertyResponse)
-                .collect(Collectors.toList());
+        return categoryRepository.findAllWithQuery(query, pageable).map(categoryMapper::mapToCategoryWithoutPropertyResponse);
 
-        // PageImpl structure : PageImpl<T>(List<T>, Pageable, int)
-        // This structure takes pageable and list of categoryResponses and return data with pageable
-        return new PageImpl<>(categoryResponses, pageable, categoryResponses.size());
     }
 
 
