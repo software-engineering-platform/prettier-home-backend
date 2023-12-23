@@ -77,8 +77,8 @@ public class BuiltInInitializer implements CommandLineRunner {
 
     private void initializeAdvertTypes() {
         if (!advertTypeRepository.existsBy()) {
-            advertTypeRepository.save(AdvertType.builder().title("Rent").build());
-            advertTypeRepository.save(AdvertType.builder().title("Sale").build());
+            advertTypeRepository.save(AdvertType.builder().title("Rent").builtIn(true).build());
+            advertTypeRepository.save(AdvertType.builder().title("Sale").builtIn(true).build());
         }
     }
 

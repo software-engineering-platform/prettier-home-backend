@@ -133,8 +133,8 @@ public class AdvertService {
      * @return The list of AdvertCityDTO objects.
      */
     @Cacheable(value = "advertsByCities")
-    public List<AdvertCityResponse> getAdvertsByCities() {
-        return repository.getAdvertsByCities();
+    public List<AdvertCityResponse> getAdvertsByCities(Integer limit) {
+        return repository.getAdvertsByCities(limit);
     }
 
     /**

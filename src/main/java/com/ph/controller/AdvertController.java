@@ -70,9 +70,9 @@ public class AdvertController {
     }
 
     // NOT:A02 / getAdvertsByCities() ************************************************************
-    @GetMapping("/cities")
-    public List<AdvertCityResponse> getAdvertsByCities() {
-        return service.getAdvertsByCities();
+    @GetMapping("/cities/{limit}")
+    public List<AdvertCityResponse> getAdvertsByCities(@PathVariable() Integer limit) {
+        return service.getAdvertsByCities(limit);
     }
 
 
