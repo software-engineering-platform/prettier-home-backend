@@ -102,7 +102,9 @@ public class AdvertService {
      * @param advertTypeId The ID of the advert type to filter by.
      * @param priceStart   The starting price range to filter by.
      * @param priceEnd     The ending price range to filter by.
-     * @param status       The status to filter by.
+     * @param country      The status to filter by.
+     * @param city         The status to filter by.
+     * @param district     The status to filter by.
      * @param pageable     The pageable object containing pagination information.
      * @return A page of AdvertResponse objects.
      * @throws ResourceNotFoundException If the start price is greater than the end price.
@@ -111,23 +113,14 @@ public class AdvertService {
     public Page<SimpleAdvertResponse> getForAnyms(
             String query, Long categoryId, Long advertTypeId,
             Integer priceStart, Integer priceEnd,
-            Integer status, Pageable pageable
+            Long country, Long city, Long district,
+            Pageable pageable
     ) throws ResourceNotFoundException {
 
         checkPrice(priceStart, priceEnd);
 
-        StatusForAdvert statusForAdvert = null;
-        // Map the status parameter to the corresponding enum value
-        if (status != null) {
-            switch (status) {
-                case 1 -> statusForAdvert = StatusForAdvert.PENDING;
-                case 2 -> statusForAdvert = StatusForAdvert.ACTIVATED;
-                case 3 -> statusForAdvert = StatusForAdvert.REJECTED;
-            }
-        }
-
         // Retrieve the Advert entities based on the provided parameters and map them to AdvertResponse objects
-        return repository.findForAnyms(query, categoryId, advertTypeId, priceStart, priceEnd, statusForAdvert, pageable)
+        return repository.findForAnyms(query, categoryId, advertTypeId, priceStart, priceEnd, StatusForAdvert.ACTIVATED, country, city, district, pageable)
                 .map(mapper::toSimpleAdvertResponse);
     }
 
@@ -437,15 +430,15 @@ public class AdvertService {
                 var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
                 advert.getCategoryPropertyValues().add(categoryPropertyValue);
             } else {
-                propertyValueService.updateValue(  valuesOfProperty.get(i),  propertyValuesIds.get(i));
-             }
+                propertyValueService.updateValue(valuesOfProperty.get(i), propertyValuesIds.get(i));
+            }
         }
 
         Advert savedAdvert = repository.save(advert);
-         // Log the update event
+        // Log the update event
         logService.logMessage("Advert updated by :" + user.getUsername(), savedAdvert, user);
         DetailedAdvertResponse detailedAdvertResponse = mapper.toDetailedAdvertResponse(savedAdvert);
-         return ResponseEntity.ok(detailedAdvertResponse);
+        return ResponseEntity.ok(detailedAdvertResponse);
     }
 
 
@@ -499,7 +492,7 @@ public class AdvertService {
                 var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
                 advert.getCategoryPropertyValues().add(categoryPropertyValue);
             } else {
-                propertyValueService.updateValue(  valuesOfProperty.get(i),  propertyValuesIds.get(i));
+                propertyValueService.updateValue(valuesOfProperty.get(i), propertyValuesIds.get(i));
             }
         }
 

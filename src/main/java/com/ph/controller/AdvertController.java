@@ -43,7 +43,9 @@ public class AdvertController {
             @RequestParam(value = "at", required = false) Long advertTypeId,
             @RequestParam(value = "ps", required = false) Integer priceStart,
             @RequestParam(value = "pe", required = false) Integer priceEnd,
-            @RequestParam(value = "s", required = false) Integer status,
+            @RequestParam(value = "ctry", required = false) Long country,
+            @RequestParam(value = "city", required = false) Long city,
+            @RequestParam(value = "dist", required = false) Long district,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "sort", defaultValue = "category.id") String sort,
@@ -60,7 +62,9 @@ public class AdvertController {
                 advertTypeId,
                 priceStart,
                 priceEnd,
-                status,
+                country,
+                city,
+                district,
                 pageable
         );
     }
