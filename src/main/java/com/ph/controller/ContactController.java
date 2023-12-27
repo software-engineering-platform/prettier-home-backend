@@ -27,12 +27,14 @@ public class ContactController {
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     @GetMapping()
     public ResponseEntity<Page<ContactResponse>> getAllContact(
+            @RequestParam(value = "query", required = false) String query,
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "size", defaultValue = "20", required = false) int size,
             @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
             @RequestParam(value = "type", defaultValue = "asc", required = false) String type
+
     ) {
-        return contactService.getAllContact(page, size, sort, type);
+        return contactService.getAllContact(query, page, size, sort, type);
     }
 
 
