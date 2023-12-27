@@ -11,6 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class AdvertCategoryResponse implements Serializable {
 
+    private Long categoryId;
     private String categoryName;
     private String icon;
     private Long categoryQuantity;

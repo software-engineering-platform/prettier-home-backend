@@ -37,7 +37,7 @@ public class FavoritesController {
 
     // Not :K03 - FavoriteSave() ***************************************************************************
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")//http://localhost:8080/favorites/1/auth
-    @PostMapping("{id}/auth")
+    @GetMapping("{id}/auth")
     @Transactional
     public ResponseEntity<AdvertResponseForFavorite> addToFavorites(
             @PathVariable(name = "id") Long advertId,
