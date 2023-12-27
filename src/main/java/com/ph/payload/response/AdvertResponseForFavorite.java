@@ -2,6 +2,7 @@ package com.ph.payload.response;
 
 import com.ph.domain.entities.Image;
 import com.ph.domain.entities.Location;
+import com.ph.domain.entities.User;
 import lombok.*;
 
 import java.io.Serializable;
@@ -25,6 +26,7 @@ public class AdvertResponseForFavorite implements Serializable {
     private DistrictResponse district;
     private CategoryResponseForFavorite category;
     private List<ImageResponse> images;
+    private Long userId;
     private String slug;
 
 }

@@ -10,14 +10,11 @@ import com.ph.exception.customs.BuiltInFieldException;
 import com.ph.exception.customs.NonDeletableException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.request.abstracts.AdvertRequestAbs;
-import com.ph.payload.response.AdvertCategoryResponse;
-import com.ph.payload.response.AdvertCityResponse;
+import com.ph.payload.response.*;
 import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.request.AdvertRequest;
 import com.ph.payload.request.AdvertRequestForUpdateByAdmin;
 import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
-import com.ph.payload.response.DetailedAdvertResponse;
-import com.ph.payload.response.SimpleAdvertResponse;
 import com.ph.repository.*;
 import com.ph.utils.GeneralUtils;
 import com.ph.utils.MessageUtil;
@@ -34,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -579,4 +577,19 @@ public class AdvertService {
     public List<Advert> getAllAdvertsByUserId(Long userId) {
         return repository.findByUser_Id(userId);
     }
+
+
+    // Not: getAllAdvertsByUserId
+    public Page<DetailedAdvertResponse> getAllAdvertsByUserId(Long id, int page, String sort, int size, String type) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+
+        if (Objects.equals(type, "desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        }
+
+        return repository.findByUser_Id(id,pageable).map(mapper::toDetailedAdvertResponse);
+
+    }
+
 }
+

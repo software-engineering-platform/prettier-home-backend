@@ -1,13 +1,10 @@
 package com.ph.controller;
 
 import com.ph.exception.customs.ValuesNotMatchException;
-import com.ph.payload.response.AdvertCategoryResponse;
-import com.ph.payload.response.AdvertCityResponse;
+import com.ph.payload.response.*;
 import com.ph.payload.request.AdvertRequest;
 import com.ph.payload.request.AdvertRequestForUpdateByAdmin;
 import com.ph.payload.request.AdvertRequestForUpdateByCustomer;
-import com.ph.payload.response.DetailedAdvertResponse;
-import com.ph.payload.response.SimpleAdvertResponse;
 import com.ph.service.AdvertService;
 import com.ph.utils.MessageUtil;
 import com.ph.utils.ValidationUtil;
@@ -210,6 +207,19 @@ public class AdvertController {
             @AuthenticationPrincipal UserDetails userDetails
     ) {
         return service.delete(id, userDetails);
+    }
+    // Not: getAllAdvertsByUserId
+    @GetMapping("/getAll/{id}")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public ResponseEntity<Page<DetailedAdvertResponse>> getAllAdvertsByUserId(@PathVariable Long id,
+                                                     @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                     @RequestParam(value = "size", defaultValue = "20", required = false) int size,
+                                                     @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+                                                     @RequestParam(value = "type", defaultValue = "asc", required = false) String type
+
+    ) {
+
+        return ResponseEntity.ok(service.getAllAdvertsByUserId(id,page,sort,size,type));
     }
 
 

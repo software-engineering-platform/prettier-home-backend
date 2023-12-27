@@ -6,16 +6,19 @@ import com.ph.domain.entities.User;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.response.AdvertResponseForFavorite;
+import com.ph.payload.response.LogResponse;
 import com.ph.repository.FavoritesRepository;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -185,6 +188,25 @@ public class FavoritesService {
             // If the favorite exists, delete it and return the response entit
             favoritesRepository.delete(favorite.get());
             return ResponseEntity.ok().body(messageUtil.getMessage("success.favorite.successfully.deleted"));
+    }
+    // Not: getAllFavoritesByUserId
+    @Transactional
+    public  ResponseEntity<Page<AdvertResponseForFavorite>> getAllFavorites(Long id, int page, String sort, int size, String type) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+
+        if (Objects.equals(type, "desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        }
+        Page<Favorite> favorites = favoritesRepository.findByUser_Id(id,pageable);
+        List<Advert> adverts = favorites.stream()
+                .map(Favorite::getAdvert)
+                .toList();
+        if (adverts.isEmpty()) {
+            return ResponseEntity.ok(Page.empty());
+        }
+
+        Page<Advert> advertPage = new PageImpl<>(adverts, pageable, adverts.size());
+        return ResponseEntity.ok(advertPage.map(advertMapper::toAdvertResponseForFavorite));
     }
 
 }

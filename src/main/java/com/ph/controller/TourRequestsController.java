@@ -2,10 +2,7 @@ package com.ph.controller;
 
 
 import com.ph.payload.request.TourRequestRequest;
-import com.ph.payload.response.TourRequestResponseSimple;
-import com.ph.payload.response.TourRequestsFullResponse;
-import com.ph.payload.response.TourRequestsStatusResponse;
-import com.ph.payload.response.TourRequestsResponse;
+import com.ph.payload.response.*;
 import com.ph.service.TourRequestsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -162,6 +159,21 @@ public class TourRequestsController {
     public ResponseEntity<Long> getTourRequestCount(@PathVariable(name = "id") Long advertId, @AuthenticationPrincipal UserDetails userDetails) {
         return tourRequestsService.getTourRequestCount(advertId, userDetails);
     }
+
+    // Not: getAllTourRequestsByUserId
+    @GetMapping("/getAll/{id}")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public ResponseEntity<Page<TourRequestsFullResponse>> getAllTourRequestsByUserId(@PathVariable Long id,
+                                                                              @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+                                                                              @RequestParam(value = "size", defaultValue = "20", required = false) int size,
+                                                                              @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+                                                                              @RequestParam(value = "type", defaultValue = "asc", required = false) String type
+
+    ) {
+
+        return tourRequestsService.getAllTourRequestsByUserId(id,page,sort,size,type);
+    }
+
 
 
 }

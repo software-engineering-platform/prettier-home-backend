@@ -157,6 +157,7 @@ public class AdvertMapper {
                 .images(advert.getImages().stream().map(imageMapper::toImageResponse).toList())
 //                .images(sortedByFeatured(advert.getImages()))
                 .slug(advert.getSlug())
+                .userId(advert.getUser().getId())
                 .build();
     }
 

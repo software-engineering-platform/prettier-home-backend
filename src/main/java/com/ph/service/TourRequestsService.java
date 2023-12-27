@@ -1,6 +1,7 @@
 package com.ph.service;
 
 import com.ph.domain.entities.Advert;
+import com.ph.domain.entities.Favorite;
 import com.ph.domain.entities.TourRequest;
 import com.ph.domain.entities.User;
 import com.ph.domain.enums.Status;
@@ -9,10 +10,7 @@ import com.ph.exception.customs.RelatedFieldException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.TourRequestsMapper;
 import com.ph.payload.request.TourRequestRequest;
-import com.ph.payload.response.TourRequestResponseSimple;
-import com.ph.payload.response.TourRequestsFullResponse;
-import com.ph.payload.response.TourRequestsStatusResponse;
-import com.ph.payload.response.TourRequestsResponse;
+import com.ph.payload.response.*;
 import com.ph.repository.TourRequestsRepository;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
@@ -380,4 +378,19 @@ public class TourRequestsService {
             // Return the count of tour requests as a ResponseEntity
             return ResponseEntity.ok(tourRequestCount);
         }
+
+    // Not: getAllAdvertsByUserId
+    @Transactional
+    public  ResponseEntity<Page<TourRequestsFullResponse>> getAllTourRequestsByUserId(Long id, int page, String sort, int size, String type) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+
+        if (Objects.equals(type, "desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        }
+        Page<TourRequest> tourRequests = tourRequestsRepository.findAllByGuestUser_Id(id, pageable);
+        Page<TourRequestsFullResponse> tourRequestsResponses = tourRequests
+                .map(tourRequestsMapper::toTourRequestsFullResponse);
+        return ResponseEntity.ok(tourRequestsResponses);
+    }
+
 }
