@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ResetDatabaseController {
 
-    private  ResetDatabaseService resetDatabaseService;
+    private final  ResetDatabaseService resetDatabaseService;
 
     //Not: ResetDatabase ************************************************* X01
     @DeleteMapping("/db-reset")
