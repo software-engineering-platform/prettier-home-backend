@@ -42,14 +42,26 @@ public class ContactService {
      * @param type The sorting type (ascending or descending).
      * @return A ResponseEntity containing a Page of ContactResponse objects.
      */
-    public ResponseEntity<Page<ContactResponse>> getAllContact(int page, int size, String sort, String type) {
+    public ResponseEntity<Page<ContactResponse>> getAllContact(String query, int page, int size, String sort, String type) {
         // Create a Pageable object with the provided page, size, and sort criteria
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         // If the sorting type is "desc", create a new Pageable object with descending sort
         if (Objects.equals(type, "desc")) {
             pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         }
+
+        if (query != null) {
+            // Find users based on search query
+            Page<ContactResponse> contactMessagesBySearch = contactRepository
+                    .findContactsPageableBySearch(query, pageable).map(userMapper::toContactResponse);
+            return ResponseEntity.ok(contactMessagesBySearch);
+        }
+        // Find All ContactMessages
+        Page<ContactResponse> all = contactRepository.findAll(pageable).map(userMapper::toContactResponse);
+
         // Return a ResponseEntity containing the contact responses
-        return ResponseEntity.ok(contactRepository.findAll(pageable).map(userMapper::toContactResponse));
+        return ResponseEntity.ok(all);
     }
+
+
 }

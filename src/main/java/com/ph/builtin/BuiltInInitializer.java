@@ -77,8 +77,8 @@ public class BuiltInInitializer implements CommandLineRunner {
 
     private void initializeAdvertTypes() {
         if (!advertTypeRepository.existsBy()) {
-            advertTypeRepository.save(AdvertType.builder().title("Rent").build());
-            advertTypeRepository.save(AdvertType.builder().title("Sale").build());
+            advertTypeRepository.save(AdvertType.builder().title("Rent").builtIn(true).build());
+            advertTypeRepository.save(AdvertType.builder().title("Sale").builtIn(true).build());
         }
     }
 
@@ -88,7 +88,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                     Category.builder().title("House").icon("fa-solid fa-house").slug("house" + "-" + System.currentTimeMillis()).seq(1).active(true).builtIn(true).build(),
                     Category.builder().title("Apartment").icon("fa-solid fa-building").slug("apartment" + "-" + System.currentTimeMillis()).seq(2).active(true).builtIn(true).build(),
                     Category.builder().title("Office").icon("fa-solid fa-house-laptop").slug("office" + "-" + System.currentTimeMillis()).seq(3).active(true).builtIn(true).build(),
-                    Category.builder().title("Villa").icon("fa-brands fa-fort-awesome").slug("villa" + "-" + System.currentTimeMillis()).seq(4).active(true).builtIn(true).build(),
+                    Category.builder().title("Villa").icon("fa-solid fa-place-of-worship").slug("villa" + "-" + System.currentTimeMillis()).seq(4).active(true).builtIn(true).build(),
                     Category.builder().title("Land").icon("fa-solid fa-mountain-sun").slug("land" + "-" + System.currentTimeMillis()).seq(5).active(true).builtIn(true).build(),
                     Category.builder().title("Shop").icon("fa-solid fa-store").slug("shop" + "-" + System.currentTimeMillis()).seq(6).active(true).builtIn(true).build()
             );

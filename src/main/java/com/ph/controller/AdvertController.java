@@ -33,14 +33,16 @@ public class AdvertController {
 
 
     // NOT:A01 / getByAdminPage() ************************************************************
-    @GetMapping()
+    @GetMapping("/search")
     public Page<SimpleAdvertResponse> getByAnonymusPage(
             @RequestParam(value = "q", defaultValue = "", required = false) String query,
-            @RequestParam(value = "category.id", required = false) Long categoryId,
-            @RequestParam(value = "advert_type_id", required = false) Long advertTypeId,
-            @RequestParam(value = "price_start", required = false) Integer priceStart,
-            @RequestParam(value = "price_end", required = false) Integer priceEnd,
-            @RequestParam(value = "status", required = false) Integer status,
+            @RequestParam(value = "c", required = false) Long categoryId,
+            @RequestParam(value = "at", required = false) Long advertTypeId,
+            @RequestParam(value = "ps", required = false) Integer priceStart,
+            @RequestParam(value = "pe", required = false) Integer priceEnd,
+            @RequestParam(value = "ctry", required = false) Long country,
+            @RequestParam(value = "city", required = false) Long city,
+            @RequestParam(value = "dist", required = false) Long district,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "sort", defaultValue = "category.id") String sort,
@@ -57,15 +59,17 @@ public class AdvertController {
                 advertTypeId,
                 priceStart,
                 priceEnd,
-                status,
+                country,
+                city,
+                district,
                 pageable
         );
     }
 
     // NOT:A02 / getAdvertsByCities() ************************************************************
-    @GetMapping("/cities")
-    public List<AdvertCityResponse> getAdvertsByCities() {
-        return service.getAdvertsByCities();
+    @GetMapping("/cities/{limit}")
+    public List<AdvertCityResponse> getAdvertsByCities(@PathVariable() Integer limit) {
+        return service.getAdvertsByCities(limit);
     }
 
 
@@ -103,7 +107,7 @@ public class AdvertController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public Page<DetailedAdvertResponse> getByAdminPage(
             @RequestParam(value = "q", defaultValue = "", required = false) String query,
-            @RequestParam(value = "category.id", required = false) Long categoryId,
+            @RequestParam(value = "category_id", required = false) Long categoryId,
             @RequestParam(value = "advert_type_id", required = false) Long advertTypeId,
             @RequestParam(value = "price_start", required = false) Integer priceStart,
             @RequestParam(value = "price_end", required = false) Integer priceEnd,

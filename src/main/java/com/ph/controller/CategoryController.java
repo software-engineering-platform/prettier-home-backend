@@ -52,7 +52,7 @@ public class CategoryController {
     public Page<CategoryWithoutPropertiesResponse> getAllCategoryWithPageAndWithAdmin(
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "size", defaultValue = "10", required = false) int size,
-            @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+            @RequestParam(value = "sort", defaultValue = "seq", required = false) String sort,
             @RequestParam(value = "type", defaultValue = "asc", required = false) String type,
             @RequestParam(value = "query", required = false) String query
     ) {

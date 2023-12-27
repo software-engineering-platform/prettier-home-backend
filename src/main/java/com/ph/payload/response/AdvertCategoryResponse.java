@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class AdvertCategoryResponse implements Serializable {
 
     private String categoryName;
+    private String icon;
     private Long categoryQuantity;
 
 }

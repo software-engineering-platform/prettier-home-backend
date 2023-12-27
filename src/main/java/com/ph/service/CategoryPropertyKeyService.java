@@ -115,7 +115,6 @@ public class CategoryPropertyKeyService {
      * @return updated category property key
      */
     @CacheEvict(cacheNames = {"category", "categoryPropertyKeys"}, allEntries = true)
-
     public ResponseEntity<CategoryPropertyKeyResponse> updatePropertyKey(Long propertyId,
                                                                          CategoryPropertyKeyRequest propertyKeyRequest) {
 
@@ -129,14 +128,16 @@ public class CategoryPropertyKeyService {
         }
 
         // is there same category key in property key of a category
-        if (!categoryPropertyKey.getName().equals(propertyKeyRequest.getName()) &&
-                propertyKeyRepository.existsByCategory_IdAndNameIgnoreCase(categoryPropertyKey.getCategory().getId(), categoryPropertyKey.getName())
-        ) {
+        if (propertyKeyRepository.existsByCategory_IdAndNameIgnoreCase(categoryPropertyKey.getCategory().getId(), propertyKeyRequest.getName())
+                && !categoryPropertyKey.getName().equalsIgnoreCase(propertyKeyRequest.getName())) {
             throw new ConflictException(messageUtil.getMessage("error.cpk.save.duplicate.name.in.category"));
         }
 
         // update category property key
         categoryPropertyKey.setName(propertyKeyRequest.getName());
+        categoryPropertyKey.setKeyType(propertyKeyRequest.getKeyType());
+        categoryPropertyKey.setPrefix(propertyKeyRequest.getPrefix());
+        categoryPropertyKey.setSuffix(propertyKeyRequest.getSuffix());
 
         // save category property key
         CategoryPropertyKey categoryPropertyKeyUpdated = propertyKeyRepository.save(categoryPropertyKey);

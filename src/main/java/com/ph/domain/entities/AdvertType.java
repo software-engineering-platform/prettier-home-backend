@@ -28,6 +28,9 @@ public class AdvertType implements Serializable {
 
     @OneToMany(mappedBy = "advertType", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Advert> adverts;
+
+    private boolean builtIn;
+
     /**
      * Entity relationships end
      */

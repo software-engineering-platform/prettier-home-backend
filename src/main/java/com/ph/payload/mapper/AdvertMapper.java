@@ -130,6 +130,7 @@ public class AdvertMapper {
         return AdvertTypeResponse.builder()
                 .id(advertType.getId())
                 .title(advertType.getTitle())
+                .builtIn(advertType.isBuiltIn())
                 .build();
     }
 

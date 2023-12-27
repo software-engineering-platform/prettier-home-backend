@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class AdvertTypeResponse implements Serializable {
 
     private Long id;
+    private boolean builtIn;
     private String title;
 
 }

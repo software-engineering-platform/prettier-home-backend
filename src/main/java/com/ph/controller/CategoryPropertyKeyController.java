@@ -30,7 +30,7 @@ public class CategoryPropertyKeyController {
 
     // Not: getPropertyKeysOfCategory() *************************************** C07
     @GetMapping("/{categoryId}/properties") // http://localhost:8080/categoriesKey/1/properties
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'CUSTOMER')")
     public ResponseEntity<List<CategoryPropertyKeyResponse>> getPropertyKeysOfCategory(@PathVariable Long categoryId) {
         //return ResponseEntity.ok(propertyKeyService.getPropertyKeysOfCategory(categoryId));
         return propertyKeyService.getPropertyKeysOfCategory(categoryId);

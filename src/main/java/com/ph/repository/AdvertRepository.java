@@ -21,7 +21,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
     boolean existsByUser_Id(Long id);
 
-     Advert findByImages_Id(Long id);
+    Advert findByImages_Id(Long id);
 
     @Query("""
             select a from Advert a
@@ -66,7 +66,10 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
             "(:price_start is null or a.price >= :price_start) and " +
             "(:price_end is null or a.price <= :price_end) and " +
             // status parametresi boş değilse, reklamın durumunu kontrol edelim
-            "(:status is null or a.statusForAdvert = :status) and " +
+            "( a.statusForAdvert = :status) and " +
+            "(:country is null or a.country.id = :country) and " +
+            "(:city is null or a.city.id = :city) and " +
+            "(:district is null or a.district.id = :district) and " +
             // reklamın ve kategorisinin aktif olduğunu kontrol edelim
             "(a.isActive = true and a.category.active = true)")
     Page<Advert> findForAnyms(@Param("q") String query,
@@ -75,6 +78,9 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
                               @Param("price_start") Integer priceStart,
                               @Param("price_end") Integer priceEnd,
                               @Param("status") StatusForAdvert status,
+                              @Param("country") Long country,
+                              @Param("city") Long city,
+                              @Param("district") Long district,
                               Pageable pageable);
 
     @Query("select a from Advert a where " +
@@ -125,11 +131,11 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     //Finish: categoryService için yazıldı
 
 
-    @Query("SELECT new com.ph.payload.response.AdvertCityResponse(a.city.name, COUNT(a.id)) FROM Advert a GROUP BY a.city.name")
-    List<AdvertCityResponse> getAdvertsByCities();
+    @Query("SELECT new com.ph.payload.response.AdvertCityResponse(a.city.name, COUNT(a.id)) FROM Advert a GROUP BY a.city.name ORDER BY COUNT(a.id) DESC LIMIT :limit")
+    List<AdvertCityResponse> getAdvertsByCities(@Param("limit") Integer limit);
 
 
-    @Query("SELECT new com.ph.payload.response.AdvertCategoryResponse(a.category.title, COUNT(a.id)) FROM Advert a GROUP BY a.category.title")
+    @Query("SELECT new com.ph.payload.response.AdvertCategoryResponse(a.category.title,a.category.icon, COUNT(a.id)) FROM Advert a GROUP BY a.category.title, a.category.icon")
     List<AdvertCategoryResponse> getAdvertsByCategories();
 
 
