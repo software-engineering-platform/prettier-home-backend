@@ -368,9 +368,9 @@ public class TourRequestsService {
             }
 
             // Check if the specified advertisement is in the user's list of advert
-            if (!advertList.contains(advert)) {
-                throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
-            }
+//            if (!advertList.contains(advert)) {
+//                throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
+//            }
 
             // Retrieve the count of tour requests for the specified advert and user
             Long tourRequestCount = tourRequestsRepository.countByAdvert_IdAndOwnerUser_Id(advertId, user.getId());
