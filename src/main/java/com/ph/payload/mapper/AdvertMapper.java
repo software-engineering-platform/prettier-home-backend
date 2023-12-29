@@ -120,6 +120,7 @@ public class AdvertMapper {
                 .country(locationMapper.toCountryResponse(advert.getCountry()))
                 .image(imageMapper.toImageResponse(getFeaturedImage(advert.getImages())))
                 .slug(advert.getSlug())
+                .location(advert.getLocation())
                 .build();
     }
 

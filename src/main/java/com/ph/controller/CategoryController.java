@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
 
     //NOT: saveCategory **************************************************C04
-    @PostMapping() // http://localhost:8080/categories
+    @PostMapping("/save") // http://localhost:8080/categories
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<?> save(@Valid @RequestBody CategoryRequest categoryRequest) {
         return categoryService.save(categoryRequest);
@@ -40,8 +40,7 @@ public class CategoryController {
     //    }
 
     //NOT: getAllCategoryWithList **************************************************C01 WithList
-    @GetMapping() //http://localhost:8080/categories
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'CUSTOMER')")
+    @GetMapping("/all") //http://localhost:8080/categories
     public ResponseEntity<List<CategoryWithoutPropertiesResponse>> getAllCategory() {
         return categoryService.getAllCategory();
     }
@@ -60,14 +59,14 @@ public class CategoryController {
     }
 
     //NOT: deleteCategory **************************************************C06
-    @DeleteMapping("/{categoryId}") //http://localhost:8080/categories/1
+    @DeleteMapping("/delete/{categoryId}") //http://localhost:8080/categories/1
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId) {
         return categoryService.deleteCategory(categoryId);
     }
 
     //NOT: getById **************************************************C03
-    @GetMapping("/{categoryId}") //http://localhost:8080/categories/1
+    @GetMapping("/one/{categoryId}") //http://localhost:8080/categories/1
     //@PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'CUSTOMER')")
     public ResponseEntity<CategoryResponse> getById(@PathVariable Long categoryId) {
         return categoryService.getById(categoryId);
@@ -75,7 +74,7 @@ public class CategoryController {
 
 
     //NOT: updateById **************************************************C05
-    @PutMapping("/{categoryId}") //http://localhost:8080/categories/1
+    @PutMapping("update/{categoryId}") //http://localhost:8080/categories/1
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     public ResponseEntity<?> updateById(
             @PathVariable Long categoryId,

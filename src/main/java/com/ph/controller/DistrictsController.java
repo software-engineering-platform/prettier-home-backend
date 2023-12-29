@@ -19,13 +19,13 @@ public class DistrictsController {
 
     //Not:U04 GetAllDistricts() *************************************************************************
     // http://localhost:8080/districts
-    @GetMapping("/search")
+    @GetMapping("/all")
     public List<DistrictResponse> getAllDistricts() {
         return districtsService.getAllDistricts();
     }
 
     //Not:U03 GetAllDistrictsByCityId() *************************************************************************
-    @GetMapping("/{cityId}")
+    @GetMapping("/search/{cityId}")
     public List<DistrictResponse> getAllDistrictsByCityId(@PathVariable Long cityId) {
         return districtsService.getAllDistrictsByCityId(cityId);
     }

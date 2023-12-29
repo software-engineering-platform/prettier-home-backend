@@ -19,14 +19,14 @@ public class CityController {
 
     //Not:U05 GetAllCities() *************************************************************************
     // http://localhost:8080/cities
-    @GetMapping("/search")
+    @GetMapping("/all")
     public List<CityResponse> getAllCities() {
         return cityService.getAllCities();
     }
 
     //Not:U02 GetAllCitiesByCountryId() *************************************************************************
     // http://localhost:8080/cities
-    @GetMapping("/{countryId}")
+    @GetMapping("/search/{countryId}")
     public List<CityResponse> getAllCitiesByCountryId(@PathVariable Long countryId) {
         return cityService.getAllCitiesByCountryId(countryId);
     }

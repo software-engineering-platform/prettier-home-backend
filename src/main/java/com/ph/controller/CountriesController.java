@@ -18,7 +18,7 @@ public class CountriesController {
 
     //Not:U01 GetAllCountries() *************************************************************************
     // http://localhost:8080/countries
-    @GetMapping()
+    @GetMapping("/all")
     public List<CountryResponse> getAllCountries() {
         return countriesService.getAllCountries();
     }

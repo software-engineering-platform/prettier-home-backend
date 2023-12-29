@@ -1,6 +1,7 @@
 package com.ph.payload.response;
 
 
+import com.ph.domain.entities.Location;
 import com.ph.domain.enums.StatusForAdvert;
 import lombok.*;
 
@@ -23,5 +24,6 @@ public class SimpleAdvertResponse implements Serializable {
     private DistrictResponse district;
     private CountryResponse country;
     private String slug;
+    private Location location;
 
 }

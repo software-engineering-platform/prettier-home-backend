@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("advert-types")
+@RequestMapping("/advert-types")
 @RequiredArgsConstructor
 public class AdvertTypeController {
 
@@ -32,7 +32,7 @@ public class AdvertTypeController {
     }
 
     // Get All AdvertType method.
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<List<AdvertTypeResponse>> getAll() {
         return service.getAll();
     }
