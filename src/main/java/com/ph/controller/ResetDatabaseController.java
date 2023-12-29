@@ -23,10 +23,4 @@ public class ResetDatabaseController {
         return resetDatabaseService.resetDatabase();
     }
 
-
-
-
-
-
-
 }

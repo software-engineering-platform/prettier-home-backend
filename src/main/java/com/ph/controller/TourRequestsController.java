@@ -38,6 +38,7 @@ public class TourRequestsController {
     }
 
     // Not :S06 - update() ****************************************************************************
+
     // http://localhost:8080/tour-requests/2/auth
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @PutMapping("/{id}/auth")
