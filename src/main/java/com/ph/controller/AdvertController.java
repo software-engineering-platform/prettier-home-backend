@@ -140,7 +140,7 @@ public class AdvertController {
 
 
     // NOT:A07 / getBySlug() ************************************************************
-    @GetMapping("/{slug}")
+    @GetMapping("/details/{slug}")
     public ResponseEntity<DetailedAdvertResponse> getBySlug(@PathVariable String slug) {
         return service.getBySlug(slug);
     }

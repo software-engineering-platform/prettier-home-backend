@@ -85,7 +85,8 @@ public class SecurityFilterConfiguration {
             "/*.css",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger*/**"
+            "/swagger*/**",
+            "/adverts/details/**"
     };
 
 
