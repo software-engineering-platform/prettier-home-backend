@@ -23,6 +23,7 @@ public class UserMapper {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .role(user.getRole().name())
+                .phone(user.getPhone())
                 .profilePhoto(user.getProfilePhoto() != null ? imageMapper.toprofilePhotoResponse(user.getProfilePhoto()) : null)
                 .build();
     }

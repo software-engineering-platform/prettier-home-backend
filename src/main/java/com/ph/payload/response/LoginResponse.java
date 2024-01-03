@@ -16,6 +16,7 @@ public class LoginResponse implements Serializable {
     private String email;
     private String firstName;
     private String lastName;
+    private String phone;
     private String role;
     private ProfilePhotoResponse profilePhoto;
 
