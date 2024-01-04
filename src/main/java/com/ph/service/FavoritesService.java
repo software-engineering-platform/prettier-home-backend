@@ -6,6 +6,7 @@ import com.ph.domain.entities.User;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.response.AdvertResponseForFavorite;
+import com.ph.payload.response.FavoriteCountResponse;
 import com.ph.payload.response.LogResponse;
 import com.ph.repository.FavoritesRepository;
 import com.ph.utils.MessageUtil;
@@ -18,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -209,5 +211,18 @@ public class FavoritesService {
         return ResponseEntity.ok(advertPage.map(advertMapper::toAdvertResponseForFavorite));
     }
 
+    public List<FavoriteCountResponse> getFavCountForAdvertCustomer(UserDetails userDetails) {
+
+        User user = (User) userDetails;
+        List<Long> advertIds = advertService.getAllAdvertsByUserId(user.getId()).stream().map(Advert::getId).toList();
+
+        return favoritesRepository.getfavoriteCountsForCustomer(advertIds);
+
+    }
+
+    public List<FavoriteCountResponse> getFavCountForAdvertAdmin() {
+
+        return favoritesRepository.getfavoriteCountsForAdmin();
+    }
 }
 

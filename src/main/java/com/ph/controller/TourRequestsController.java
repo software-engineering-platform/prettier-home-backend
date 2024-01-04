@@ -17,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -174,6 +175,24 @@ public class TourRequestsController {
 
         return tourRequestsService.getAllTourRequestsByUserId(id,page,sort,size,type);
     }
+
+
+    // Not: getTourRequestCount for spesific advert
+
+    @GetMapping("/admin/count")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    public List<TourRequestCountResponse> getTourRequestCountAdmin() {
+        return tourRequestsService.getTourRequestCounts();
+    }
+    @GetMapping("/count")
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
+    public List<TourRequestCountResponse> getTourRequestCountCustomer(@AuthenticationPrincipal UserDetails userDetails) {
+        return tourRequestsService.getTourRequestCountsCustomer(userDetails);
+    }
+
+
+
+
 
 
 

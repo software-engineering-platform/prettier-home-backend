@@ -2,12 +2,14 @@ package com.ph.repository;
 
 import com.ph.domain.entities.TourRequest;
 import com.ph.domain.enums.Status;
+import com.ph.payload.response.TourRequestCountResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Range;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -18,9 +20,15 @@ import java.util.Optional;
 
 @Repository
 public interface TourRequestsRepository extends JpaRepository<TourRequest, Long> {
+    @Query("select count(t) from TourRequest t where t.advert.id = ?1")
+    long countByAdvert_Id(Long id);
+
     boolean existsByTourDateAndTourTimeAndAdvert_Id(LocalDate tourDate, LocalTime tourTime, Long id);
+
     List<TourRequest> findByGuestUser_Id(Long id);
+
     Page<TourRequest> findByAdvert_Id(Long id, Pageable pageable);
+
     boolean existsByOwnerUser_Id(Long id);
 
     boolean existsByGuestUser_Id(Long id);
@@ -50,4 +58,19 @@ public interface TourRequestsRepository extends JpaRepository<TourRequest, Long>
             select t from TourRequest t
             where t.advert.title ilike concat('%', ?1, '%')""")
     Page<TourRequest> search(String query, Pageable pageable);
+
+
+    // Not: getTour\requestCount new
+    @Query("SELECT NEW com.ph.payload.response.TourRequestCountResponse(tr.advert.id, COUNT(tr)) " +
+            "FROM TourRequest tr " +
+            "GROUP BY tr.advert.id")
+    List<TourRequestCountResponse> getCountsTourRequests();
+
+
+    @Query("SELECT NEW com.ph.payload.response.TourRequestCountResponse(tr.advert.id, COUNT(tr)) " +
+            "FROM TourRequest tr " +
+            "WHERE tr.advert.id IN :advertIds " +
+            "GROUP BY tr.advert.id")
+    List<TourRequestCountResponse> getCountsTourRequestsCustomer(@Param("advertIds") List<Long> advertIds);
+
 }

@@ -1,6 +1,7 @@
 package com.ph.controller;
 
 import com.ph.payload.response.AdvertResponseForFavorite;
+import com.ph.payload.response.FavoriteCountResponse;
 import com.ph.payload.response.LogResponse;
 import com.ph.service.FavoritesService;
 import jakarta.transaction.Transactional;
@@ -99,4 +100,16 @@ public class FavoritesController {
 
         return favoritesService.getAllFavorites(id,page,sort,size,type);
     }
+
+    // Not: getFavCountForAdvert for specific advert
+    @GetMapping("/countFav")
+    public List<FavoriteCountResponse> getFavCountForAdvertCustomer(@AuthenticationPrincipal UserDetails userDetails) {
+        return favoritesService.getFavCountForAdvertCustomer(userDetails);
+    }
+    @GetMapping("/admin/countFav")
+    public List<FavoriteCountResponse> getFavCountForAdvertAdmin() {
+        return favoritesService.getFavCountForAdvertAdmin();
+    }
+
+
 }

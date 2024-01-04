@@ -382,6 +382,9 @@ public class TourRequestsService {
         return ResponseEntity.ok(tourRequestCount);
     }
 
+
+
+
     // Not: getAllAdvertsByUserId
     @Transactional
     public ResponseEntity<Page<TourRequestsFullResponse>> getAllTourRequestsByUserId(Long id, int page, String sort, int size, String type) {
@@ -396,4 +399,24 @@ public class TourRequestsService {
         return ResponseEntity.ok(tourRequestsResponses);
     }
 
+
+    // Not: getTourRequestCount
+
+
+    public List<TourRequestCountResponse> getTourRequestCounts() {
+
+        return tourRequestsRepository.getCountsTourRequests();
+
+    }
+
+
+    public List<TourRequestCountResponse> getTourRequestCountsCustomer(UserDetails userDetails) {
+
+        User user = (User) userDetails;
+
+        List<Long> advertIds =
+                advertService.getAllAdvertsByUserId(user.getId()).stream().map(Advert::getId).collect(Collectors.toList());
+
+        return tourRequestsRepository.getCountsTourRequestsCustomer(advertIds);
+    }
 }
