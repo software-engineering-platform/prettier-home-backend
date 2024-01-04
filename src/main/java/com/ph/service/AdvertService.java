@@ -30,10 +30,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -391,6 +391,7 @@ public class AdvertService {
     public ResponseEntity<DetailedAdvertResponse> updateForCustomer(Long id, AdvertRequestForUpdateByCustomer request, UserDetails userDetails) {
 
         Advert advert = getById(id);
+        boolean categorySame=advert.getCategory().getId().equals(request.getCategoryId());
 
         // Check if the advert is a built-in advert
         if (advert.isBuiltIn()) {
@@ -418,19 +419,26 @@ public class AdvertService {
         // Update the property values of the advert
         List<CategoryPropertyKey> propertyKeys = advert.getCategory().getCategoryPropertyKeys();
         List<String> valuesOfProperty = request.getPropertyValues();
-        List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream()
-                .map(CategoryPropertyValue::getId)
-                .sorted()
-                .toList();
 
-        for (int i = 0; i < propertyKeys.size(); i++) {
-            if (propertyValuesIds.size() < i + 1) {
-                var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
-                advert.getCategoryPropertyValues().add(categoryPropertyValue);
-            } else {
-                propertyValueService.updateValue(valuesOfProperty.get(i), propertyValuesIds.get(i));
+
+        if(!categorySame)  {
+            propertyValueService.deleteValue(advert.getCategoryPropertyValues());
+            List<CategoryPropertyValue> propertyValueList = new ArrayList<>();
+            for (int i = 0; i < propertyKeys.size(); i++) {
+                var categoryPropertyValue =propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
+                propertyValueList.add(categoryPropertyValue);
             }
+            advert.setCategoryPropertyValues(propertyValueList);
         }
+        else {
+            List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream()
+                    .map(CategoryPropertyValue::getId)
+                    .sorted()
+                    .toList();
+            for (int i = 0; i < propertyKeys.size(); i++) {
+                    propertyValueService.updateValue(valuesOfProperty.get(i), propertyValuesIds.get(i));
+                }
+            }
 
         Advert savedAdvert = repository.save(advert);
         // Log the update event
@@ -462,6 +470,7 @@ public class AdvertService {
 
         // Get the advert by ID
         Advert advert = getById(id);
+        boolean categorySame=advert.getCategory().getId().equals(request.getCategoryId());
 
         // Check if advert is built-in
         if (advert.isBuiltIn()) {
@@ -482,14 +491,23 @@ public class AdvertService {
         // Update the property values of the advert
         List<CategoryPropertyKey> propertyKeys = advert.getCategory().getCategoryPropertyKeys();
         List<String> valuesOfProperty = request.getPropertyValues();
-        List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream().map(CategoryPropertyValue::getId)
-                .sorted()
-                .toList();
-        for (int i = 0; i < propertyKeys.size(); i++) {
-            if (propertyValuesIds.size() < i + 1) {
-                var categoryPropertyValue = propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
-                advert.getCategoryPropertyValues().add(categoryPropertyValue);
-            } else {
+
+
+        if(!categorySame)  {
+            propertyValueService.deleteValue(advert.getCategoryPropertyValues());
+            List<CategoryPropertyValue> propertyValueList = new ArrayList<>();
+            for (int i = 0; i < propertyKeys.size(); i++) {
+                var categoryPropertyValue =propertyValueService.saveValue(propertyKeys.get(i), valuesOfProperty.get(i), advert);
+                propertyValueList.add(categoryPropertyValue);
+            }
+            advert.setCategoryPropertyValues(propertyValueList);
+        }
+        else {
+            List<Long> propertyValuesIds = advert.getCategoryPropertyValues().stream()
+                    .map(CategoryPropertyValue::getId)
+                    .sorted()
+                    .toList();
+            for (int i = 0; i < propertyKeys.size(); i++) {
                 propertyValueService.updateValue(valuesOfProperty.get(i), propertyValuesIds.get(i));
             }
         }

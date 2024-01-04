@@ -9,6 +9,9 @@ import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 
@@ -41,6 +44,16 @@ public class CategoryPropertyValueService {
 
         CategoryPropertyValue save = repository.save(categoryPropertyValue);
         System.err.println(save);
+
+    }
+
+    public void deleteValue(List<CategoryPropertyValue> propertyValues) {
+        repository.deleteAllById(propertyValues
+                .stream()
+                .map(CategoryPropertyValue::getId)
+                .collect(Collectors
+                        .toList()));
+
 
     }
 

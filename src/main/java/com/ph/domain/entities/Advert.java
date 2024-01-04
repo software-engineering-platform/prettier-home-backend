@@ -74,7 +74,7 @@ public class Advert extends Entry implements Serializable {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
     private List<CategoryPropertyValue> categoryPropertyValues;
 
     @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
