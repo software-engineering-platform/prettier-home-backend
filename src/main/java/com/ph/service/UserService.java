@@ -1,10 +1,7 @@
 package com.ph.service;
 
 
-import com.ph.domain.entities.Advert;
-import com.ph.domain.entities.Favorite;
-import com.ph.domain.entities.ProfilePhoto;
-import com.ph.domain.entities.User;
+import com.ph.domain.entities.*;
 import com.ph.exception.customs.*;
 import com.ph.payload.mapper.UserMapper;
 import com.ph.payload.request.*;
@@ -42,6 +39,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final ProfilePhotoService profilePhotoService;
     private final FavoritesRepository favoritesRepository;
+    private final ConfirmationTokenService confirmationTokenService;
+
 
     /**
      * This method is used to retrieve user for login process and some other methods.
@@ -72,6 +71,10 @@ public class UserService {
         user.setRole(Role.CUSTOMER);
         // Save the user to the database
         User saved = userRepository.save(user);
+
+        final ConfirmationToken confirmationToken = new ConfirmationToken(user);
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+        emailService.sendConfirmationMail(user.getEmail(), confirmationToken.getConfirmationToken());
         // Return the saved user information
         return ResponseEntity.ok(userMapper.toUserSaveResponse(saved));
     }
@@ -439,4 +442,17 @@ public class UserService {
                .map(Advert::getId)
                .collect(Collectors.toList());
       }
+
+
+    public void confirmUser(ConfirmationToken confirmationToken) {
+
+        final User user = confirmationToken.getUser();
+
+        user.setEnabled(true);
+
+        userRepository.save(user);
+
+        confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
+
+    }
 }

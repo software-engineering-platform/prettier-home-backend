@@ -40,4 +40,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAllByBuiltIn(boolean b);
 
     boolean existsBy();
+
+
 }

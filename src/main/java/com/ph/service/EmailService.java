@@ -2,13 +2,17 @@ package com.ph.service;
 
 import com.ph.exception.customs.EmailSendingException;
 import com.ph.utils.MessageUtil;
-import freemarker.template.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -34,6 +38,12 @@ public class EmailService {
     @Value("${email.account.forgot.email-img}")
     private String mailImage;
 
+    @Value("${email.account.confirmation.template}")
+    private String confirmEmailTemplate;
+
+    @Value("${email.account.confirmation.subject}")
+    private String confirmEmailSubject;
+
 
     /**
      * Sends a reset password email to the specified recipient email address with the given reset code.
@@ -55,7 +65,7 @@ public class EmailService {
             );
 
             // Get the email template
-            Template template = freemarkerConfig.getTemplate(emailTemplate);
+            Template template = freemarkerConfig.getTemplate(confirmEmailTemplate);
 
             // Create a StringWriter to store the processed template
             StringWriter writer = new StringWriter();
@@ -80,6 +90,67 @@ public class EmailService {
             // If there is an error sending the email, throw an EmailSendingException with the appropriate message
             throw new EmailSendingException(String.format(messageUtil.getMessage("error.mail.reset-password"), e.getMessage()));
         }
+    }
+
+    public void sendConfirmationMail(String userMail, String token) {
+        try {
+            // Create a new MimeMessage
+            MimeMessage message = mailSender.createMimeMessage();
+
+            // Create a new MimeMessageHelper and set the necessary properties
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    message,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name()
+            );
+
+            // Get the email template
+            Template template = freemarkerConfig.getTemplate(emailTemplate);
+
+            // Create a StringWriter to store the processed template
+            StringWriter writer = new StringWriter();
+
+            // Set the data model for the template
+            Map<String, Object> dataModel = new HashMap<>();
+            dataModel.put("token", token);
+            dataModel.put("imgSource", mailImage);
+
+            // Process the template with the data model and store the result in the StringWriter
+            template.process(dataModel, writer);
+            String emailContent = writer.toString();
+
+            // Set the recipient email address and subject of the email
+            helper.setTo(userMail);
+            helper.setSubject(confirmEmailSubject);
+
+            // Set the email content as HTML and send the email
+            helper.setText(emailContent, true);
+            mailSender.send(message);
+        } catch (MessagingException | IOException | TemplateException e) {
+            // If there is an error sending the email, throw an EmailSendingException with the appropriate message
+            throw new EmailSendingException(String.format(messageUtil.getMessage("error.mail.reset-password"), e.getMessage()));
+        }
+
+
+
+
+
+
+        final SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(userMail);
+        mailMessage.setSubject("Mail Confirmation Link!");
+        mailMessage.setFrom("<MAIL>");
+        mailMessage.setText(
+                "Thank you for registering. Please click on the below link to activate your account." + "http://localhost:8080/users/register/confirm?token="
+                        + token);
+
+        sendEmail(mailMessage);
+    }
+
+
+    @Async
+    public void sendEmail(SimpleMailMessage email) {
+        mailSender.send(email);
     }
 
 }

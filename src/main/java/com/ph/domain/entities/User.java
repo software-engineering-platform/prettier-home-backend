@@ -44,6 +44,14 @@ public class User extends Entry implements Serializable, UserDetails {
     @Column(nullable = true, unique = true)
     private String resetPasswordCode;
 
+    @Column(name = "locked")
+    @Builder.Default
+    private Boolean locked = false;
+
+    @Column(name = "enabled")
+    @Builder.Default
+    private Boolean enabled = false;
+
     private boolean builtIn;
 
     @Enumerated(EnumType.STRING)
@@ -102,19 +110,20 @@ public class User extends Entry implements Serializable, UserDetails {
     }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !locked;
+    }
+
 
     /**
      * UserDetails Fields end
