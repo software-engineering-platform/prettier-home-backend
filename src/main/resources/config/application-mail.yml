@@ -33,7 +33,7 @@ email:
       text: |
         <In this property, you can set the text of the email.>
     confirmation:
-      subject: Confirmation Email
+      subject: Confirmation Email!
       template: account-confirmation-mail.ftl
       text: |
         <In this property, you can set the text of the email.>

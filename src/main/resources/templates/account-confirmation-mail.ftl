@@ -1,7 +1,6 @@
 <html>
 <head>
     <style>
-
         .container {
             font-family: Verdana, sans-serif;
             background-color: #fac769;
@@ -22,21 +21,28 @@
         .content {
             background-color: #F8F8FF;
             border: 2px solid #fac769;
-
             padding: 20px;
         }
 
-        .code {
+        .token {
+            display: inline-block;
             font-size: 24px;
             text-align: center;
             background-color: #d2d2d2;
             padding: 10px;
             border-radius: 5px;
             margin: 20px 0;
+            text-decoration: none;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .token:hover {
+            background-color: #b0b0b0;
         }
 
         .footer {
-            font-size:14px;
+            font-size: 14px;
             background-color: #fac769;
             border-radius: 0 0 10px 10px;
             text-align: center;
@@ -50,9 +56,8 @@
         <img src="${imgSource}" alt="Logo" style="max-width: 100%;">
     </div>
     <div class="content">
-    <
         <p>Thank you for registering. Please click on the below link to activate your account.</p>
-        <button class="code">${code}</button>
+        <a href=`http://localhost:8080/users/register/confirm?token=${token}` class="token">Confirm Email</a>
         <p>This link will expire in 24 hours!</p>
     </div>
     <div class="footer">

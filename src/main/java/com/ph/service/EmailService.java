@@ -65,7 +65,7 @@ public class EmailService {
             );
 
             // Get the email template
-            Template template = freemarkerConfig.getTemplate(confirmEmailTemplate);
+            Template template = freemarkerConfig.getTemplate(emailTemplate);
 
             // Create a StringWriter to store the processed template
             StringWriter writer = new StringWriter();
@@ -105,7 +105,7 @@ public class EmailService {
             );
 
             // Get the email template
-            Template template = freemarkerConfig.getTemplate(emailTemplate);
+            Template template = freemarkerConfig.getTemplate(confirmEmailTemplate);
 
             // Create a StringWriter to store the processed template
             StringWriter writer = new StringWriter();
@@ -125,7 +125,7 @@ public class EmailService {
 
             // Set the email content as HTML and send the email
             helper.setText(emailContent, true);
-            mailSender.send(message);
+            sendEmail(message);
         } catch (MessagingException | IOException | TemplateException e) {
             // If there is an error sending the email, throw an EmailSendingException with the appropriate message
             throw new EmailSendingException(String.format(messageUtil.getMessage("error.mail.reset-password"), e.getMessage()));
@@ -136,20 +136,20 @@ public class EmailService {
 
 
 
-        final SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(userMail);
-        mailMessage.setSubject("Mail Confirmation Link!");
-        mailMessage.setFrom("<MAIL>");
-        mailMessage.setText(
-                "Thank you for registering. Please click on the below link to activate your account." + "http://localhost:8080/users/register/confirm?token="
-                        + token);
+        //final SimpleMailMessage mailMessage = new SimpleMailMessage();
+        //mailMessage.setTo(userMail);
+        //mailMessage.setSubject("Mail Confirmation Link!");
+        //mailMessage.setFrom("<MAIL>");
+        //mailMessage.setText(
+               // "Thank you for registering. Please click on the below link to activate your account." + "http://localhost:8080/users/register/confirm?token="
+                    //    + token);
 
-        sendEmail(mailMessage);
+
     }
 
 
     @Async
-    public void sendEmail(SimpleMailMessage email) {
+    public void sendEmail(MimeMessage email) {
         mailSender.send(email);
     }
 
