@@ -1,20 +1,22 @@
 package com.ph.builtin;
 
-import com.ph.domain.entities.AdvertType;
-import com.ph.domain.entities.Category;
-import com.ph.domain.entities.CategoryPropertyKey;
-import com.ph.domain.entities.User;
+import com.ph.domain.entities.*;
 import com.ph.domain.enums.KeyType;
-import com.ph.repository.AdvertTypeRepository;
-import com.ph.repository.CategoryPropertyKeyRepository;
-import com.ph.repository.CategoryRepository;
-import com.ph.repository.UserRepository;
+import com.ph.domain.enums.StatusForAdvert;
+import com.ph.repository.*;
 import com.ph.security.role.Role;
+import com.ph.utils.GeneralUtils;
+import com.ph.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -26,6 +28,13 @@ public class BuiltInInitializer implements CommandLineRunner {
     private final AdvertTypeRepository advertTypeRepository;
     private final CategoryRepository categoryRepository;
     private final CategoryPropertyKeyRepository propertyKeyRepository;
+    private final CityRepository cityRepository;
+    private final DistrictsRepository districtsRepository;
+    private final CountriesRepository countriesRepository;
+    private final AdvertRepository advertRepository;
+    private final ImageRepository imageRepository;
+
+
 
     @Override
     public void run(String... args) throws Exception {
@@ -34,6 +43,10 @@ public class BuiltInInitializer implements CommandLineRunner {
         initializeAdvertTypes();
         initializeCategories();
         initializePropertyKeys();
+        if(advertRepository.count() == 0) {
+            initializeDefaultAdvert();
+        }
+
     }
 
     private void initializeUsers() {
@@ -172,6 +185,96 @@ public class BuiltInInitializer implements CommandLineRunner {
             propertyKeyRepository.saveAll(shopProperties);
         }
     }
+
+    private void initializeDefaultAdvert() {
+        String[] images = new String[]{"static/house.jpg", "static/apartment.jpg", "static/office.jpg", "static/villa.jpg", "static/land.jpg", "static/shop.jpg"};
+        List<Category> allCategories = categoryRepository.findAll();
+        String[] titles = new String[]{"House", "Apartment", "Office", "Villa", "Land", "Shop"};
+        Double[] prices = new Double[]{100000.0, 200000.0, 300000.0, 400000.0, 500000.0, 60000.0};
+        Long[] cities = new Long[]{34L, 10L, 38L, 6L, 72L, 35L};
+        Long[] districts = new Long[]{126L, 831L, 490L, 565L, 453L, 139L};
+        Double[] lat = new Double[]{41.10500496452611, 39.91349760621756, 38.62218565477382, 39.97437614009851, 37.75093476161285, 38.46207669619371};
+        Double[] lng = new Double[]{28.788342747629066, 28.14135381537319, 35.15306199396324, 32.86918909133035, 41.40976722322277, 27.17709951048468};
+        String[] descriptions = {
+                "Beautifully designed and spacious.",
+                "Located in a prime neighborhood.",
+                "Modern amenities for your comfort.",
+                "Stunning views from every room.",
+                "Close to schools, parks, and shopping centers.",
+                "Secure and peaceful environment.",
+                "Perfect for family living.",
+                "High-quality construction and finishes.",
+                "Easy access to public transportation.",
+                "A great investment opportunity."
+        }; // Generate a random 10-sentence description
+
+
+        AdvertType advertType = advertTypeRepository.getReferenceById(1L);
+
+        if (advertType != null && !allCategories.isEmpty()) {
+            for (int i = 0; i < images.length; i++) {
+                String imageFileName = images[i];
+                String title = titles[i];
+                Category category = allCategories.get(i);
+                Double price = prices[i];
+                Long city = cities[i];
+                Long district = districts[i];
+                Double latitude = lat[i];
+                Double longitude = lng[i];
+                String description = descriptions[i];
+
+
+                Resource resource = new ClassPathResource(imageFileName);
+                Image defaultImage = null;
+
+                try {
+                    InputStream inputStream = resource.getInputStream();
+                    byte[] imageData = Files.readAllBytes(Paths.get(resource.getURI()));
+
+                    defaultImage = Image.builder()
+                            .data(ImageUtil.compressImage(imageData))
+                            .name(title)
+                            .type("image/jpg")
+                            .featured(true)
+                            .build();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String slug = GeneralUtils.generateSlug(title);
+
+                Advert defaultAdvert = Advert.builder()
+                        .title(title)
+                        .description(description)
+                        .slug(slug)
+                        .price(price)
+                        .statusForAdvert(StatusForAdvert.ACTIVATED)
+                        .builtIn(true)
+                        .isActive(true)
+                        .viewCount(0)
+                        .location(new Location(latitude, longitude))
+                        .advertType(advertType)
+                        .category(category)
+                        .country(countriesRepository.findById(1L).get())
+                        .city(cityRepository.findById(city).get())
+                        .district(districtsRepository.findById(district).get())
+                        .images(List.of(defaultImage))
+                        .user(userRepository.findByEmail("admin@gmail.com").orElse(null))
+                        .build();
+
+                Advert savedAdvert = advertRepository.save(defaultAdvert);
+
+                Image savedImage = savedAdvert.getImages().stream().findFirst().orElse(null);
+                if (savedImage != null) {
+                    savedImage.setAdvert(savedAdvert);
+                    imageRepository.save(savedImage);
+                }
+            }
+        }
+    }
+
+
 
 
 }
