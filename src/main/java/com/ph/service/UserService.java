@@ -74,7 +74,7 @@ public class UserService {
 
         final ConfirmationToken confirmationToken = new ConfirmationToken(user);
         confirmationTokenService.saveConfirmationToken(confirmationToken);
-        emailService.sendConfirmationMail(user.getEmail(), confirmationToken.getConfirmationToken());
+        emailService.sendConfirmationMail(user.getEmail(), confirmationToken.getConfirmationToken(), confirmationToken.getCreatedTime());
         // Return the saved user information
         return ResponseEntity.ok(userMapper.toUserSaveResponse(saved));
     }

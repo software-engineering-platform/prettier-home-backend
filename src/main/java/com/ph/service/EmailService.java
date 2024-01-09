@@ -1,5 +1,6 @@
 package com.ph.service;
 
+import com.ph.domain.entities.TourRequest;
 import com.ph.exception.customs.EmailSendingException;
 import com.ph.utils.MessageUtil;
 import freemarker.template.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +45,12 @@ public class EmailService {
 
     @Value("${email.account.confirmation.subject}")
     private String confirmEmailSubject;
+
+    @Value("${email.account.check-tour-request.template}")
+    private String checkTourRequestTemplate;
+
+    @Value("${email.account.check-tour-request.subject}")
+    private String informationEmailSubject;
 
 
     /**
@@ -92,7 +100,12 @@ public class EmailService {
         }
     }
 
-    public void sendConfirmationMail(String userMail, String token) {
+    @Async
+    public void sendEmail(MimeMessage email) {
+        mailSender.send(email);
+    }
+
+    public void sendConfirmationMail(String userMail, String token, LocalDateTime createdTime) {
         try {
             // Create a new MimeMessage
             MimeMessage message = mailSender.createMimeMessage();
@@ -115,6 +128,12 @@ public class EmailService {
             dataModel.put("token", token);
             dataModel.put("imgSource", mailImage);
 
+
+            // Calculate 24 hours from now
+            LocalDateTime expirationTime = createdTime.plusMinutes(3);
+
+            dataModel.put("expirationTime", expirationTime);
+
             // Process the template with the data model and store the result in the StringWriter
             template.process(dataModel, writer);
             String emailContent = writer.toString();
@@ -128,29 +147,58 @@ public class EmailService {
             sendEmail(message);
         } catch (MessagingException | IOException | TemplateException e) {
             // If there is an error sending the email, throw an EmailSendingException with the appropriate message
-            throw new EmailSendingException(String.format(messageUtil.getMessage("error.mail.reset-password"), e.getMessage()));
+            throw new EmailSendingException(String.format(messageUtil.getMessage("error.mail.confirm-account"), e.getMessage()));
         }
-
-
-
-
-
-
-        //final SimpleMailMessage mailMessage = new SimpleMailMessage();
-        //mailMessage.setTo(userMail);
-        //mailMessage.setSubject("Mail Confirmation Link!");
-        //mailMessage.setFrom("<MAIL>");
-        //mailMessage.setText(
-               // "Thank you for registering. Please click on the below link to activate your account." + "http://localhost:8080/users/register/confirm?token="
-                    //    + token);
-
-
     }
 
 
-    @Async
-    public void sendEmail(MimeMessage email) {
-        mailSender.send(email);
+
+    public void sendInformationEmail(TourRequest tourRequest) {
+        try {
+            // Create a new MimeMessage
+            MimeMessage message = mailSender.createMimeMessage();
+
+            // Create a new MimeMessageHelper and set the necessary properties
+            MimeMessageHelper helper = new MimeMessageHelper(
+                    message,
+                    MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                    StandardCharsets.UTF_8.name()
+            );
+
+            // Get the email template
+            Template template = freemarkerConfig.getTemplate(checkTourRequestTemplate);
+
+            // Create a StringWriter to store the processed template
+            StringWriter writer = new StringWriter();
+
+            // Set the data model for the template
+            Map<String, Object> dataModel = new HashMap<>();
+            dataModel.put("imgSource", mailImage);
+            dataModel.put("firstName", tourRequest.getGuestUser().getFirstName());
+            dataModel.put("lastName", tourRequest.getGuestUser().getLastName());
+            dataModel.put("tourTime", tourRequest.getTourTime());
+            dataModel.put("tourDate", tourRequest.getTourDate());
+            dataModel.put("advertTitle", tourRequest.getAdvert().getTitle());
+            dataModel.put("country", tourRequest.getAdvert().getCountry().getName());
+            dataModel.put("city", tourRequest.getAdvert().getCity().getName());
+            dataModel.put("district", tourRequest.getAdvert().getDistrict().getName());
+
+
+            // Process the template with the data model and store the result in the StringWriter
+            template.process(dataModel, writer);
+            String emailContent = writer.toString();
+
+            // Set the recipient email address and subject of the email
+            helper.setTo(tourRequest.getGuestUser().getEmail());
+            helper.setSubject(informationEmailSubject);
+
+            // Set the email content as HTML and send the email
+            helper.setText(emailContent, true);
+            sendEmail(message);
+        } catch (MessagingException | IOException | TemplateException e) {
+            // If there is an error sending the email, throw an EmailSendingException with the appropriate message
+            throw new EmailSendingException(String.format(messageUtil.getMessage("error.mail.check-tour-request"), e.getMessage()));
+        }
     }
 
 }

@@ -23,6 +23,7 @@ spring:
       - security
       - data
       - mail
+      - scheduler
   freemarker:
     template-loader-path: file:C:\Users\Bilal\IdeaProjects\prettierHome-backend\src\main\resources\templates
 

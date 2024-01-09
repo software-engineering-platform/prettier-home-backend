@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -23,7 +22,7 @@ public class ConfirmationToken {
 
     private String confirmationToken;
 
-    private LocalDate createdDate;
+    private LocalDateTime createdTime;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
@@ -31,7 +30,7 @@ public class ConfirmationToken {
 
     public ConfirmationToken(User user) {
         this.user = user;
-        this.createdDate = LocalDate.now();
+        this.createdTime = LocalDateTime.now();
         this.confirmationToken = UUID.randomUUID().toString();
     }
 }

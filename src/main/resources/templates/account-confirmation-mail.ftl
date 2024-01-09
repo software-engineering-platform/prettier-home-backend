@@ -1,3 +1,4 @@
+<#-- FTL Template -->
 <html>
 <head>
     <style>
@@ -37,7 +38,12 @@
             cursor: pointer;
         }
 
-        .token:hover {
+        .token[disabled] {
+            background-color: #999;
+            cursor: not-allowed;
+        }
+
+        .token:hover:not([disabled]) {
             background-color: #b0b0b0;
         }
 
@@ -51,18 +57,39 @@
     </style>
 </head>
 <body>
+
+<script>
+    var expirationTime = "${expirationTime?string?html}"; // FTL ile JavaScript değişkeni tanımlama
+    var expirationDate = parseInt(expirationTime, 10);
+    var currentDate = new Date().getTime();
+    console.log(currentDate)
+    var timeDifference = expirationDate - currentDate;
+    console.log(timeDifference)
+
+    if (timeDifference <= 0) {
+        var confirmButton = document.querySelector('.token');
+        confirmButton.setAttribute('disabled', 'disabled');
+        confirmButton.innerHTML = 'Bağlantı Süresi Doldu';
+        var errorMessage = document.createElement('p');
+        errorMessage.innerHTML = 'Üzgünüz, bağlantı süresi doldu.';
+        document.querySelector('.content').appendChild(errorMessage);
+    }
+</script>
+
 <div class="container">
     <div class="header">
         <img src="${imgSource}" alt="Logo" style="max-width: 100%;">
     </div>
     <div class="content">
         <p>Thank you for registering. Please click on the below link to activate your account.</p>
-        <a href=`http://localhost:8080/users/register/confirm?token=${token}` class="token">Confirm Email</a>
+        <p>${expirationTime}</p>
+        <a href='http://localhost:3000/confirm/${token}' class="token">Confirm Email</a>
         <p>This link will expire in 24 hours!</p>
     </div>
     <div class="footer">
         <p>© 2023 Prettier Homes LLC. All rights reserved.</p>
     </div>
 </div>
+
 </body>
 </html>

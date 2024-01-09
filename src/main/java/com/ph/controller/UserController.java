@@ -41,19 +41,13 @@ public class UserController {
     }
 
     @GetMapping("/register/confirm")
-    String confirmMail(@RequestParam("token") String token) {
+    public boolean confirmMail(@RequestParam("token") String token) {
 
         Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
 
         optionalConfirmationToken.ifPresent(userService::confirmUser);
 
-        return "redirect:/sign-in";
-    }
-
-    @GetMapping("/sign-in")
-    String signIn() {
-
-        return "sign-in";
+        return optionalConfirmationToken.isPresent();
     }
 
     @PostMapping("/forgot-password")

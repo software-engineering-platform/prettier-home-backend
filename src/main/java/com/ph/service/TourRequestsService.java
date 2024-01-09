@@ -1,7 +1,6 @@
 package com.ph.service;
 
 import com.ph.domain.entities.Advert;
-import com.ph.domain.entities.Favorite;
 import com.ph.domain.entities.TourRequest;
 import com.ph.domain.entities.User;
 import com.ph.domain.enums.Status;
@@ -21,10 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -394,6 +393,15 @@ public class TourRequestsService {
         Page<TourRequestsFullResponse> tourRequestsResponses = tourRequests
                 .map(tourRequestsMapper::toTourRequestsFullResponse);
         return ResponseEntity.ok(tourRequestsResponses);
+    }
+    @Transactional
+    public List<TourRequest> checkingTheDatesOfTourRequests() {
+        // LocalDate.now() ile mevcut tarihi al
+        LocalDate currentDate = LocalDate.now();
+        // plusDays(1) ile bir sonraki günü elde et
+        LocalDate nextDay = currentDate.plusDays(1);
+        return tourRequestsRepository.findByTourDateEquals(nextDay);
+
     }
 
 }

@@ -40,7 +40,7 @@ public class TourRequest extends Entry implements Serializable {
      * Entity relationships start
      */
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "advert_id")
     @NotNull
     private Advert advert;
@@ -50,7 +50,7 @@ public class TourRequest extends Entry implements Serializable {
     @NotNull
     private User ownerUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "guest_user_id")
     @NotNull
     private User guestUser;

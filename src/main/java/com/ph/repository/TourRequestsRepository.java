@@ -18,6 +18,8 @@ import java.util.Optional;
 
 @Repository
 public interface TourRequestsRepository extends JpaRepository<TourRequest, Long> {
+    List<TourRequest> findByTourDateEquals(LocalDate tourDate);
+
     boolean existsByTourDateAndTourTimeAndAdvert_Id(LocalDate tourDate, LocalTime tourTime, Long id);
     List<TourRequest> findByGuestUser_Id(Long id);
     Page<TourRequest> findByAdvert_Id(Long id, Pageable pageable);
