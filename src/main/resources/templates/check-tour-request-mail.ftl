@@ -50,15 +50,16 @@
         <img src="${imgSource}" alt="Logo" style="max-width: 100%;">
     </div>
     <div class="content">
-        <p>Hello "${firstName} ${lastName}"</p>
-        <p>This reminder message is for the scheduled "${advertTitle}" on "${tourDate}". Your appointment is approaching, and we are excited to have you with us.</p>
+        <p>Hello ${firstName} ${lastName},</p>
+        <p>This reminder message is for the tour request for the <strong>${advertTitle}</strong> announcement planned on <strong>${tourDate}</strong>. Your appointment is approaching!</p>
+
         <p>Tour Details:</p>
-        <p>Date: "${tourDate}"</p>
-        <p>Time: "${tourTime}"</p>
-        <p>Meeting Point: "${country}, ${city}, ${district}"</p>
-        <p>Please be ready at this date and time. If, for any reason, you won't be able to attend, kindly inform us as soon as possible.</p>
-        <p>If you have any questions or concerns, feel free to contact us. We are here to provide you with a fantastic tour experience.</p>
-        <p>Best regards.</p>
+        <p>Date: ${tourDate}</p>
+        <p>Time: ${tourTime}</p>
+        <p>Meeting Point: ${country}, ${city}, ${district}</p>
+        <p>Please be ready at this date and time. If you cannot attend for any reason, please cancel your advertised tour request as soon as possible.</p>
+        <p>Thank you for your participation. See you later!</p>
+       <p>Regards.</p>
     </div>
     <div class="footer">
         <p>© 2023 Prettier Homes LLC. All rights reserved.</p>
@@ -66,3 +67,5 @@
 </div>
 </body>
 </html>
+
+

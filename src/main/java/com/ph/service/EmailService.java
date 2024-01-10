@@ -130,7 +130,7 @@ public class EmailService {
 
 
             // Calculate 24 hours from now
-            LocalDateTime expirationTime = createdTime.plusMinutes(3);
+            LocalDateTime expirationTime = createdTime.plusHours(24);
 
             dataModel.put("expirationTime", expirationTime);
 

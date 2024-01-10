@@ -58,23 +58,7 @@
 </head>
 <body>
 
-<script>
-    var expirationTime = "${expirationTime?string?html}"; // FTL ile JavaScript değişkeni tanımlama
-    var expirationDate = parseInt(expirationTime, 10);
-    var currentDate = new Date().getTime();
-    console.log(currentDate)
-    var timeDifference = expirationDate - currentDate;
-    console.log(timeDifference)
 
-    if (timeDifference <= 0) {
-        var confirmButton = document.querySelector('.token');
-        confirmButton.setAttribute('disabled', 'disabled');
-        confirmButton.innerHTML = 'Bağlantı Süresi Doldu';
-        var errorMessage = document.createElement('p');
-        errorMessage.innerHTML = 'Üzgünüz, bağlantı süresi doldu.';
-        document.querySelector('.content').appendChild(errorMessage);
-    }
-</script>
 
 <div class="container">
     <div class="header">
@@ -82,9 +66,10 @@
     </div>
     <div class="content">
         <p>Thank you for registering. Please click on the below link to activate your account.</p>
-        <p>${expirationTime}</p>
         <a href='http://localhost:3000/confirm/${token}' class="token">Confirm Email</a>
-        <p>This link will expire in 24 hours!</p>
+        <p>For the security of your account, avoid sharing this link with others.</p>
+        <p>Please note that if you do not activate your account, you may not have access to certain features.</p>
+        <p>Regards.</p>
     </div>
     <div class="footer">
         <p>© 2023 Prettier Homes LLC. All rights reserved.</p>
