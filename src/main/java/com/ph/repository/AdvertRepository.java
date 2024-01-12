@@ -139,7 +139,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     List<AdvertCategoryResponse> getAdvertsByCategories();
 
 
-    @Query("SELECT a FROM Advert a LEFT JOIN a.tourRequests t GROUP BY a ORDER BY (3 * COUNT(t) + a.viewCount) DESC LIMIT :limit")
+    @Query("SELECT a FROM Advert a LEFT JOIN a.tourRequests t WHERE a.statusForAdvert = com.ph.domain.enums.StatusForAdvert.ACTIVATED GROUP BY a ORDER BY (3 * COUNT(t) + a.viewCount) DESC LIMIT :limit")
     public List<Advert> findPopularAdverts(@Param("limit") Integer limit);
 
     //NOT: ESKİ QUERY (EKSİK)

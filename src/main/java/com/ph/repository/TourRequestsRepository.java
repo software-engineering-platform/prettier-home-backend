@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -40,13 +41,11 @@ public interface TourRequestsRepository extends JpaRepository<TourRequest, Long>
     Page<TourRequest> findAllByGuestUser_Id(Long id, Pageable pageable);
 
     @Query("select t from TourRequest t where " +
-
-            "(:start_date is null or t.tourDate >= :start_date) and " +
-            "(:end_date is null or t.tourDate <= :end_date) and " +
+            "(t.createdAt between :start_date and :end_date) and " +
             "(:status is null or t.status = :status)")
     List<TourRequest> findForExcel(
-            @Param("start_date") LocalDate startDate,
-            @Param("end_date") LocalDate endDate,
+            @Param("start_date") LocalDateTime startDate,
+            @Param("end_date") LocalDateTime endDate,
             @Param("status") Status status
     );
 

@@ -126,11 +126,36 @@ public class ReportService {
 
 
     // Not: get all tour request
-    public ResponseEntity<?> getTourRequests(LocalDate startDate, LocalDate endDate, Status status) {
+    public ResponseEntity<?> getTourRequests(LocalDate startDate, LocalDate endDate, Integer status) {
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
             throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
         }
-        List<TourRequest> tourRequests = tourRequestsRepository.findForExcel(startDate, endDate, status);
+
+        LocalDateTime startDateTime;
+        LocalDateTime endDateTime;
+        if (startDate != null) {
+            startDateTime = startDate.atTime(LocalTime.MIN);
+        } else {
+
+            startDateTime = LocalDateTime.of(1900, 1, 1, 0, 0);
+        }
+        if (endDate != null) {
+            endDateTime = endDate.atTime(LocalTime.MIN);
+        } else {
+            endDateTime = LocalDateTime.of(2400, 1, 1, 0, 0);
+        }
+        Status statusForTour = null;
+        if (status != null) {
+            switch (status) {
+                case 0 -> statusForTour = Status.PENDING;
+                case 1 -> statusForTour = Status.APPROVED;
+                case 2 -> statusForTour = Status.DECLINED;
+                case 3 -> statusForTour = Status.CANCELED;
+            }
+        }
+
+
+        List<TourRequest> tourRequests = tourRequestsRepository.findForExcel(startDateTime, endDateTime, statusForTour);
         List<TourRequestResource> tourRequestsResource = tourRequests
                 .stream()
                 .map(reportMapper::toTourRequestResource)
