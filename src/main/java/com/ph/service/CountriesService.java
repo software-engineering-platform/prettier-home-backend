@@ -4,7 +4,7 @@ import com.ph.domain.entities.Country;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.LocationMapper;
 import com.ph.payload.response.CountryResponse;
-import com.ph.repository.CountriesRepository;
+import com.ph.repository.CountryRepository;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CountriesService {
-    private final CountriesRepository countriesRepository;
+    private final CountryRepository countriesRepository;
     private final MessageUtil messageUtil;
     private final LocationMapper locationMapper;
 

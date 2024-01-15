@@ -35,7 +35,7 @@ public class ResetDatabaseService {
         List<Advert> adverts = advertRepository.findAllByBuiltIn(false);
         advertRepository.deleteAll(adverts);
 
-        return ResponseEntity.ok("The database has successfully been reset.");
+        return ResponseEntity.ok("The database has been reset successfully.");
     }
 
 }
