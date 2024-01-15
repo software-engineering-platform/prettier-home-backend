@@ -59,6 +59,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                     .passwordHash(passwordEncoder.encode("admin123!"))
                     .role(Role.ADMIN)
                     .builtIn(true)
+                    .enabled(true)
                     .build();
             userRepository.save(admin);
 
@@ -70,6 +71,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                     .passwordHash(passwordEncoder.encode("manager123!"))
                     .role(Role.MANAGER)
                     .builtIn(true)
+                    .enabled(true)
                     .build();
             userRepository.save(manager);
 
@@ -81,6 +83,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                     .passwordHash(passwordEncoder.encode("customer123!"))
                     .role(Role.CUSTOMER)
                     .builtIn(true)
+                    .enabled(true)
                     .build();
             userRepository.save(customer);
 

@@ -13,6 +13,10 @@ spring:
           auth: true
           starttls:
             enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
 
 email:
   account:
@@ -28,3 +32,13 @@ email:
       email-img: https://i.imgur.com/P5FfKNl.png
       text: |
         <In this property, you can set the text of the email.>
+    confirmation:
+      subject: Confirmation Email !
+      template: account-confirmation-mail.ftl
+      text: |
+        <In this property, you can set the text of the email.>
+    check-tour-request:
+      subject: Appointment Information Email !
+      template: check-tour-request-mail.ftl
+      text: |
+        <In this property, you can set the text of the email.>   

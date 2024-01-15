@@ -21,8 +21,14 @@ import java.util.Optional;
 
 @Repository
 public interface TourRequestsRepository extends JpaRepository<TourRequest, Long> {
+
+    List<TourRequest> findByTourDateEquals(LocalDate tourDate);
+
+    boolean existsByTourDateAndTourTimeAndAdvert_Id(LocalDate tourDate, LocalTime tourTime, Long id);
+
     @Query("select count(t) from TourRequest t where t.advert.id = ?1")
     long countByAdvert_Id(Long id);
+
 
     List<TourRequest> findByGuestUser_Id(Long id);
 

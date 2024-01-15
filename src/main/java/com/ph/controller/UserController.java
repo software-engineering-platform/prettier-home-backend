@@ -1,8 +1,10 @@
 package com.ph.controller;
 
+import com.ph.domain.entities.ConfirmationToken;
 import com.ph.payload.request.*;
 import com.ph.payload.response.LoginResponse;
 import com.ph.security.service.AuthService;
+import com.ph.service.ConfirmationTokenService;
 import com.ph.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -25,6 +28,7 @@ public class UserController {
 
     private final UserService userService;
     private final AuthService authService;
+    private final ConfirmationTokenService confirmationTokenService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
@@ -34,6 +38,16 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> userSave(@RequestBody @Valid UserSaveRequest request) {
         return userService.saveUser(request);
+    }
+
+    @GetMapping("/register/confirm")
+    public boolean confirmMail(@RequestParam("token") String token) {
+
+        Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
+
+        optionalConfirmationToken.ifPresent(userService::confirmUser);
+
+        return optionalConfirmationToken.isPresent();
     }
 
     @PostMapping("/forgot-password")

@@ -67,7 +67,7 @@ public class SecurityFilterConfiguration {
     private static final String[] AUTH_WHITE_LIST = {
             "/",
             "/users/login",
-            "/users/register",
+            "/users/register/**",
             "/users/forgot-password",
             "/users/reset-password",
             "/adverts/search",
@@ -86,7 +86,9 @@ public class SecurityFilterConfiguration {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/swagger*/**",
-            "/adverts/details/**"
+            "/adverts/details/**",
+            "/sign-up/**",
+            "/sign-in/**"
     };
 
 
