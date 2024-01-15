@@ -23,8 +23,6 @@ public interface TourRequestsRepository extends JpaRepository<TourRequest, Long>
     @Query("select count(t) from TourRequest t where t.advert.id = ?1")
     long countByAdvert_Id(Long id);
 
-    boolean existsByTourDateAndTourTimeAndAdvert_Id(LocalDate tourDate, LocalTime tourTime, Long id);
-
     List<TourRequest> findByGuestUser_Id(Long id);
 
     Page<TourRequest> findByAdvert_Id(Long id, Pageable pageable);
@@ -73,4 +71,5 @@ public interface TourRequestsRepository extends JpaRepository<TourRequest, Long>
             "GROUP BY tr.advert.id")
     List<TourRequestCountResponse> getCountsTourRequestsCustomer(@Param("advertIds") List<Long> advertIds);
 
+    boolean existsByAdvert_IdAndTourTimeAndTourDate(Long advertId, LocalTime tourTime, LocalDate tourDate);
 }

@@ -111,7 +111,7 @@ public class TourRequestsController {
     // http://localhost:8080/tour-requests/6/cancel
 
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    @PatchMapping("/{id}/cancel")
+    @GetMapping("/{id}/cancel")
     public ResponseEntity<TourRequestsResponse> cancelByCustomerAsTourId(
             @PathVariable(name = "id") Long tourId,
             @AuthenticationPrincipal UserDetails userDetails
