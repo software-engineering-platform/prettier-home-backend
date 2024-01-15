@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -145,9 +144,11 @@ public class AdvertMapper {
 
     //NOT FAVOURITE
 
-    public AdvertResponseForFavorite toAdvertResponseForFavorite(Advert advert) {
+    public AdvertResponseForFavorite toAdvertResponseForFavorite(Long favoriteId ,Advert advert) {
         return AdvertResponseForFavorite.builder()
-                .id(advert.getId())
+                .favoriteId(favoriteId)
+                .advertId(advert.getId())
+//                .ownerId(advert.getUser().getId())
                 .title(advert.getTitle())
                 .price(advert.getPrice())
                 .location(advert.getLocation())
@@ -156,10 +157,8 @@ public class AdvertMapper {
                 .city(locationMapper.toCityResponse(advert.getCity()))
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
                 .category(categoryMapper.toCategoryResponseForFavorite(advert.getCategory()))
-                .images(advert.getImages().stream().map(imageMapper::toImageResponse).toList())
-//                .images(sortedByFeatured(advert.getImages()))
+                .image(imageMapper.toImageResponse(getFeaturedImage(advert.getImages())))
                 .slug(advert.getSlug())
-                .userId(advert.getUser().getId())
                 .build();
     }
 

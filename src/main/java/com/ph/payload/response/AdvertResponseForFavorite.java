@@ -1,8 +1,6 @@
 package com.ph.payload.response;
 
-import com.ph.domain.entities.Image;
 import com.ph.domain.entities.Location;
-import com.ph.domain.entities.User;
 import lombok.*;
 
 import java.io.Serializable;
@@ -16,7 +14,9 @@ import java.util.List;
 public class AdvertResponseForFavorite implements Serializable {
     //TODO RESPONSE DA İMAGE DÖNÜNCE 4.5 MB'LİK BİR RESPONSE OLUYOR
 
-    private Long id;
+    private Long favoriteId;
+    private Long advertId;
+//    private Long ownerId;
     private String title;
     private Double price;
     private Location location;
@@ -25,8 +25,7 @@ public class AdvertResponseForFavorite implements Serializable {
     private CityResponse city;
     private DistrictResponse district;
     private CategoryResponseForFavorite category;
-    private List<ImageResponse> images;
-    private Long userId;
+    private ImageResponse image;
     private String slug;
 
 }

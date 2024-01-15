@@ -2,7 +2,6 @@ package com.ph.controller;
 
 import com.ph.payload.response.AdvertResponseForFavorite;
 import com.ph.payload.response.FavoriteCountResponse;
-import com.ph.payload.response.LogResponse;
 import com.ph.service.FavoritesService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +39,7 @@ public class FavoritesController {
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")//http://localhost:8080/favorites/1/auth
     @GetMapping("{id}/auth")
     @Transactional
-    public ResponseEntity<AdvertResponseForFavorite> addToFavorites(
+    public ResponseEntity<?> addToFavorites(
             @PathVariable(name = "id") Long advertId,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
@@ -56,15 +55,15 @@ public class FavoritesController {
 
     // Not :K05 - DeleteFavoriteIdByAdminAndManager() *********************************************************
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
-    //http://localhost:8080/favorites/1/admin
-    @DeleteMapping("/{id}/admin")
+    //http://localhost:8080/favorites/admin/delete/all/1
+    @DeleteMapping("admin/delete/all/{id}")
     public ResponseEntity<String> deleteFavoritesByAdminAndManager(@PathVariable(name = "id") Long userId) {
         return favoritesService.deleteFavoritesByAdminAndManager(userId);
     }
 
     // Not :K06 - DeleteFavoriteIdByAdminAndManager() *********************************************************
-    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")//http://localhost:8080/favorites/1/admin/favorite
-    @DeleteMapping("/{id}/admin/favorite")
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")//http://localhost:8080/favorites/admin/delete/2
+    @DeleteMapping("/admin/delete/{id}")
     public ResponseEntity<String> deleteFavoriteIdByAdminAndManager(@PathVariable(name = "id") Long favoriteId) {
         return favoritesService.deleteFavoriteIdByAdminAndManager(favoriteId);
     }
@@ -73,7 +72,7 @@ public class FavoritesController {
     // Not: getFavCountForAdvert for specific advert
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     @GetMapping("/auth/countFav/{advertId}") // http://localhost:8080/favorites/auth/countFav/1
-    public ResponseEntity<?> getFavCountForAdvert(@PathVariable(name = "advertId") Long advertId,@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> getFavCountForAdvert(@PathVariable(name = "advertId") Long advertId, @AuthenticationPrincipal UserDetails userDetails) {
         return favoritesService.getFavCountForAdvert(advertId, userDetails);
     }
 
@@ -87,18 +86,18 @@ public class FavoritesController {
     ) {
         return favoritesService.deleteFavorite(advertId, userDetails);
     }
+
     // Not: getAllFavoritesByUserId
-    @GetMapping("/getAll/{id}")
+    @GetMapping("/getAll/{userId}")
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
-    public ResponseEntity<Page<AdvertResponseForFavorite>> getAllFavorites(@PathVariable Long id,
-                                                     @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                                                     @RequestParam(value = "size", defaultValue = "20", required = false) int size,
-                                                     @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
-                                                     @RequestParam(value = "type", defaultValue = "asc", required = false) String type
-
+    public ResponseEntity<Page<AdvertResponseForFavorite>> getAllFavorites(
+            @PathVariable Long userId,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "20", required = false) int size,
+            @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+            @RequestParam(value = "type", defaultValue = "asc", required = false) String type
     ) {
-
-        return favoritesService.getAllFavorites(id,page,sort,size,type);
+        return favoritesService.getAllFavorites(userId, page, sort, size, type);
     }
 
     // Not: getFavCountForAdvert for specific advert
@@ -106,6 +105,7 @@ public class FavoritesController {
     public List<FavoriteCountResponse> getFavCountForAdvertCustomer(@AuthenticationPrincipal UserDetails userDetails) {
         return favoritesService.getFavCountForAdvertCustomer(userDetails);
     }
+
     @GetMapping("/admin/countFav")
     public List<FavoriteCountResponse> getFavCountForAdvertAdmin() {
         return favoritesService.getFavCountForAdvertAdmin();

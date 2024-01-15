@@ -2,7 +2,8 @@ package com.ph.service;
 
 
 import com.ph.domain.entities.AdvertType;
-import com.ph.exception.customs.ConflictException;
+import com.ph.exception.customs.BuiltInFieldException;
+import com.ph.exception.customs.NonDeletableException;
 import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.request.AdvertTypeRequest;
@@ -137,10 +138,10 @@ public class AdvertTypeService {
         AdvertType advertType = getById(id);
         if (advertType.isBuiltIn()) {
 //            throw new ConflictException(messageUtil.getMessage("error.advert.type.delete.builtin"));
-            throw new ConflictException("AdvertType cannot be deleted");
+            throw new BuiltInFieldException("AdvertType cannot be deleted");
         }
         if (!advertType.getAdverts().isEmpty()) {
-            throw new ConflictException("AdvertType cannot be deleted because it has associated Adverts");
+            throw new NonDeletableException("AdvertType cannot be deleted because it has associated Adverts");
         }
 
         // Delete the AdvertType from the repository
@@ -171,7 +172,7 @@ public class AdvertTypeService {
       AdvertType found =  getById(id);
         if (found.isBuiltIn()) {
 //            throw new ConflictException(messageUtil.getMessage("error.advert.type.delete.builtin"));
-            throw new ConflictException("AdvertType cannot be updated");
+            throw new BuiltInFieldException("AdvertType cannot be updated");
         }
 
         // Map the request data to an advert type entity

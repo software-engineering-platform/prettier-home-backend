@@ -1,7 +1,9 @@
 package com.ph.payload.request;
 
 import com.ph.domain.entities.User;
+import com.ph.security.role.Role;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -34,12 +36,16 @@ public class UserUpdateRequest implements Consumer<User>, Serializable {
     @Email(message = "{validation.email.pattern}")
     private String email;
 
+    @NotNull(message = "{validation.role.null}")
+    private Role role;
+
     @Override
     public void accept(User user) {
         if (firstName != null) user.setFirstName(firstName);
         if (lastName != null) user.setLastName(lastName);
         if (phone != null) user.setPhone(phone);
         if (email != null) user.setEmail(email);
+        if (role != null) user.setRole(role);
     }
 
 }
