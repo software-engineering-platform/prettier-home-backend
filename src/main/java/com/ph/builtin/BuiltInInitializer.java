@@ -30,7 +30,7 @@ public class BuiltInInitializer implements CommandLineRunner {
     private final CategoryPropertyKeyRepository propertyKeyRepository;
     private final CityRepository cityRepository;
     private final DistrictsRepository districtsRepository;
-    private final CountriesRepository countriesRepository;
+    private final CountryRepository countriesRepository;
     private final AdvertRepository advertRepository;
     private final ImageRepository imageRepository;
 

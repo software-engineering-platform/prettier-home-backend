@@ -62,7 +62,7 @@ public class ReportController {
     public ResponseEntity<?> getTourRequests(
             @RequestParam(name = "startDate", required = false) LocalDate startDate,
             @RequestParam(name = "endDate", required = false) LocalDate endDate,
-            @RequestParam(name = "status", required = false) Status status
+            @RequestParam(name = "status", required = false) Integer status
     ) { //http://localhost:8080/report
         return reportService.getTourRequests(startDate, endDate, status);
     }

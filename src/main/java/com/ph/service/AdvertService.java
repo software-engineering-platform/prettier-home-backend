@@ -59,7 +59,7 @@ public class AdvertService {
         }
     }
 
-    private void setAdvertField(Advert advert, User user, AdvertRequestAbs requestAbs) {
+    private void setAdvertField(Advert advert, AdvertRequestAbs requestAbs) {
         AdvertType type = typeService.getById(requestAbs.getAdvertTypeId());
         Country country = countriesService.getById(requestAbs.getCountryId());
         City city = cityService.getById(requestAbs.getCityId());
@@ -71,7 +71,7 @@ public class AdvertService {
         advert.setCountry(country);
         advert.setCity(city);
         advert.setDistrict(district);
-        advert.setUser(user);
+
     }
 
 
@@ -345,7 +345,8 @@ public class AdvertService {
         User user = (User) userDetails;
 
         Advert advert = mapper.toEntity(request);
-        setAdvertField(advert, user, request);
+        setAdvertField(advert, request);
+        advert.setUser(user);
 
         // Save the advert to the repository
         Advert savedAdvert = repository.save(advert);
@@ -411,7 +412,7 @@ public class AdvertService {
 
         // Update the advert with the new data
         mapper.toEntityForUpdateCustomer(advert, request);
-        setAdvertField(advert, user, request);
+        setAdvertField(advert, request);
         advert.setStatusForAdvert(StatusForAdvert.PENDING);
         advert.setSlug(GeneralUtils.generateSlug(advert.getTitle()));
 
@@ -478,7 +479,7 @@ public class AdvertService {
         }
 
         // Get the advert type, country, city, district, and category by ID
-        setAdvertField(advert, user, request);
+        setAdvertField(advert, request);
         // Update the advert with the request data
         mapper.toEntityForUpdate(advert, request);
 
@@ -574,9 +575,7 @@ public class AdvertService {
 
     }
 
-    public boolean isHaveUserAdvert(Long id) {
-        return repository.existsByUser_Id(id);
-    }
+
 
 
     /**
