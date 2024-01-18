@@ -131,18 +131,18 @@ public class ReportService {
             throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
         }
 
-        LocalDateTime startDateTime;
-        LocalDateTime endDateTime;
+        LocalDate dateStart;
+        LocalDate dateEnd;
         if (startDate != null) {
-            startDateTime = startDate.atTime(LocalTime.MIN);
+            dateStart = startDate;
         } else {
 
-            startDateTime = LocalDateTime.of(1900, 1, 1, 0, 0);
+            dateStart = LocalDate.of(1900, 1, 1);
         }
         if (endDate != null) {
-            endDateTime = endDate.atTime(LocalTime.MIN);
+            dateEnd = endDate;
         } else {
-            endDateTime = LocalDateTime.of(2400, 1, 1, 0, 0);
+            dateEnd = LocalDate.of(2400, 1, 1);
         }
         Status statusForTour = null;
         if (status != null) {
@@ -155,7 +155,7 @@ public class ReportService {
         }
 
 
-        List<TourRequest> tourRequests = tourRequestsRepository.findForExcel(startDateTime, endDateTime, statusForTour);
+        List<TourRequest> tourRequests = tourRequestsRepository.findForExcel(dateStart, dateEnd, statusForTour);
         List<TourRequestResource> tourRequestsResource = tourRequests
                 .stream()
                 .map(reportMapper::toTourRequestResource)

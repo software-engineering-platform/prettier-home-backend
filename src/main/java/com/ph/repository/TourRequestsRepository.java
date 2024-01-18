@@ -45,11 +45,11 @@ public interface TourRequestsRepository extends JpaRepository<TourRequest, Long>
     Page<TourRequest> findAllByGuestUser_Id(Long id, Pageable pageable);
 
     @Query("select t from TourRequest t where " +
-            "(t.createdAt between :start_date and :end_date) and " +
+            "(t.tourDate between :start_date and :end_date) and " +
             "(:status is null or t.status = :status)")
     List<TourRequest> findForExcel(
-            @Param("start_date") LocalDateTime startDate,
-            @Param("end_date") LocalDateTime endDate,
+            @Param("start_date") LocalDate startDate,
+            @Param("end_date") LocalDate endDate,
             @Param("status") Status status
     );
 
