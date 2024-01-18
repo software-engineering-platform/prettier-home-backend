@@ -22,6 +22,8 @@ public class District implements Serializable {
 
     private String name;
 
+    @Embedded
+    private Location location;
     /**
      * Entity relationships start
      */

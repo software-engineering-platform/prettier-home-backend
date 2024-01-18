@@ -26,6 +26,9 @@ public class Country implements Serializable {
     @Size(max = 30)
     private String name;
 
+    @Embedded
+    private Location location;
+
     /**
      * Entity relationships start
      */

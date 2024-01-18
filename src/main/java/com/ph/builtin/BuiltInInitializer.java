@@ -194,8 +194,8 @@ public class BuiltInInitializer implements CommandLineRunner {
         List<Category> allCategories = categoryRepository.findAll();
         String[] titles = new String[]{"House", "Apartment", "Office", "Villa", "Land", "Shop"};
         Double[] prices = new Double[]{100000.0, 200000.0, 300000.0, 400000.0, 500000.0, 60000.0};
-        Long[] cities = new Long[]{34L, 10L, 38L, 6L, 72L, 35L};
-        Long[] districts = new Long[]{126L, 831L, 490L, 565L, 453L, 139L};
+        Long[] cities = new Long[]{4160L, 3866L, 3264L, 1278L, 1359L, 1357L};
+        Long[] districts = new Long[]{48762L, 42218L, 38248L, 17726L, 19014L, 18742L};
         Double[] lat = new Double[]{41.10500496452611, 39.91349760621756, 38.62218565477382, 39.97437614009851, 37.75093476161285, 38.46207669619371};
         Double[] lng = new Double[]{28.788342747629066, 28.14135381537319, 35.15306199396324, 32.86918909133035, 41.40976722322277, 27.17709951048468};
         String[] descriptions = {
@@ -259,7 +259,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                         .location(new Location(latitude, longitude))
                         .advertType(advertType)
                         .category(category)
-                        .country(countriesRepository.findById(1L).get())
+                        .country(countriesRepository.findById(223L).get())
                         .city(cityRepository.findById(city).get())
                         .district(districtsRepository.findById(district).get())
                         .images(List.of(defaultImage))

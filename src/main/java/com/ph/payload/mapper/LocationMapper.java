@@ -17,6 +17,7 @@ public class LocationMapper {
         return CountryResponse.builder()
                 .id(country.getId())
                 .name(country.getName())
+                .location(country.getLocation())
                 /*.advertsResponse(country.getAdverts().stream().map(advertMapper::toAdvertResponseForTourRequest).collect(Collectors.toList()))
                 .citiesResponse(country.getCities().stream().map(cityMapper::toCityResponse).collect(Collectors.toList()))*/
                 .build();
@@ -27,6 +28,7 @@ public class LocationMapper {
         return CityResponse.builder()
                 .id(city.getId())
                 .name(city.getName())
+                .location(city.getLocation())
                 /*.countryResponse(countryMapper.toCountryResponse(city.getCountry()))
                 .advertsResponse(city.getAdverts().stream().map(advertMapper::toAdvertResponseForTourRequest).collect(Collectors.toList()))
                 .districtsResponse(city.getDistricts().stream().map(districtMapper::toDistrictResponse).collect(Collectors.toList()))*/
@@ -38,6 +40,7 @@ public class LocationMapper {
         return DistrictResponse.builder()
                 .id(district.getId())
                 .name(district.getName())
+                .location(district.getLocation())
                 /*.advertsResponse(district.getAdverts().stream().map(advertMapper::toAdvertResponseForTourRequest).collect(Collectors.toList()))
                 .cityResponse(cityMapper.toCityResponse(district.getCity()))*/
                 .build();
