@@ -17,10 +17,10 @@ public class ReportController {
     private final ReportService reportService;
 
     // Not: get most popular properties
-    @GetMapping("/most-popular-properties")
+    @GetMapping("/most-popular")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseEntity<?> getProperties(@RequestParam Integer amount
-    ) { //http://localhost:8080/report/most-popular-properties?amount=10
+    public ResponseEntity<?> getProperties(@RequestParam(name = "amount") Integer amount
+    ) { //http://localhost:8080/report/most-popular?amount=10
 
         return reportService.getMostPopularProperties(amount);
 
