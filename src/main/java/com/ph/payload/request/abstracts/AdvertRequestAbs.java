@@ -27,11 +27,11 @@ public abstract class AdvertRequestAbs implements Serializable {
     @Size(max = 300, message = "validation.advert.desc.size")
     private String desc;
 
-    @Valid
-    private Location location;
-
     @NotNull(message = "validation.advert.price.notnull")
     private Double price;
+
+    @NotNull(message = "validation.advert.category.notnull")
+    private Long categoryId;
 
     @NotNull(message = "validation.advert.type.notnull")
     private Long advertTypeId;
@@ -45,7 +45,10 @@ public abstract class AdvertRequestAbs implements Serializable {
     @NotNull(message = "validation.advert.district.notnull")
     private Long districtId;
 
-    @NotNull(message = "validation.advert.category.notnull")
-    private Long categoryId;
+    @Valid
+    private Location location;
 
+    @NotNull(message = "validation.advert.address.notnull")
+    @Size(min = 2, max = 100, message = "validation.advert.address.size")
+    private String address;
 }

@@ -31,6 +31,7 @@ public class AdvertMapper {
                 .description(request.getDesc())
                 .price(request.getPrice())
                 .location(request.getLocation())
+                .address(request.getAddress())
                 .statusForAdvert(StatusForAdvert.PENDING)
                 .viewCount(0)
                 .builtIn(false)
@@ -44,22 +45,23 @@ public class AdvertMapper {
                 .createdAt(advert.getCreatedAt())
                 .updatedAt(advert.getUpdatedAt())
                 .title(advert.getTitle())
+                .slug(advert.getSlug())
                 .description(advert.getDescription())
+                .advertType(toResponse(advert.getAdvertType()))
+                .category(categoryMapper.mapToCategoryResponsewithPropertyKeys(advert.getCategory()))
                 .categoryPropertyValue(categoryMapper.entityToResponse(advert.getCategoryPropertyValues()))
                 .price(advert.getPrice())
                 .statusForAdvert(advert.getStatusForAdvert())
-                .advertType(toResponse(advert.getAdvertType()))
                 .viewCount(advert.getViewCount())
                 .builtIn(advert.isBuiltIn())
                 .isActive(advert.isActive())
+                .images(sortedByFeatured(advert.getImages()))
                 .country(locationMapper.toCountryResponse(advert.getCountry()))
                 .city(locationMapper.toCityResponse(advert.getCity()))
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
-                .images(sortedByFeatured(advert.getImages()))
+                .address(advert.getAddress())
                 .location(advert.getLocation())
                 .user(userMapper.toUserResponse(advert.getUser()))
-                .category(categoryMapper.mapToCategoryResponsewithPropertyKeys(advert.getCategory()))
-                .slug(advert.getSlug())
                 .build();
     }
 
@@ -97,13 +99,11 @@ public class AdvertMapper {
     }
 
     public void toEntityForUpdateCustomer(Advert pojo, AdvertRequestForUpdateByCustomer request) {
-
         pojo.setTitle(request.getTitle());
         pojo.setDescription(request.getDesc());
         pojo.setPrice(request.getPrice());
         pojo.setActive(request.getActive());
         pojo.setLocation(request.getLocation());
-
     }
 
 
@@ -141,10 +141,9 @@ public class AdvertMapper {
     }
 
 
-
     //NOT FAVOURITE
 
-    public AdvertResponseForFavorite toAdvertResponseForFavorite(Long favoriteId ,Advert advert) {
+    public AdvertResponseForFavorite toAdvertResponseForFavorite(Long favoriteId, Advert advert) {
         return AdvertResponseForFavorite.builder()
                 .favoriteId(favoriteId)
                 .advertId(advert.getId())
