@@ -131,16 +131,19 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     //Finish: categoryService için yazıldı
 
 
-    @Query("SELECT new com.ph.payload.response.AdvertCityResponse(a.city.id, a.city.name, COUNT(a.id)) FROM Advert a GROUP BY a.city.id, a.city.name ORDER BY COUNT(a.id) DESC LIMIT :limit")
+    @Query("SELECT new com.ph.payload.response.AdvertCityResponse(a.city.id, a.city.name, COUNT(a.id)) FROM Advert a WHERE a.statusForAdvert = com.ph.domain.enums.StatusForAdvert.ACTIVATED GROUP BY a.city.id, a.city.name ORDER BY COUNT(a.id) DESC LIMIT :limit")
     List<AdvertCityResponse> getAdvertsByCities(@Param("limit") Integer limit);
 
 
-    @Query("SELECT new com.ph.payload.response.AdvertCategoryResponse(a.category.id,a.category.title,a.category.icon, COUNT(a.id)) FROM Advert a GROUP BY a.category.id, a.category.title, a.category.icon")
+    @Query("SELECT new com.ph.payload.response.AdvertCategoryResponse(a.category.id,a.category.title,a.category.icon, COUNT(a.id)) FROM Advert a WHERE a.statusForAdvert = com.ph.domain.enums.StatusForAdvert.ACTIVATED GROUP BY a.category.id, a.category.title, a.category.icon")
     List<AdvertCategoryResponse> getAdvertsByCategories();
 
-
     @Query("SELECT a FROM Advert a LEFT JOIN a.tourRequests t WHERE a.statusForAdvert = com.ph.domain.enums.StatusForAdvert.ACTIVATED GROUP BY a ORDER BY (3 * COUNT(t) + a.viewCount) DESC LIMIT :limit")
-    public List<Advert> findPopularAdverts(@Param("limit") Integer limit);
+     List<Advert> findPopularAdverts(@Param("limit") Integer limit);
+    @Query("SELECT a FROM Advert a LEFT JOIN a.tourRequests t WHERE a.statusForAdvert = com.ph.domain.enums.StatusForAdvert.ACTIVATED and a.advertType.title=:advertType GROUP BY a ORDER BY (3 * COUNT(t) + a.viewCount) DESC LIMIT :limit")
+      List<Advert> findPopularSaleOrRentAdverts(@Param("limit") Integer limit,@Param("advertType") String advertType);
+
+
 
     //NOT: ESKİ QUERY (EKSİK)
     //    @Query("""

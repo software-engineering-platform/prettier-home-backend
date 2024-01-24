@@ -156,8 +156,8 @@ public class AdvertService {
      * @return A list of AdvertResponse objects representing the most popular adverts.
      */
 
-    @Cacheable(value = "mostPopularAdverts", key = "#amount")
-    public List<SimpleAdvertResponse> getMostPopularAdverts(Integer amount) {
+    @Cacheable(value = "mostPopularAdverts", key = "#type + ' ' + #amount")
+    public List<SimpleAdvertResponse> getMostPopularAdverts(String type,Integer amount) {
 
         // Set the default amount if null
         if (amount == null) {
@@ -165,8 +165,8 @@ public class AdvertService {
         }
 
         // Retrieve the most popular adverts from the repository
-        List<Advert> popularAdverts = repository.findPopularAdverts(amount);
-
+      String newType =  type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase();
+        List<Advert> popularAdverts =  repository.findPopularSaleOrRentAdverts(amount, newType);
         // Convert the Advert objects to AdvertResponse objects
         return popularAdverts.stream()
                 .map(mapper::toSimpleAdvertResponse)
