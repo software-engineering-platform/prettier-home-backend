@@ -21,6 +21,12 @@ import java.util.Optional;
 
 @Repository
 public interface TourRequestsRepository extends JpaRepository<TourRequest, Long> {
+    @Query("""
+            select (count(t) > 0) from TourRequest t
+            where t.tourDate = ?1 and t.tourTime = ?2 and t.status = ?3 and t.guestUser.id = ?4""")
+    boolean existsByTourDateAndTourTimeAndStatusAndGuestUser_Id(LocalDate tourDate, LocalTime tourTime, Status status, Long id);
+    @Query("select (count(t) > 0) from TourRequest t where t.tourDate = ?1 and t.tourTime = ?2 and t.status = ?3")
+    boolean existsByTourDateAndTourTimeAndStatus(LocalDate tourDate, LocalTime tourTime, Status status);
 
     List<TourRequest> findByTourDateEquals(LocalDate tourDate);
 
@@ -40,7 +46,8 @@ public interface TourRequestsRepository extends JpaRepository<TourRequest, Long>
 
     Optional<TourRequest> findByIdAndGuestUser_Id(Long id, Long id1);
 
-    boolean existsByTourDateAndTourTime(LocalDate tourDate, LocalTime tourTime);
+    @Query("SELECT COUNT(tr) > 0 FROM TourRequest tr WHERE tr.tourDate = :tourDate AND tr.tourTime = :tourTime AND tr.status IN (:allowedStatuses)")
+    boolean existsByTourDateAndTourTimeAndStatusIn(LocalDate tourDate, LocalTime tourTime, List<Status> allowedStatuses);
 
     Page<TourRequest> findAllByGuestUser_Id(Long id, Pageable pageable);
 

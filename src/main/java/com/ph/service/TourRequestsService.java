@@ -21,7 +21,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -39,7 +41,6 @@ public class TourRequestsService {
 
 
     // Not :S05 - Save() *************************************************************************
-
     /**
      * Saves a tour request.
      *
@@ -52,10 +53,6 @@ public class TourRequestsService {
      */
     public ResponseEntity<?> save(TourRequestRequest request, UserDetails userDetails) {
         TourRequest tourRequest = request.get();
-        // Check if there is a conflict with the tour date and time
-        if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
-        }
         // Check if the tour time is valid
         if (!isValidTourTime(tourRequest.getTourTime())) {
             throw new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
@@ -64,6 +61,25 @@ public class TourRequestsService {
         Advert advert = advertService.getById(request.getAdvertId());
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
+        // Check if the user is the owner of the advert
+        if (advert.getUser().getId().equals(user.getId())) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.owner-cannot-create"));
+        }
+        // Check if the tour date is before today
+        LocalDate tourDate=tourRequest.getTourDate();
+        LocalDate today = LocalDate.now();
+        // Check if the tour date is before today
+        if (tourDate.isBefore(today) || tourDate.isEqual(today)) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.invalid-date"));
+        }
+        // Check if the tour request already exists
+        if (tourRequestsRepository.existsByTourDateAndTourTimeAndStatus(tourDate, tourRequest.getTourTime(), Status.APPROVED)) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.approved-request-exists"));
+        }
+        // Check if the tour request already exists for the user
+        if (tourRequestsRepository.existsByTourDateAndTourTimeAndStatusAndGuestUser_Id(tourRequest.getTourDate(), tourRequest.getTourTime(), Status.PENDING, user.getId())) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.approved-request-exists-for-user"));
+        }
         // Set the advert, guest user, and owner user for the tour request
         User ownerUser = advert.getUser();
         tourRequest.setAdvert(advert);
@@ -269,6 +285,10 @@ public class TourRequestsService {
         // Get the tour request based on the tour ID and user ID
         TourRequest tourRequest = tourRequestsRepository.findByIdAndGuestUser_Id(tourId, user.getId()).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
+        // Check if the tour request is already canceled or declined
+        if (tourRequest.getStatus() == Status.CANCELED || tourRequest.getStatus() == Status.DECLINED) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.already-processed"));
+        }
         // Update the tour request status to CANCELED
         tourRequest.setStatus(Status.CANCELED);
         tourRequestsRepository.save(tourRequest);
@@ -292,6 +312,10 @@ public class TourRequestsService {
         // Find the tour request by ID or throw an exception if not found
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
+        // Check if the tour request has already been approved or declined
+        if (tourRequest.getStatus() == Status.APPROVED || tourRequest.getStatus() == Status.DECLINED) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.already-processed"));
+        }
         // Update the status of the tour request to "APPROVED"
         tourRequest.setStatus(Status.APPROVED);
         // Save the updated tour request in the repository
@@ -316,6 +340,10 @@ public class TourRequestsService {
         // Find the tour request by ID or throw an exception if not found
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
+        // Check if the tour request has already been approved or declined
+        if (tourRequest.getStatus() == Status.APPROVED || tourRequest.getStatus() == Status.DECLINED) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.already-processed"));
+        }
         // Update the status of the tour request to "DECLINED"
         tourRequest.setStatus(Status.DECLINED);
         // Save the updated tour request in the repository
