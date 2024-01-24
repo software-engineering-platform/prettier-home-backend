@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
@@ -35,7 +35,6 @@ public class BuiltInInitializer implements CommandLineRunner {
     private final ImageRepository imageRepository;
 
 
-
     @Override
     public void run(String... args) throws Exception {
         // Initialize built-in data
@@ -43,10 +42,7 @@ public class BuiltInInitializer implements CommandLineRunner {
         initializeAdvertTypes();
         initializeCategories();
         initializePropertyKeys();
-        if(advertRepository.count() == 0) {
-            initializeDefaultAdvert();
-        }
-
+        initializeDefaultAdvert();
     }
 
     private void initializeUsers() {
@@ -190,83 +186,101 @@ public class BuiltInInitializer implements CommandLineRunner {
     }
 
     private void initializeDefaultAdvert() {
-        String[] images = new String[]{"static/house.jpg", "static/apartment.jpg", "static/office.jpg", "static/villa.jpg", "static/land.jpg", "static/shop.jpg"};
-        List<Category> allCategories = categoryRepository.findAll();
-        String[] titles = new String[]{"House", "Apartment", "Office", "Villa", "Land", "Shop"};
-        Double[] prices = new Double[]{100000.0, 200000.0, 300000.0, 400000.0, 500000.0, 60000.0};
-        Long[] cities = new Long[]{4160L, 3866L, 3264L, 1278L, 1359L, 1357L};
-        Long[] districts = new Long[]{48762L, 42218L, 38248L, 17726L, 19014L, 18742L};
-        Double[] lat = new Double[]{41.10500496452611, 39.91349760621756, 38.62218565477382, 39.97437614009851, 37.75093476161285, 38.46207669619371};
-        Double[] lng = new Double[]{28.788342747629066, 28.14135381537319, 35.15306199396324, 32.86918909133035, 41.40976722322277, 27.17709951048468};
-        String[] descriptions = {
-                "Beautifully designed and spacious.",
-                "Located in a prime neighborhood.",
-                "Modern amenities for your comfort.",
-                "Stunning views from every room.",
-                "Close to schools, parks, and shopping centers.",
-                "Secure and peaceful environment.",
-                "Perfect for family living.",
-                "High-quality construction and finishes.",
-                "Easy access to public transportation.",
-                "A great investment opportunity."
-        }; // Generate a random 10-sentence description
+        if (!advertRepository.existsBy()) {
+            List<Map<String, Object>> adverts = new ArrayList<>(Arrays.asList(
+                    Map.of("title", "House",
+                            "description", "Beautifully designed and spacious.",
+                            "price", 100000.0,
+                            "ccd", new Long[]{223L, 4160L, 48762L},
+                            "address", "Sakura Cad. No: 15",
+                            "location", new Double[]{41.10500496452611, 28.788342747629066},
+                            "category", 1L,
+                            "advertType", 1L,
+                            "image", "static/house.jpg",
+                            "user", "admin@gmail.com"),
 
+                    Map.of("title", "Apartment",
+                            "description", "Located in a prime neighborhood.",
+                            "price", 200000.0,
+                            "ccd", new Long[]{223L, 3866L, 42218L},
+                            "address", "Sakura Cad. No: 16",
+                            "location", new Double[]{39.91349760621756, 28.14135381537319},
+                            "category", 1L,
+                            "advertType", 1L,
+                            "image", "static/apartment.jpg",
+                            "user", "admin@gmail.com"),
 
-        AdvertType advertType = advertTypeRepository.getReferenceById(1L);
+                    Map.of("title", "Office",
+                            "description", "Modern amenities for your comfort.",
+                            "price", 300000.0,
+                            "ccd", new Long[]{223L, 3264L, 38248L},
+                            "address", "Sakura Cad. No: 17",
+                            "location", new Double[]{38.62218565477382, 35.15306199396324},
+                            "category", 1L,
+                            "advertType", 1L,
+                            "image", "static/office.jpg",
+                            "user", "admin@gmail.com"),
 
-        if (advertType != null && !allCategories.isEmpty()) {
-            for (int i = 0; i < images.length; i++) {
-                String imageFileName = images[i];
-                String title = titles[i];
-                Category category = allCategories.get(i);
-                Double price = prices[i];
-                Long city = cities[i];
-                Long district = districts[i];
-                Double latitude = lat[i];
-                Double longitude = lng[i];
-                String description = descriptions[i];
+                    Map.of("title", "Villa",
+                            "description", "Stunning views from every room.",
+                            "price", 400000.0,
+                            "ccd", new Long[]{223L, 1278L, 17726L},
+                            "address", "Sakura Cad. No: 18",
+                            "location", new Double[]{39.97437614009851, 32.86918909133035},
+                            "category", 1L,
+                            "advertType", 1L,
+                            "image", "static/villa.jpg",
+                            "user", "admin@gmail.com"),
 
+                    Map.of("title", "Land",
+                            "description", "Close to schools, parks, and shopping centers.",
+                            "price", 500000.0,
+                            "ccd", new Long[]{223L, 1359L, 19014L},
+                            "address", "Sakura Cad. No: 19",
+                            "location", new Double[]{37.75093476161285, 41.40976722322277},
+                            "category", 1L,
+                            "advertType", 1L,
+                            "image", "static/land.jpg",
+                            "user", "admin@gmail.com"),
 
-                Resource resource = new ClassPathResource(imageFileName);
-                Image defaultImage = null;
+                    Map.of("title", "Shop",
+                            "description", "Secure and peaceful environment.",
+                            "price", 600000.0,
+                            "ccd", new Long[]{223L, 3885L, 42218L},
+                            "address", "Sakura Cad. No: 20",
+                            "location", new Double[]{38.46207669619371, 27.17709951048468},
+                            "category", 1L,
+                            "advertType", 1L,
+                            "image", "static/shop.jpg",
+                            "user", "admin@gmail.com")
+            ));
 
-                try {
-                    InputStream inputStream = resource.getInputStream();
-                    byte[] imageData = Files.readAllBytes(Paths.get(resource.getURI()));
+            for (Map<String, Object> advert : adverts) {
 
-                    defaultImage = Image.builder()
-                            .data(ImageUtil.compressImage(imageData))
-                            .name(title)
-                            .type("image/jpg")
-                            .featured(true)
-                            .build();
+                String title = advert.get("title").toString();
+                Image image = buildImage(advert.get("image").toString(), title);
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                String slug = GeneralUtils.generateSlug(title);
-
-                Advert defaultAdvert = Advert.builder()
+                Advert builtInAdvert = Advert.builder()
                         .title(title)
-                        .description(description)
-                        .slug(slug)
-                        .price(price)
+                        .description(advert.get("description").toString())
+                        .slug(GeneralUtils.generateSlug(title))
+                        .price((Double) advert.get("price"))
                         .statusForAdvert(StatusForAdvert.ACTIVATED)
                         .builtIn(true)
                         .isActive(true)
                         .viewCount(0)
-                        .location(new Location(latitude, longitude))
-                        .advertType(advertType)
-                        .category(category)
-                        .country(countriesRepository.findById(223L).get())
-                        .city(cityRepository.findById(city).get())
-                        .district(districtsRepository.findById(district).get())
-                        .images(List.of(defaultImage))
-                        .user(userRepository.findByEmail("admin@gmail.com").orElse(null))
+                        .location(new Location(((Double[]) advert.get("location"))[0], ((Double[]) advert.get("location"))[1]))
+                        .advertType(advertTypeRepository.findById((Long) advert.get("advertType")).get())
+                        .category(categoryRepository.findById((Long) advert.get("category")).get())
+                        .country(countriesRepository.findById(((Long[]) advert.get("ccd"))[0]).get())
+                        .city(cityRepository.findById(((Long[]) advert.get("ccd"))[1]).get())
+                        .district(districtsRepository.findById(((Long[]) advert.get("ccd"))[2]).get())
+                        .address(advert.get("address").toString())
+                        .images(List.of(image))
+                        .user(userRepository.findByEmail(advert.get("user").toString()).get())
                         .build();
 
-                Advert savedAdvert = advertRepository.save(defaultAdvert);
+                Advert savedAdvert = advertRepository.save(builtInAdvert);
 
                 Image savedImage = savedAdvert.getImages().stream().findFirst().orElse(null);
                 if (savedImage != null) {
@@ -277,7 +291,21 @@ public class BuiltInInitializer implements CommandLineRunner {
         }
     }
 
+    private Image buildImage(String fileName, String title) {
+        try {
+            byte[] data = Files.readAllBytes(Paths.get(new ClassPathResource(fileName).getURI()));
+            return Image.builder()
+                    .data(ImageUtil.compressImage(data))
+                    .name(title)
+                    .type("image/jpg")
+                    .featured(true)
+                    .build();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }

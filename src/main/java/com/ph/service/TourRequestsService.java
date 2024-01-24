@@ -339,7 +339,7 @@ public class TourRequestsService {
         return tourRequestsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
     }
-
+    @Transactional
     public Page<TourRequestResponseSimple> getTourRequestByAdvertId(Pageable pageable, Long advertId) {
         Page<TourRequest> tourRequests = tourRequestsRepository.findByAdvert_Id(advertId, pageable);
         return tourRequests.map(tourRequestsMapper::toResponseSimple);

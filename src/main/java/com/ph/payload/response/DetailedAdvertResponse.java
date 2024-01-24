@@ -28,6 +28,7 @@ public class DetailedAdvertResponse implements Serializable {
     private CountryResponse country;
     private CityResponse city;
     private DistrictResponse district;
+    private String address;
     private UserResponse user;
     private CategoryResponse category;
     private List<ImageResponse> images;

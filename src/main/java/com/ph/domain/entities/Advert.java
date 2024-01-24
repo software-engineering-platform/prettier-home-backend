@@ -22,29 +22,36 @@ import java.util.Objects;
 @Table(name = "adverts")
 
 public class Advert extends Entry implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String title;
+
     @Column(length = 300)
     private String description;
+
     @Column(unique = true)
     private String slug;
+
     @Column(nullable = false)
     private Double price;
-
 
     private StatusForAdvert statusForAdvert = StatusForAdvert.PENDING;
 
     private boolean builtIn;
 
-
     private boolean isActive = true;
+
     private Integer viewCount = 0;
 
     @Embedded
     private Location location;
+
+    @Column(nullable = false, length = 100)
+    private String address;
 
     /**
      * Entity relationships start
@@ -74,7 +81,7 @@ public class Advert extends Entry implements Serializable {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY )
+    @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CategoryPropertyValue> categoryPropertyValues;
 
     @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)

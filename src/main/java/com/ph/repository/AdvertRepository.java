@@ -167,4 +167,5 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     @Query("select a from Advert a where a.builtIn = ?1")
     List<Advert> findAllByBuiltIn(boolean b);
 
+    boolean existsBy();
 }
