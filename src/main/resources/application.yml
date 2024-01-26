@@ -11,10 +11,10 @@ spring:
     multipart:
       max-file-size: 3MB
       max-request-size: 30MB
-  web:
-    locale: auto
-  messages:
-    basename: messages
+#  web:
+#    locale: auto
+#  messages:
+#    basename: messages
     encoding: UTF-8
     cache-duration: -1
     fallback-to-system-locale: true
