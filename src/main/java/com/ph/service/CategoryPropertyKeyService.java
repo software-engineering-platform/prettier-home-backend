@@ -94,7 +94,7 @@ public class CategoryPropertyKeyService {
     public ResponseEntity<CategoryPropertyKeyResponse> deletePropertyKey(Long propertyId) {
 
         CategoryPropertyKey categoryPropertyKey = propertyKeyRepository.findById(propertyId).orElseThrow(()
-                -> new ResourceNotFoundException("Category property key not found"));
+                -> new ResourceNotFoundException("error.cpk.not-found"));
 
         if (categoryPropertyKey.isBuiltIn()) {
             throw new ConflictException(messageUtil.getMessage("error.cpk.delete.built-in"));

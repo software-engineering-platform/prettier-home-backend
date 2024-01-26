@@ -20,7 +20,7 @@ public class CategoryPropertyKeyRequest implements Supplier<CategoryPropertyKey>
     @Size(min = 2, max = 80, message = "{validation.category.name.size}")
     private String name;
 
-    @NotNull(message = "{validation.category.key-type.notnull}")// messages.properties handle this
+    @NotNull(message = "{validation.category.key-type.notnull}")
     private KeyType keyType;
 
     private String prefix;
