@@ -4,9 +4,7 @@ import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.TourRequest;
 import com.ph.domain.entities.User;
 import com.ph.domain.enums.Status;
-import com.ph.exception.customs.ConflictException;
-import com.ph.exception.customs.RelatedFieldException;
-import com.ph.exception.customs.ResourceNotFoundException;
+import com.ph.exception.customs.*;
 import com.ph.payload.mapper.TourRequestsMapper;
 import com.ph.payload.request.TourRequestRequest;
 import com.ph.payload.response.*;
@@ -14,16 +12,24 @@ import com.ph.repository.TourRequestsRepository;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,7 +45,6 @@ public class TourRequestsService {
 
 
     // Not :S05 - Save() *************************************************************************
-
     /**
      * Saves a tour request.
      *
@@ -52,10 +57,6 @@ public class TourRequestsService {
      */
     public ResponseEntity<?> save(TourRequestRequest request, UserDetails userDetails) {
         TourRequest tourRequest = request.get();
-        // Check if there is a conflict with the tour date and time
-        if (tourRequestsRepository.existsByTourDateAndTourTime(tourRequest.getTourDate(), tourRequest.getTourTime())) {
-            throw new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
-        }
         // Check if the tour time is valid
         if (!isValidTourTime(tourRequest.getTourTime())) {
             throw new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
@@ -64,6 +65,25 @@ public class TourRequestsService {
         Advert advert = advertService.getById(request.getAdvertId());
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
+        // Check if the user is the owner of the advert
+        if (advert.getUser().getId().equals(user.getId())) {
+            throw new RelatedFieldException(messageUtil.getMessage("error.tour-request.owner-cannot-create"));
+        }
+        // Check if the tour date is before today
+        LocalDate tourDate=tourRequest.getTourDate();
+        LocalDate today = LocalDate.now();
+        // Check if the tour date is before today
+        if (tourDate.isBefore(today) || tourDate.isEqual(today)) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.invalid-date"));
+        }
+        // Check if the tour request already exists
+        if (tourRequestsRepository.existsByTourDateAndTourTimeAndStatus(tourDate, tourRequest.getTourTime(), Status.APPROVED)) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.approved-request-exists"));
+        }
+        // Check if the tour request already exists for the user
+        if (tourRequestsRepository.existsByTourDateAndTourTimeAndStatusAndGuestUser_Id(tourRequest.getTourDate(), tourRequest.getTourTime(), Status.PENDING, user.getId())) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.pending-request-exists-for-user"));
+        }
         // Set the advert, guest user, and owner user for the tour request
         User ownerUser = advert.getUser();
         tourRequest.setAdvert(advert);
@@ -109,14 +129,23 @@ public class TourRequestsService {
         // Check if the tour request exists for the given ID
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
+        // Check if the tour date is before today
+        if (tourRequest.getTourDate().isEqual(LocalDate.now())) {
+            throw new RelatedFieldException(messageUtil.getMessage("error.tour-request.cannot-updated"));
+        }
+        // Check if the tour request already exists
+        if (tourRequestsRepository.existsByTourDateAndTourTimeAndStatus(request.getTourDate(), request.getTourTime(), Status.APPROVED)) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.approved-request-exists"));
+        }
+        // Check if the tour request already exists for the user
+        if (tourRequestsRepository.existsByTourDateAndTourTimeAndStatusAndGuestUser_Id(request.getTourDate(), request.getTourTime(), Status.PENDING, tourRequest.getGuestUser().getId())) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.pending-request-exists-for-user"));
+        }
         // Check if the tour request status is approved or canceled
-        if ((Status.APPROVED.name()).equals(tourRequest.getStatus().name()) || (Status.CANCELED.name()).equals(tourRequest.getStatus().name())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.pending-or-declined"));
+        if ((Status.APPROVED.name()).equals(tourRequest.getStatus().name()) ){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.cannot-approved"));
         }
-        // Check if there is a conflict in tour time
-        if (tourRequestsRepository.existsByAdvert_IdAndTourTimeAndTourDate(request.getAdvertId(), request.getTourTime(), request.getTourDate())) {
-            throw new ConflictException(messageUtil.getMessage("error.tour-time.conflict"));
-        }
+        // Check if the tour time is valid
         if (!isValidTourTime(tourRequest.getTourTime())) {
             throw new RelatedFieldException(messageUtil.getMessage("error.tour-time.bad-request"));
         }
@@ -170,11 +199,30 @@ public class TourRequestsService {
         // Find the tour request with the given ID
         TourRequest tourRequest = tourRequestsRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
-        // Delete the tour request from the repository
-        tourRequestsRepository.deleteById(id);
-        // Return the response entity containing the deleted tour request
-        return ResponseEntity.ok(tourRequestsMapper.toTourRequestsSaveResponse(tourRequest));
+        if (isCustomerUser() && tourRequest.getStatus() == Status.DECLINED) {
+            // Delete the tour request from the repository
+            tourRequestsRepository.deleteById(id);
+            // Return the response entity containing the deleted tour request
+            return ResponseEntity.ok(tourRequestsMapper.toTourRequestsSaveResponse(tourRequest));
+        }
+        throw new NonDeletableException(messageUtil.getMessage("error.tour-request.cannot-deleted"));
+    }
 
+    // Not: Helper Method***********************************************************************
+    private boolean isCustomerUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            boolean isCustomer = false;
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                if (authority.getAuthority().equals("CUSTOMER")) {
+                    isCustomer = true; // Kullanıcı "CUSTOMER" roline sahipse true döndür
+                } else if (authority.getAuthority().equals("ADMIN") || authority.getAuthority().equals("MANAGER")) {
+                    return false; // "ADMIN" veya "MANAGER" rolüne sahipse false döndür
+                }
+            }
+            return isCustomer;
+        }
+        return false; // Kullanıcı "CUSTOMER" roline sahip değilse false döndür
     }
 
     // Not :S02 - GetAllTourRequestByManagerAndAdminAsPage() ***************************************************
@@ -269,6 +317,17 @@ public class TourRequestsService {
         // Get the tour request based on the tour ID and user ID
         TourRequest tourRequest = tourRequestsRepository.findByIdAndGuestUser_Id(tourId, user.getId()).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
+        // Check if the tour request is already canceled or declined
+        if (tourRequest.getStatus() == Status.CANCELED || tourRequest.getStatus() == Status.DECLINED) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.already-processed"));
+        }
+        // Check if the tour date is within the allowed cancellation period
+        LocalDate today = LocalDate.now();
+        LocalDate tourDate = tourRequest.getTourDate();
+        int allowedCancellationDays = 1; // Change this value according to your business rule
+        if (today.isAfter(tourDate.minusDays(allowedCancellationDays))) {
+            throw new NonDeletableException(messageUtil.getMessage("error.tour-request.invalid-cancellation-date"));
+        }
         // Update the tour request status to CANCELED
         tourRequest.setStatus(Status.CANCELED);
         tourRequestsRepository.save(tourRequest);
@@ -292,15 +351,54 @@ public class TourRequestsService {
         // Find the tour request by ID or throw an exception if not found
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
+        // Check if the tour request has already been approved or declined
+        if (tourRequest.getStatus() == Status.APPROVED || tourRequest.getStatus() == Status.CANCELED) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.already-processed"));
+        }
+       LocalDate tourDate=tourRequest.getTourDate();
+        LocalDate today = LocalDate.now();
+        // Check if the tour date is before today
+        if (tourDate.isBefore(today) || tourDate.isEqual(today)) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.approved"));
+        }
+        // Check if there is already an approved request for the same date and time
+        if (hasApprovedRequestAtSameDateTime(tourRequest)) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.approved-request-exists"));
+        }
         // Update the status of the tour request to "APPROVED"
         tourRequest.setStatus(Status.APPROVED);
         // Save the updated tour request in the repository
         tourRequestsRepository.save(tourRequest);
+        // Automatically decline other tour requests created at the same date and time
+        declineOtherTourRequestsAtSameDateTime(tourRequest);
         // Log a message indicating that the tour request has been approved
         logService.logMessage(messageUtil.getMessage("success.tour-request.approved"), tourRequest.getAdvert(), tourRequest.getGuestUser());
         // Return the status response of the approved tour request
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsResponse(tourRequest));
     }
+
+    // Not: Helper Method***********************************************************************
+    private void declineOtherTourRequestsAtSameDateTime(TourRequest tourRequest) {
+        LocalDate requestDate = tourRequest.getTourDate();
+        LocalTime requestTime = tourRequest.getTourTime();
+        List<TourRequest> otherRequestsAtSameDateTime = tourRequestsRepository.findAllByTourDateAndTourTime(requestDate, requestTime);
+        for (TourRequest otherRequest : otherRequestsAtSameDateTime) {
+            if (otherRequest.getId() != tourRequest.getId()) {
+                // Set the status of other requests to "DECLINED"
+                otherRequest.setStatus(Status.DECLINED);
+                tourRequestsRepository.save(otherRequest);
+            }
+        }
+    }
+
+    // Not: Helper Method***********************************************************************
+    private boolean hasApprovedRequestAtSameDateTime(TourRequest tourRequest) {
+        LocalDate requestDate = tourRequest.getTourDate();
+        LocalTime requestTime = tourRequest.getTourTime();
+        List<TourRequest> approvedRequestsAtSameDateTime = tourRequestsRepository.findAllByTourDateAndTourTimeAndStatus(requestDate, requestTime, Status.APPROVED);
+        return !approvedRequestsAtSameDateTime.isEmpty();
+    }
+
 
     // Not :S09 - DeclinedByCustomerAsTourId() *******************************************************************
 
@@ -316,6 +414,13 @@ public class TourRequestsService {
         // Find the tour request by ID or throw an exception if not found
         TourRequest tourRequest = tourRequestsRepository.findById(tourId).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
+        // Check if the tour request has already been approved or declined
+        if (tourRequest.getStatus() == Status.DECLINED || tourRequest.getStatus() == Status.CANCELED) {
+            throw new ConflictException(messageUtil.getMessage("error.tour-request.already-processed"));
+        }
+        if(tourRequest.getStatus() == Status.APPROVED && tourRequest.getTourDate().equals(LocalDate.now())){
+            throw new RelatedFieldException(messageUtil.getMessage("error.tour-request.cannot-declined"));
+        }
         // Update the status of the tour request to "DECLINED"
         tourRequest.setStatus(Status.DECLINED);
         // Save the updated tour request in the repository
@@ -427,5 +532,18 @@ public class TourRequestsService {
                 advertService.getAllAdvertsByUserId(user.getId()).stream().map(Advert::getId).collect(Collectors.toList());
 
         return tourRequestsRepository.getCountsTourRequestsCustomer(advertIds);
+    }
+    @Transactional
+    public List<TourRequest> getExpiredPendingTourRequests() {
+        LocalDate today = LocalDate.now();
+        return tourRequestsRepository.findPendingTourRequestsBeforeToday(today, Status.PENDING);
+    }
+
+    @Transactional
+    public void declineExpiredPendingTourRequests(List<TourRequest> expiredPendingTourRequests) {
+        for (TourRequest tourRequest : expiredPendingTourRequests) {
+            tourRequest.setStatus(Status.DECLINED);
+            tourRequestsRepository.save(tourRequest);
+        }
     }
 }
