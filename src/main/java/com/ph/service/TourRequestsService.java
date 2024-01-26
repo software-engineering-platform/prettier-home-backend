@@ -313,7 +313,7 @@ public class TourRequestsService {
     public ResponseEntity<TourRequestsResponse> cancelByCustomerAsTourId(Long tourId, UserDetails userDetails) {
         // Get the user based on the email from the user details
         User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
-                new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found")));
+                new ResourceNotFoundException(messageUtil.getMessage("error.user.update.not-found")));
         // Get the tour request based on the tour ID and user ID
         TourRequest tourRequest = tourRequestsRepository.findByIdAndGuestUser_Id(tourId, user.getId()).orElseThrow(() ->
                 new ResourceNotFoundException(messageUtil.getMessage("error.tour-request.not-found")));
@@ -463,7 +463,7 @@ public class TourRequestsService {
     public ResponseEntity<Long> getTourRequestCount(Long advertId, UserDetails userDetails) {
         // Retrieve the user by email from the user service
         User user = userService.getUserByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found")));
+                .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.user.update.not-found")));
 
         // Retrieve the advertisement by ID from the advert service
         Advert advert = advertService.getById(advertId);
@@ -472,7 +472,7 @@ public class TourRequestsService {
         List<Advert> advertList = advertService.getAllAdvertsByUserId(user.getId());
 
         if (advertList.isEmpty()) {
-            throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
+            throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not.found"));
         }
 
         // Check if the specified advertisement is in the user's list of advert

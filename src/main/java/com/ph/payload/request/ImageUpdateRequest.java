@@ -9,9 +9,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class ImageUpdateRequest implements Serializable {
 
-    //TODO MESAJLARI SETLENİCEK
-    @NotNull
+    @NotNull(message = "validation.image.id-notnull")
     Long imgId;
-    @NotNull
+    @NotNull(message = "validation.advert.id.notnull")
     Long advertId;
 }
