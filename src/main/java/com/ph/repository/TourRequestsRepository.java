@@ -84,4 +84,11 @@ public interface TourRequestsRepository extends JpaRepository<TourRequest, Long>
     List<TourRequestCountResponse> getCountsTourRequestsCustomer(@Param("advertIds") List<Long> advertIds);
 
     boolean existsByAdvert_IdAndTourTimeAndTourDate(Long advertId, LocalTime tourTime, LocalDate tourDate);
+
+    List<TourRequest> findAllByTourDateAndTourTime(LocalDate requestDate, LocalTime requestTime);
+
+    List<TourRequest> findAllByTourDateAndTourTimeAndStatus(LocalDate requestDate, LocalTime requestTime, Status approved);
+
+    @Query("SELECT tr FROM TourRequest tr WHERE tr.tourDate < :today AND tr.status = :status")
+    List<TourRequest> findPendingTourRequestsBeforeToday(LocalDate today, Status status);
 }
