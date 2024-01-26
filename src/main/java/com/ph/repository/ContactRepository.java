@@ -16,4 +16,13 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
             select c from Contact c
             where c.firstName ilike concat('%', ?1, '%') or c.lastName ilike concat('%', ?1, '%') or c.email ilike concat('%', ?1, '%') or c.message ilike concat('%', ?1, '%')""")
     Page<Contact> findContactsPageableBySearch(String query, Pageable pageable);
+
+    boolean existsByMessageIsNotNull();
+
+    @Query("""
+            select c from Contact c
+            where c.status = ?1
+            """)
+    Page<Contact> findContactsPageableByStatus(boolean status, Pageable pageable);
+
 }

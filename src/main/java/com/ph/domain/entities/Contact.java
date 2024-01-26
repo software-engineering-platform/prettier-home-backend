@@ -24,6 +24,7 @@ public class Contact implements Serializable {
     private String lastName;
     private String email;
     private String message;
+    private boolean status;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -35,12 +36,18 @@ public class Contact implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Contact contact)) return false;
-        return getId().equals(contact.getId()) && getFirstName().equals(contact.getFirstName()) && getLastName().equals(contact.getLastName()) && getEmail().equals(contact.getEmail()) && getMessage().equals(contact.getMessage()) && getCreatedAt().equals(contact.getCreatedAt());
+        return getId().equals(contact.getId())
+                && getFirstName().equals(contact.getFirstName())
+                && getLastName().equals(contact.getLastName())
+                && getEmail().equals(contact.getEmail())
+                && getMessage().equals(contact.getMessage())
+                && getCreatedAt().equals(contact.getCreatedAt())
+                && isStatus() == contact.isStatus();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getEmail(), getMessage(), getCreatedAt());
+        return Objects.hash(getId(), getFirstName(), getLastName(), getEmail(), getMessage(), getCreatedAt(), isStatus());
     }
 
     @Override
@@ -51,7 +58,8 @@ public class Contact implements Serializable {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", message='" + message + '\'' +
-                ", createdAt=" + createdAt +
+                ", createdAt=" + createdAt + '\'' +
+                ", status=" + status +
                 '}';
     }
 

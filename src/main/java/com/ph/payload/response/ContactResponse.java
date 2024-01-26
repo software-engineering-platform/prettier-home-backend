@@ -11,10 +11,12 @@ import java.time.LocalDateTime;
 @Builder
 public class ContactResponse {
 
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
     private String message;
+    private boolean status;
     private LocalDateTime createdAt;
 
 

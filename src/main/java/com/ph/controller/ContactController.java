@@ -25,16 +25,47 @@ public class ContactController {
 
     // Not :J01 - GetAll() *************************************************************************
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
-    @GetMapping()
+    @GetMapping() // http://localhost:8080/contact-messages?page=0&size=20&sort=id&type=asc
     public ResponseEntity<Page<ContactResponse>> getAllContact(
             @RequestParam(value = "query", required = false) String query,
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
             @RequestParam(value = "size", defaultValue = "20", required = false) int size,
             @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
-            @RequestParam(value = "type", defaultValue = "asc", required = false) String type
-
+            @RequestParam(value = "type", defaultValue = "asc", required = false) String type,
+            @RequestParam(value = "status", required = false) boolean status
     ) {
-        return contactService.getAllContact(query, page, size, sort, type);
+        return contactService.getAllContact(query, page, size, sort, type, status);
+    }
+
+    // Not :J03 - getById() *************************************************************************
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @GetMapping("/{id}") // http://localhost:8080/contact-messages/1
+    public ResponseEntity<ContactResponse> getById(@PathVariable Long id) {
+        return contactService.getById(id);
+    }
+
+
+    // Not :J04 - delete() *************************************************************************
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @DeleteMapping("/{id}") // http://localhost:8080/contact-messages/1
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        return contactService.delete(id);
+    }
+
+
+    // Not :J05 - deleteAll() **********************************************************************
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @DeleteMapping() // http://localhost:8080/contact-messages
+    public ResponseEntity<?> deleteAllMessages() {
+        return contactService.deleteAllMessages();
+    }
+
+
+    // Not :J06 - updateStatus() *************************************************************************
+    @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
+    @PatchMapping("/{id}") // http://localhost:8080/contact-messages/1
+    public ResponseEntity<ContactResponse> updateMessage(@PathVariable Long id) {
+        return contactService.updateMessage(id);
     }
 
 

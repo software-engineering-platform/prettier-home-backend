@@ -19,6 +19,8 @@ public class ContactRequest implements Supplier<Contact>, Serializable {
     @Email(message = "{validation.email.pattern}")
     private String email;
     private String message;
+    private boolean status;
+
 
     @Override
     public Contact get() {
@@ -27,6 +29,7 @@ public class ContactRequest implements Supplier<Contact>, Serializable {
                 .lastName(getLastName())
                 .email(getEmail())
                 .message(getMessage())
+                .status(isStatus())
                 .build();
     }
 

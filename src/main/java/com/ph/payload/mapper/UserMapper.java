@@ -52,11 +52,13 @@ public class UserMapper {
 
     public ContactResponse toContactResponse(Contact contact) {
         return ContactResponse.builder()
+                .id(contact.getId())
                 .firstName(contact.getFirstName())
                 .lastName(contact.getLastName())
                 .email(contact.getEmail())
                 .message(contact.getMessage())
                 .createdAt(contact.getCreatedAt())
+                .status(contact.isStatus())
                 .build();
     }
 
