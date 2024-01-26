@@ -81,9 +81,9 @@ public class AdvertController {
 
 
     // NOT:A04 / getMostPopularAdverts() ************************************************************
-    @GetMapping("/popular/{amount}")
-    public List<SimpleAdvertResponse> getMostPopularAdverts(@PathVariable Integer amount) {
-        return service.getMostPopularAdverts(amount);
+    @GetMapping("/popular/{type}/{amount}")
+    public List<SimpleAdvertResponse> getMostPopularAdverts(@PathVariable String type, @PathVariable Integer amount) {
+        return service.getMostPopularAdverts(type,amount);
     }
 
 

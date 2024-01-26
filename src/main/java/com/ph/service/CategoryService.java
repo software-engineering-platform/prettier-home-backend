@@ -58,9 +58,15 @@ public class CategoryService {
         // check title constraint
         checkTitle(categoryRequest.getTitle());
 
+        //Eski hali
         // check title for duplicate if there is same title in database then throw ConflictException
-        if (categoryRepository.existsByTitle(categoryRequest.getTitle()) &&
+/*        if (categoryRepository.existsByTitle(categoryRequest.getTitle()) &&
                 !category.getTitle().equalsIgnoreCase(categoryRequest.getTitle())) {
+            throw new ConflictException(messageUtil.getMessage("error.category.save.exist"));
+        }*/
+
+        //Yeni hali
+        if (categoryRepository.existsByTitleIgnoreCase(categoryRequest.getTitle())) {
             throw new ConflictException(messageUtil.getMessage("error.category.save.exist"));
         }
 
