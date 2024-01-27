@@ -2,6 +2,7 @@ package com.ph.service;
 
 import com.ph.domain.entities.Contact;
 import com.ph.exception.customs.ResourceNotFoundException;
+import com.ph.exception.customs.ValuesNotMatchException;
 import com.ph.payload.mapper.UserMapper;
 import com.ph.payload.request.ContactRequest;
 import com.ph.payload.response.ContactResponse;
@@ -16,6 +17,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -116,5 +119,32 @@ public class ContactService {
     }
 
 
+    // Not :J07 - getOlderMessages() *************************************************************************
+    public ResponseEntity<Page<ContactResponse>> getOlderMessages(int page, int size, String sort, String type, LocalDateTime startDate, LocalDateTime endDate) {
+
+        // Check if the start date is after the end date
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
+        }
+
+        // Set default start and end dates if they are not provided
+        LocalDateTime dateStart = startDate != null ? startDate : LocalDate.of(1900, 1, 1).atStartOfDay();
+        LocalDateTime dateEnd = endDate != null ? endDate : LocalDate.of(2400, 1, 1).atStartOfDay();
+
+        // Create a Pageable object with the provided page, size, and sort criteria
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+
+        // If the sorting type is "desc", create a new Pageable object with descending sort
+        if (Objects.equals(type, "desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        }
+
+        // Get messages that are older than a certain date range
+        Page<ContactResponse> olderMessages = contactRepository.findOlderMessages(dateStart, dateEnd, pageable)
+                .map(userMapper::toContactResponse);
+
+        return ResponseEntity.ok(olderMessages);
+
+    }
 
 }

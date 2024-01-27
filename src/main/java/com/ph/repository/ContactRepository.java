@@ -1,12 +1,14 @@
 package com.ph.repository;
 
 import com.ph.domain.entities.Contact;
-import com.ph.payload.response.ContactResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
 
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
@@ -24,5 +26,11 @@ public interface ContactRepository extends JpaRepository<Contact, Long> {
             where c.status = ?1
             """)
     Page<Contact> findContactsPageableByStatus(boolean status, Pageable pageable);
+
+    @Query("""
+        SELECT c FROM Contact c
+        WHERE c.createdAt BETWEEN :startDate AND :endDate
+    """)
+    Page<Contact> findOlderMessages(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, Pageable pageable);
 
 }
