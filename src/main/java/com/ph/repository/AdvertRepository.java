@@ -168,4 +168,7 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     List<Advert> findAllByBuiltIn(boolean b);
 
     boolean existsBy();
+
+    @Query("SELECT COUNT(a) FROM Advert a WHERE a.statusForAdvert = com.ph.domain.enums.StatusForAdvert.ACTIVATED")
+    Long countActivatedAdverts();
 }
