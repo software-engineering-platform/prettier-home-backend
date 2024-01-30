@@ -22,8 +22,20 @@ public class DailyReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
-    private Long numberOfAdverts;
-    private Long numberOfFavorites;
-    private Long numberOfTourRequests;
-    private Long numberOfUsers;
+    private Integer numberOfAdverts;
+    private Integer numberOfFavorites;
+    private Integer numberOfTourRequests;
+    private Integer numberOfUsers;
+
+    @Override
+    public String toString() {
+        return "DailyReport{" +
+                "id=" + id +
+                ", date=" + date +
+                ", numberOfAdverts=" + numberOfAdverts +
+                ", numberOfFavorites=" + numberOfFavorites +
+                ", numberOfTourRequests=" + numberOfTourRequests +
+                ", numberOfUsers=" + numberOfUsers +
+                '}';
+    }
 }

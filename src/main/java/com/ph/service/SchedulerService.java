@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -47,24 +48,52 @@ public class SchedulerService {
      DailyReport dailyReport =   DailyReport.builder()
                 .date(LocalDate.now())
                 .numberOfAdverts(advertRepository.countActivatedAdverts())
-                .numberOfTourRequests(tourRequestsRepository.count())
-                .numberOfFavorites(favoritesRepository.count())
-                .numberOfUsers(userRepository.count())
+                .numberOfTourRequests((int) tourRequestsRepository.count())
+                .numberOfFavorites((int) favoritesRepository.count())
+                .numberOfUsers((int) userRepository.count())
                 .build();
      dailyReportRepository.save(dailyReport);
     }
 
 
-    public List<DailyReport> getDailyReport(){
-
-        // Burda son 7 günün raporunu alıyorum
+    public Map<String, Map<LocalDate, Integer>> getDailyReport() {
         LocalDate currentDate = LocalDate.now();
         LocalDate startDate = currentDate.minusDays(7);
-        List<DailyReport> reports = dailyReportRepository.findByDateBetween(startDate, currentDate);
+        List<DailyReport> reports = dailyReportRepository.findByDateBetween(startDate, currentDate).stream().sorted(Comparator.comparing(DailyReport::getDate)).toList();
+        Map<String, Map<LocalDate, Integer>> resultMap = new TreeMap<>(); // TreeMap kullan
 
-        // Raporları tarihe göre sırala (en yeni tarihten en eskiye doğru)
-        reports.sort(Comparator.comparing(DailyReport::getDate).reversed());
-        return reports;
+        for (DailyReport report : reports) {
+            LocalDate date = report.getDate();
+
+            // numberOfAdverts
+
+//            resultMap.put("Adverts",Map.of(date,report.getNumberOfAdverts()));
+//            resultMap.put("Favorites",Map.of(date,report.getNumberOfFavorites()));
+//            resultMap.put("TourRequests",Map.of(date,report.getNumberOfTourRequests()));
+//            resultMap.put("Users",Map.of(date,report.getNumberOfUsers()));
+
+            resultMap.computeIfAbsent("Adverts", k -> new TreeMap<>())
+                    .merge(date, report.getNumberOfAdverts(), Integer::sum);
+
+            System.err.println(resultMap);
+
+            // numberOfFavorites
+            resultMap.computeIfAbsent("Favorites", k -> new TreeMap<>())
+                    .merge(date, report.getNumberOfFavorites(), Integer::sum);
+
+            // numberOfTourRequests
+            resultMap.computeIfAbsent("TourRequests", k -> new TreeMap<>())
+                    .merge(date, report.getNumberOfTourRequests(), Integer::sum);
+
+            // numberOfUsers
+            resultMap.computeIfAbsent("Users", k -> new TreeMap<>())
+                    .merge(date, report.getNumberOfUsers(), Integer::sum);
+        }
+        return resultMap;
     }
+
+
+
+
 
 }

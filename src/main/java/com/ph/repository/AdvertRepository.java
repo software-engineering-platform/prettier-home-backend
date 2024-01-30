@@ -170,5 +170,6 @@ public interface AdvertRepository extends JpaRepository<Advert, Long> {
     boolean existsBy();
 
     @Query("SELECT COUNT(a) FROM Advert a WHERE a.statusForAdvert = com.ph.domain.enums.StatusForAdvert.ACTIVATED")
-    Long countActivatedAdverts();
+    Integer countActivatedAdverts();
+
 }
