@@ -22,17 +22,22 @@ public class DailyReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
-    private Integer numberOfAdverts;
+    private Integer numberOfRentAdverts;
+    private Integer numberOfSaleAdverts;
+    private Integer numberOfContactMessage;
     private Integer numberOfFavorites;
     private Integer numberOfTourRequests;
     private Integer numberOfUsers;
+
 
     @Override
     public String toString() {
         return "DailyReport{" +
                 "id=" + id +
                 ", date=" + date +
-                ", numberOfAdverts=" + numberOfAdverts +
+                ", numberOfRentAdverts=" + numberOfRentAdverts +
+                ", numberOfSaleAdverts=" + numberOfSaleAdverts +
+                ", numberOfContactMessage=" + numberOfContactMessage +
                 ", numberOfFavorites=" + numberOfFavorites +
                 ", numberOfTourRequests=" + numberOfTourRequests +
                 ", numberOfUsers=" + numberOfUsers +

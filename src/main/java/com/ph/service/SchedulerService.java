@@ -25,6 +25,7 @@ public class SchedulerService {
     private final FavoritesRepository favoritesRepository;
     private final UserRepository userRepository;
     private final DailyReportRepository dailyReportRepository;
+    private final ContactRepository contactRepository;
 
     @Scheduled(cron = "${scheduler.cron.daily-at-midnight}")
     public void sendReminderEmails() {
@@ -47,7 +48,9 @@ public class SchedulerService {
     public void saveDailyReport(){
      DailyReport dailyReport =   DailyReport.builder()
                 .date(LocalDate.now())
-                .numberOfAdverts(advertRepository.countActivatedAdverts())
+                .numberOfRentAdverts( advertRepository.countActivatedRentAdverts())
+                .numberOfSaleAdverts( advertRepository.countActivatedSaleAdverts())
+                  .numberOfContactMessage((int) contactRepository.count())
                 .numberOfTourRequests((int) tourRequestsRepository.count())
                 .numberOfFavorites((int) favoritesRepository.count())
                 .numberOfUsers((int) userRepository.count())
@@ -72,10 +75,15 @@ public class SchedulerService {
 //            resultMap.put("TourRequests",Map.of(date,report.getNumberOfTourRequests()));
 //            resultMap.put("Users",Map.of(date,report.getNumberOfUsers()));
 
-            resultMap.computeIfAbsent("Adverts", k -> new TreeMap<>())
-                    .merge(date, report.getNumberOfAdverts(), Integer::sum);
+            resultMap.computeIfAbsent("RentAdverts", k -> new TreeMap<>())
+                    .merge(date, report.getNumberOfRentAdverts(), Integer::sum);
 
-            System.err.println(resultMap);
+            resultMap.computeIfAbsent("SaleAdverts", k -> new TreeMap<>())
+                    .merge(date, report.getNumberOfSaleAdverts(), Integer::sum);
+
+            // numberOfContactMessage
+            resultMap.computeIfAbsent("ContactMessages", k -> new TreeMap<>())
+                    .merge(date, report.getNumberOfContactMessage(), Integer::sum);
 
             // numberOfFavorites
             resultMap.computeIfAbsent("Favorites", k -> new TreeMap<>())
