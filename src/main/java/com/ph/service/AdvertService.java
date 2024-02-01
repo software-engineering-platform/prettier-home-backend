@@ -250,14 +250,16 @@ public class AdvertService {
      * @return The response entity containing the advert response.
      * @throws ResourceNotFoundException If the advert is not found.
      */
-    public ResponseEntity<DetailedAdvertResponse> getBySlug(String slug) {
-
+    public ResponseEntity<DetailedAdvertResponse> getBySlug(String slug, UserDetails userDetails) {
+        User user = (User) userDetails;
         // Find the advert by slug in the repository
         Advert advert = repository.findBySlug(slug)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found.slug"), slug)));
 
         // Increment the view count of the advert
-        advert.setViewCount(advert.getViewCount() + 1);
+        if (!user.getId().equals(advert.getUser().getId())) {
+            advert.setViewCount(advert.getViewCount() + 1);
+        }
 
         // Save the updated advert in the repository
         Advert savedAdvert = repository.save(advert);
@@ -294,7 +296,9 @@ public class AdvertService {
 
         // Increment the view count of the Advert
         Advert advert = getById(id);
-        advert.setViewCount(advert.getViewCount() + 1);
+        if (!user.getId().equals(advert.getUser().getId())) {
+            advert.setViewCount(advert.getViewCount() + 1);
+        }
 
         // Save the updated Advert
         Advert savedAdvert = repository.save(advert);
@@ -314,13 +318,15 @@ public class AdvertService {
      * @param id The ID of the advert to retrieve.
      * @return A ResponseEntity with the response body containing the saved advert.
      */
-    public ResponseEntity<DetailedAdvertResponse> getByAdmin(Long id) {
-
+    public ResponseEntity<DetailedAdvertResponse> getByAdmin(Long id, UserDetails userDetails) {
+        User user = (User) userDetails;
         // Retrieve the advert by its ID
         Advert advert = getById(id);
 
         // Increment the view count of the advert
-        advert.setViewCount(advert.getViewCount() + 1);
+        if (!user.getId().equals(advert.getUser().getId())) {
+            advert.setViewCount(advert.getViewCount() + 1);
+        }
 
         // Save the updated advert
         Advert savedAdvert = repository.save(advert);
