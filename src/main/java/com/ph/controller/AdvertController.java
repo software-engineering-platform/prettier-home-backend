@@ -141,8 +141,10 @@ public class AdvertController {
 
     // NOT:A07 / getBySlug() ************************************************************
     @GetMapping("/details/{slug}")
-    public ResponseEntity<DetailedAdvertResponse> getBySlug(@PathVariable String slug) {
-        return service.getBySlug(slug);
+    public ResponseEntity<DetailedAdvertResponse> getBySlug(@PathVariable String slug ,
+                                                            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+        return service.getBySlug(slug, userDetails);
     }
 
 
@@ -160,8 +162,8 @@ public class AdvertController {
     // NOT:A09 / getForAdmin() ************************************************************
     @GetMapping("/{id}/admin")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
-    public ResponseEntity<DetailedAdvertResponse> getByAdmin(@PathVariable Long id) {
-        return service.getByAdmin(id);
+    public ResponseEntity<DetailedAdvertResponse> getByAdmin(@PathVariable Long id,  @AuthenticationPrincipal UserDetails userDetails) {
+        return service.getByAdmin(id,userDetails);
     }
 
 
