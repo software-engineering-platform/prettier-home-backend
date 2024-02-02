@@ -257,7 +257,7 @@ public class AdvertService {
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.not.found.slug"), slug)));
 
         // Increment the view count of the advert
-        if (!user.getId().equals(advert.getUser().getId())) {
+        if (user != null && !user.getId().equals(advert.getUser().getId())) {
             advert.setViewCount(advert.getViewCount() + 1);
         }
 
@@ -296,7 +296,7 @@ public class AdvertService {
 
         // Increment the view count of the Advert
         Advert advert = getById(id);
-        if (!user.getId().equals(advert.getUser().getId())) {
+        if (user != null && !user.getId().equals(advert.getUser().getId())) {
             advert.setViewCount(advert.getViewCount() + 1);
         }
 
@@ -324,7 +324,7 @@ public class AdvertService {
         Advert advert = getById(id);
 
         // Increment the view count of the advert
-        if (!user.getId().equals(advert.getUser().getId())) {
+        if (user != null && !user.getId().equals(advert.getUser().getId())) {
             advert.setViewCount(advert.getViewCount() + 1);
         }
 
