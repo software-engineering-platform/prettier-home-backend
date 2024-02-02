@@ -1,5 +1,6 @@
 package com.ph.payload.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -16,6 +17,7 @@ public class ChangePasswordRequest implements Serializable {
 
     @NotNull(message = "{validation.password.null}")
     @Size(min = 8, max = 30, message = "{validation.password.size}")
+    @NotBlank(message = "{validation.password.notblank}")
     @Pattern(
             regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
             message = "{validation.password.pattern}"
@@ -24,6 +26,7 @@ public class ChangePasswordRequest implements Serializable {
 
     @NotNull(message = "{validation.password.null}")
     @Size(min = 8, max = 30, message = "{validation.password.size}")
+    @NotBlank(message = "{validation.password.notblank}")
     @Pattern(
             regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
             message = "{validation.password.pattern}"

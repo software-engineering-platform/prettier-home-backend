@@ -2,10 +2,7 @@ package com.ph.payload.request;
 
 import com.ph.domain.entities.User;
 import com.ph.security.role.Role;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.io.Serializable;
@@ -18,15 +15,19 @@ import java.util.function.Consumer;
 public class UserUpdateRequest implements Consumer<User>, Serializable {
 
     @Size(min = 1, max = 50, message = "{validation.firstName.size}")
+    @NotBlank(message = "{validation.firstName.notblank}")
     private String firstName;
 
     @Size(min = 1, max = 50, message = "{validation.lastName.size}")
+    @NotBlank(message = "{validation.lastName.notblank}")
     private String lastName;
 
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{validation.phone.pattern}")
+    @NotBlank(message = "{validation.phone.notblank}")
     private String phone;
 
     @Size(min = 8, max = 30, message = "{validation.password.size}")
+    @NotBlank(message = "{validation.password.notblank}")
     @Pattern(
             regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
             message = "{validation.password.pattern}"
@@ -34,6 +35,7 @@ public class UserUpdateRequest implements Consumer<User>, Serializable {
     private String password;
 
     @Email(message = "{validation.email.pattern}")
+    @NotBlank(message = "{validation.email.notblank}")
     private String email;
 
     @NotNull(message = "{validation.role.null}")

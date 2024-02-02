@@ -2,6 +2,7 @@ package com.ph.payload.request;
 
 import com.ph.domain.entities.Category;
 import com.ph.domain.entities.CategoryPropertyKey;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -21,10 +22,12 @@ public class CategoryRequest implements Supplier<Category>, Serializable {
 
     @NotNull(message = "{validation.category.title.notnull}")
     @Size(max = 150, message = "{validation.category.title.size}")
+    @NotBlank(message = "{validation.category.title.notblank}")
     private String title;
 
     @NotNull(message = "{validation.category.icon.notnull}")
     @Size(max = 50, message = "{validation.category.icon.size}")
+    @NotBlank(message = "{validation.category.icon.notblank}")
     private String icon;
 
     @NotNull(message = "{validation.category.seq.notnull}")

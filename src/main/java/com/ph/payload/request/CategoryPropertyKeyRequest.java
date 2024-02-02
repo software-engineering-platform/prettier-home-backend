@@ -2,6 +2,7 @@ package com.ph.payload.request;
 
 import com.ph.domain.entities.CategoryPropertyKey;
 import com.ph.domain.enums.KeyType;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -17,6 +18,7 @@ import java.util.function.Supplier;
 public class CategoryPropertyKeyRequest implements Supplier<CategoryPropertyKey>, Serializable {
 
     @NotNull(message = "{validation.category.name.notnull}")
+    @NotBlank(message = "{validation.category.name.notblank}")
     @Size(min = 2, max = 80, message = "{validation.category.name.size}")
     private String name;
 

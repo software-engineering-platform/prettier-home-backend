@@ -1,5 +1,6 @@
 package com.ph.payload.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -17,9 +18,11 @@ import java.io.Serializable;
 public class ResetPasswordRequest implements Serializable {
 
     @NotNull(message = "{validation.reset-code.null}")
+    @NotBlank(message = "{validation.reset-code.notblank}")
     private String code;
 
     @NotNull(message = "{validation.password.null}")
+    @NotBlank(message = "{validation.password.notblank}")
     @Size(min = 8, max = 30, message = "{validation.password.size}")
     @Pattern(
             regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",

@@ -4,6 +4,7 @@ import com.ph.domain.entities.Location;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -20,6 +21,7 @@ import java.io.Serializable;
 public abstract class AdvertRequestAbs implements Serializable {
 
     @NotNull(message = "validation.advert.notnull")
+    @NotBlank(message = "validation.advert.notblank")
     @Size(min = 5, max = 150, message = "validation.advert.size")
     private String title;
 
@@ -49,6 +51,7 @@ public abstract class AdvertRequestAbs implements Serializable {
     private Location location;
 
     @NotNull(message = "validation.advert.address.notnull")
+    @NotBlank(message = "validation.advert.address.notblank")
     @Size(min = 2, max = 100, message = "validation.advert.address.size")
     private String address;
 }
