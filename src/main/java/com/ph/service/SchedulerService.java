@@ -2,16 +2,13 @@ package com.ph.service;
 
 import com.ph.domain.entities.DailyReport;
 import com.ph.domain.entities.TourRequest;
-import com.ph.domain.enums.Status;
 import com.ph.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -27,7 +24,7 @@ public class SchedulerService {
     private final DailyReportRepository dailyReportRepository;
     private final ContactRepository contactRepository;
 
-    @Scheduled(cron = "${scheduler.cron.daily-at-midnight}")
+    @Scheduled(cron = "${scheduler.cron.daily-at-midnight-3}")
     public void sendReminderEmails() {
         List<TourRequest> tourRequestList = tourRequestsService.checkingTheDatesOfTourRequests();
         if (tourRequestList.size() > 0) {
@@ -36,7 +33,7 @@ public class SchedulerService {
 
     }
 
-    @Scheduled(cron = "${scheduler.cron.daily-at-midnight}")
+    @Scheduled(cron = "${scheduler.cron.daily-at-midnight-2}")
     public void updateExpiredPendingTourRequests() {
         List<TourRequest> expiredPendingTourRequests = tourRequestsService.getExpiredPendingTourRequests();
         if (!expiredPendingTourRequests.isEmpty()) {
@@ -44,8 +41,11 @@ public class SchedulerService {
         }
     }
 
-    @Scheduled(cron = "${scheduler.cron.daily-at-midnight}")
+    @Scheduled(cron = "${scheduler.cron.daily-at-midnight-1}")
     public void saveDailyReport(){
+        if (dailyReportRepository.existsByDate(LocalDate.now())) {
+            return;
+        }
      DailyReport dailyReport =   DailyReport.builder()
                 .date(LocalDate.now())
                 .numberOfRentAdverts( advertRepository.countActivatedRentAdverts())
@@ -59,22 +59,17 @@ public class SchedulerService {
     }
 
 
+    @Cacheable(value = "dailyReport")
     public Map<String, Map<LocalDate, Integer>> getDailyReport() {
         LocalDate currentDate = LocalDate.now();
         LocalDate startDate = currentDate.minusDays(7);
         List<DailyReport> reports = dailyReportRepository.findByDateBetween(startDate, currentDate).stream().sorted(Comparator.comparing(DailyReport::getDate)).toList();
-        Map<String, Map<LocalDate, Integer>> resultMap = new TreeMap<>(); // TreeMap kullan
+        Map<String, Map<LocalDate, Integer>> resultMap = new TreeMap<>();
 
         for (DailyReport report : reports) {
             LocalDate date = report.getDate();
 
             // numberOfAdverts
-
-//            resultMap.put("Adverts",Map.of(date,report.getNumberOfAdverts()));
-//            resultMap.put("Favorites",Map.of(date,report.getNumberOfFavorites()));
-//            resultMap.put("TourRequests",Map.of(date,report.getNumberOfTourRequests()));
-//            resultMap.put("Users",Map.of(date,report.getNumberOfUsers()));
-
             resultMap.computeIfAbsent("RentAdverts", k -> new TreeMap<>())
                     .merge(date, report.getNumberOfRentAdverts(), Integer::sum);
 

@@ -12,4 +12,6 @@ import java.util.List;
 public interface DailyReportRepository extends JpaRepository<DailyReport, Long> {
     @Query("select d from DailyReport d where d.date between ?1 and ?2")
     List<DailyReport> findByDateBetween(LocalDate dateStart, LocalDate dateEnd);
+
+    boolean existsByDate(LocalDate now);
 }

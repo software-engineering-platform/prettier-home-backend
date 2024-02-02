@@ -21,13 +21,8 @@ public class DailyReportController {
     private final SchedulerService schedulerService;
 
 
-    @PostMapping
-    public void savedailyReport(){
-        schedulerService.saveDailyReport();
-    }
-
     @GetMapping
-    public Map<String, Map<LocalDate, Integer>> getDailyReport(){
+    public Map<String, Map<LocalDate, Integer>> getDailyReport() {
         return schedulerService.getDailyReport();
     }
 }
