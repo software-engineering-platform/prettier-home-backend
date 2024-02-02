@@ -634,7 +634,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Seaside Serenity: Luxurious Coastal Apartment in Alsancak's Prestigious Enclave",
-                            "description", "Indulge in the epitome of coastal living with this luxurious apartment nestled in the heart of Alsancak's prestigious enclave. Offering panoramic views of the azure waters and pristine coastline, this residence exudes elegance and charm. Immerse yourself in the gentle embrace of sea breeze and the soothing rhythm of the waves, where every moment is a celebration of serenity and luxury.",
+                            "description", "Enjoy the epitome of coastal living with this luxury apartment located in the heart of Alsancak's prestigious residential area.",
                             "price", 275000.0,
                             "ccd", new Long[]{223L, 4161L, 48814L},
                             "address", "Alsancak Mah. 789. Ave. No: 10",
@@ -656,14 +656,14 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Elegant Escape: Secluded Villa Retreat in Urla's Idyllic Countryside",
-                            "description", "Embark on an elegant escape to this secluded villa retreat, nestled amidst the idyllic countryside of Urla. Surrounded by lush greenery and tranquil landscapes, this exquisite sanctuary offers a haven of peace and serenity. Immerse yourself in the timeless beauty of nature, where every moment is a celebration of luxury and relaxation. Experience the epitome of refined living in this enchanting villa retreat.",
+                            "description", "Embark on an elegant escape to this secluded villa retreat set amid Urla's idyllic countryside. Surrounded by lush greenery and tranquil landscapes, this elegant retreat offers a haven of peace and tranquility.",
                             "price", 600000.0,
                             "ccd", new Long[]{223L, 4161L, 48823L},
                             "address", "Urla Mah. 101. St. No: 3",
                             "location", new Double[]{38.3228184, 26.7672998},
                             "category", 1L,
                             "advertType", 2L,
-                            "image", "static/villa5jpg",
+                            "image", "static/villa5.jpg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Unlimited Potential: Expansive Land Parcel in Bornova's Flourishing Landscape",
@@ -678,7 +678,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Retail Excellence: Prime Corner Shop in Karşıyaka's Vibrant Retail Hub",
-                            "description", "Position your brand for retail excellence with this prime corner shop located in the heart of Karşıyaka's vibrant retail hub. Boasting high foot traffic and excellent visibility, this strategic location offers unparalleled exposure for your business. Whether launching a new venture or expanding your presence, capitalize on this unique opportunity to make a lasting impression in the retail landscape.",
+                            "description", "Position your brand for retail excellence with this exclusive corner store located in the heart of Karşıyaka's vibrant retail centre. This strategic location with high foot traffic and excellent visibility offers unparalleled visibility for your business.",
                             "price", 150000.0,
                             "ccd", new Long[]{223L, 4161L, 48810L},
                             "address", "Karşıyaka Mah. 4567. Ave. No: 20",
