@@ -170,7 +170,7 @@ public class BuiltInInitializer implements CommandLineRunner {
             User managerAbdurrahman = User.builder()
                     .firstName("Abdurrahman")
                     .lastName("Sahin")
-                    .email("abdurrahman@gmail.com")
+                    .email("abdrrahman@gmail.com")
                     .phone("(532) 789-7898")
                     .passwordHash(passwordEncoder.encode("managerAbdurrahman123!"))
                     .role(Role.MANAGER)
@@ -178,22 +178,6 @@ public class BuiltInInitializer implements CommandLineRunner {
                     .enabled(true)
                     .build();
             userRepository.save(managerAbdurrahman);
-
-
-
-            User customer = User.builder()
-                    .firstName("Adam")
-                    .lastName("Born")
-                    .email("adamd.born@gmail.com")
-                    .phone("(123) 456-7892")
-                    .passwordHash(passwordEncoder.encode("customer123!"))
-                    .role(Role.CUSTOMER)
-                    .builtIn(true)
-                    .enabled(true)
-                    .build();
-            userRepository.save(customer);
-
-
         }
     }
 
@@ -306,7 +290,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.10500496452611, 28.788342747629066},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "image", "static/home1.jpg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Apartment",
@@ -317,7 +301,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.91349760621756, 28.14135381537319},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "image", "static/apartment1.jpg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Office",
@@ -327,8 +311,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Sakura Cad. No: 17",
                             "location", new Double[]{38.62218565477382, 35.15306199396324},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "advertType", 2L,
+                            "image", "static/office1.jpg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Villa",
@@ -338,30 +322,30 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Sakura Cad. No: 18",
                             "location", new Double[]{39.97437614009851, 32.86918909133035},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "advertType", 2L,
+                            "image", "static/villa1.jpg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Land",
-                            "description", "Close to schools, parks, and shopping centers.",
+                            "description", "Located close to the city.",
                             "price", 500000.0,
                             "ccd", new Long[]{223L, 1359L, 19014L},
                             "address", "Sakura Cad. No: 19",
                             "location", new Double[]{37.75093476161285, 41.40976722322277},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/land.jpg",
+                            "image", "static/land3.jpg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Shop",
-                            "description", "Secure and peaceful environment.",
+                            "description", "Our original designs and quality fabrics fit every style..",
                             "price", 600000.0,
                             "ccd", new Long[]{223L, 3885L, 42218L},
                             "address", "Sakura Cad. No: 20",
                             "location", new Double[]{38.46207669619371, 27.17709951048468},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "advertType", 2L,
+                            "image", "static/shop1.jpg",
                             "user", "admin@gmail.com"),
 
                     /////////////////////////////////////////////////////
@@ -374,7 +358,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.874185, 32.674029},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "image", "static/home2.jpg",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Modern Apartment in Central Location",
@@ -384,8 +368,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Kızılay Mah. 789. Ave. No: 10",
                             "location", new Double[]{39.919838, 32.852380},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "advertType", 2L,
+                            "image", "static/apartment2.jpg",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Modern Office Space",
@@ -396,7 +380,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.8853321, 32.8554966},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "image", "static/office2.jpg",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Luxury Villa With Pool",
@@ -406,8 +390,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Sakura Cad. No: 18",
                             "location", new Double[]{39.7925289, 32.8066652},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "advertType", 2L,
+                            "image", "static/villa2.jpg",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Suitable Land for Investment",
@@ -418,7 +402,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.9489423, 32.6620792},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/land.jpg",
+                            "image", "static/land6.jpg",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Shop on the Main Street",
@@ -428,8 +412,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Sakura Cad. No: 20",
                             "location", new Double[]{39.9329813, 32.9082154},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "advertType", 2L,
+                            "image", "static/shop3.jpg",
                             "user", "kochisarufuk@gmail.com"),
 
                     ///////////////////////////////////////////////////////
@@ -441,8 +425,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "İzmit Mah. 456. St. No: 7",
                             "location", new Double[]{40.7718611, 29.9498078},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "advertType", 2L,
+                            "image", "static/home6.jpg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Urban Oasis: Stylish Apartment in Gebze",
@@ -452,8 +436,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Gebze Mah. 789. Ave. No: 10",
                             "location", new Double[]{40.8006696, 29.431767},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "advertType", 2L,
+                            "image", "static/apartment3.jpg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Prime Office Space in İzmit Center",
@@ -464,18 +448,18 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.7718611, 29.9498078},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "image", "static/office3.jpg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Exclusive Retreat: Seaview Villa in Başiskele",
-                            "description", "Indulge in luxury with this exclusive retreat boasting panoramic sea views in Başiskele.",
+                            "description", "Enjoy luxury in this privileged villa with panoramic sea views in Başiskele.",
                             "price", 600000.0,
                             "ccd", new Long[]{223L, 4172L, 48918L},
                             "address", "Sakura Cad. No: 18",
                             "location", new Double[]{40.64592185, 29.951563320964866},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "advertType", 2L,
+                            "image", "static/villa3.jpg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Investment Opportunity: Land in Darıca",
@@ -486,7 +470,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.7574799, 29.3840563},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/land.jpg",
+                            "image", "static/land1.jpg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Commercial Hub: Shop in Körfez",
@@ -496,8 +480,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Körfez Mah. 4567. Ave. No: 20",
                             "location", new Double[]{40.760756, 29.7839402},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "advertType", 2L,
+                            "image", "static/shop4.jpg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     /////////////////////////////////////////////////////////
@@ -509,8 +493,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Batman Center Mah. 456. St. No: 7",
                             "location", new Double[]{37.7874104, 41.2573924},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "advertType", 2L,
+                            "image", "static/home4.jpg",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Urban Comfort: Stylish Apartment in Beşiri",
@@ -521,7 +505,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.9162455, 41.2927679},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "image", "static/apartment4.jpg",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Central Workspace: Modern Office in Batman Center",
@@ -532,7 +516,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.7874104, 41.2573924},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "image", "static/office4.jpg",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Exclusive Haven: Secluded Villa in Gercüş",
@@ -542,8 +526,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Gercüş Mah. 101. St. No: 3",
                             "location", new Double[]{37.5683088, 41.3852365},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "advertType", 2L,
+                            "image", "static/villa4.jpg",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Investment Opportunity: Land in Hasankeyf",
@@ -554,7 +538,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.7304689, 41.4160863},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/land.jpg",
+                            "image", "static/land2.jpg",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Prime Location: Shop on Main Street in Kozluk",
@@ -565,20 +549,20 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.1933398, 41.4886025},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "image", "static/shop6.jpg",
                             "user", "gulsum.satic@gmail.com"),
 
                     //////////////////////////////////////////////////////
 
                     Map.of("title", "Tranquil Haven: Family Residence in Historic Kastamonu",
-                            "description", "Discover serenity in this charming family residence nestled in the historic heart of Kastamonu.",
+                            "description", "Discover peace in this charming family home located in the center of Kastamonu, surrounded by nature.",
                             "price", 280000.0,
                             "ccd", new Long[]{223L, 4166L, 48867L},
                             "address", "Kastamonu Center Mah. 456. St. No: 7",
                             "location", new Double[]{41.3680217, 33.7619177},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "advertType", 2L,
+                            "image", "static/home5.jpg",
                             "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Coastal Retreat: Modern Apartment in Scenic İnebolu",
@@ -589,7 +573,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.9785763, 33.7599031},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "image", "static/apartment5.jpg",
                             "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Urban Hub: Contemporary Office Space in Vibrant Kastamonu",
@@ -599,8 +583,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Kastamonu Center Mah. 123. Ave. No: 5",
                             "location", new Double[]{41.3680217, 33.7619177},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "advertType", 2L,
+                            "image", "static/office5.jpg",
                             "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Secluded Gem: Luxurious Villa Escape in Idyllic Cide",
@@ -611,7 +595,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.8915711, 33.003712},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "image", "static/villa6.jpg",
                             "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Promising Investment: Vast Land in Tranquil Araç",
@@ -622,8 +606,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.2412014, 33.324933},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/land.jpg",
-                            "user", "ebubekirc442.com"),
+                            "image", "static/land4.jpg",
+                            "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Prime Corner: Bustling Shop in Central Tosya",
                             "description", "Secure your spot at the prime corner with this bustling shop located in central Tosya.",
@@ -632,21 +616,21 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Tosya Mah. 4567. Ave. No: 20",
                             "location", new Double[]{41.0164957, 34.0386079},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "advertType", 2L,
+                            "image", "static/shop8.jpg",
                             "user", "ebubekirc442@gmail.com"),
 
                     //////////////////////////////////////////////////////
 
                     Map.of("title", "Tranquil Haven: Exquisite Family Residence in the Heart of Bustling Izmir",
-                            "description", "Step into a realm of tranquility with this exquisite family residence, a sanctuary nestled amidst the vibrant energy of bustling Izmir. Embrace the harmonious blend of modern luxury and timeless elegance, where every corner tells a story of comfort and sophistication. This haven offers not just a home, but an experience of serenity amidst the dynamic pulse of city life.",
+                            "description", "For those who want to escape from the busy life of Izmir, step into the world of peace intertwined with nature.",
                             "price", 320000.0,
                             "ccd", new Long[]{223L, 4161L, 48814L},
                             "address", "Izmir City Center Mah. 456. St. No: 7",
                             "location", new Double[]{38.4185042, 27.1290835},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "advertType", 2L,
+                            "image", "static/home10.jpg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Seaside Serenity: Luxurious Coastal Apartment in Alsancak's Prestigious Enclave",
@@ -657,18 +641,18 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.4185042, 27.1290835},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "image", "static/apartment6.jpg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Elevated Productivity: State-of-the-Art Office Space in Konak's Business District",
-                            "description", "Experience a new era of elevated productivity with this state-of-the-art office space situated in the heart of Konak's bustling business district. Designed to inspire creativity and foster innovation, this modern workspace offers the perfect environment for growth and success. Elevate your business to new heights in this dynamic hub of entrepreneurship and opportunity.",
+                            "description", "Get the opportunity to work with high efficiency and in a peaceful environment in this office located in the heart of Konak's lively business district.",
                             "price", 350000.0,
                             "ccd", new Long[]{223L, 4161L, 48814L},
                             "address", "Konak Mah. 123. Ave. No: 5",
                             "location", new Double[]{38.4185042, 27.1290835},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "advertType", 2L,
+                            "image", "static/office6.jpg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Elegant Escape: Secluded Villa Retreat in Urla's Idyllic Countryside",
@@ -678,20 +662,20 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Urla Mah. 101. St. No: 3",
                             "location", new Double[]{38.3228184, 26.7672998},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "advertType", 2L,
+                            "image", "static/villa5jpg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Unlimited Potential: Expansive Land Parcel in Bornova's Flourishing Landscape",
-                            "description", "Unlock endless possibilities with this expansive land parcel nestled in the heart of Bornova's flourishing landscape. Spanning vast stretches of fertile terrain, this prime investment opportunity offers unlimited potential for development and growth. Whether envisioning a residential haven, a commercial venture, or a recreational retreat, seize the chance to shape your dreams into reality in this land of boundless opportunity.",
+                            "description", "Unlock endless possibilities with this large parcel of land located 20 km from Bornova. This first-class investment opportunity, spread over large fertile lands, offers unlimited development and growth potential. Use it as you wish.",
                             "price", 480000.0,
                             "ccd", new Long[]{223L, 4161L, 48800L},
                             "address", "Bornova Mah. 7890. St. No: 12",
                             "location", new Double[]{38.4660651, 27.2190721},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/land.jpg",
-                            "user", "adamd.born.com"),
+                            "image", "static/land5.jpg",
+                            "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Retail Excellence: Prime Corner Shop in Karşıyaka's Vibrant Retail Hub",
                             "description", "Position your brand for retail excellence with this prime corner shop located in the heart of Karşıyaka's vibrant retail hub. Boasting high foot traffic and excellent visibility, this strategic location offers unparalleled exposure for your business. Whether launching a new venture or expanding your presence, capitalize on this unique opportunity to make a lasting impression in the retail landscape.",
@@ -700,76 +684,76 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Karşıyaka Mah. 4567. Ave. No: 20",
                             "location", new Double[]{38.503445150000005, 27.113455434284667},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "advertType", 2L,
+                            "image", "static/shop2.jpg",
                             "user", "adamd.born@gmail.com"),
 
                     //////////////////////////////////////////////////////
 
-                    Map.of("title", "Tranquil Garden Haven: Elegant Residence in Yozgat's Center",
-                            "description", "Experience serene living in this elegant residence located in the heart of Yozgat. With its spacious garden and modern design, this home offers a peaceful retreat integrated with the city's energy.",
+                    Map.of("title", "Tranquil Garden Haven: Elegant Residence in Sinop's Center",
+                            "description", "Experience serene living in this elegant residence located in the heart of Sinop. With its spacious garden and modern design, this home offers a peaceful retreat integrated with the city's energy.",
                             "price", 550000.0,
-                            "ccd", new Long[]{223L, 4200L, 49265L},
-                            "address", "Yozgat City Center Mah. 123. St. No: 4",
-                            "location", new Double[]{39.8221974, 34.8080972},
+                            "ccd", new Long[]{223L, 4190L, 49144L},
+                            "address", "Sinop City Center Mah. 123. St. No: 4",
+                            "location", new Double[]{41.6476377, 34.9560137},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "image", "static/home7.jpg",
                             "user", "sarpzahide@gmail.com"),
 
-                    Map.of("title", "Natural Radiance: Modern Apartment Living in Akdağmadeni",
-                            "description", "Enjoy the natural radiance of Akdağmadeni in this modern apartment. With its spacious and bright interiors, this apartment offers a serene and comfortable living space.",
+                    Map.of("title", "Natural Radiance: Modern Apartment Living in Boyabat",
+                            "description", "Enjoy the natural radiance of Boyabat in this modern apartment. With its spacious and bright interiors, this apartment offers a serene and comfortable living space.",
                             "price", 270000.0,
-                            "ccd", new Long[]{223L, 4200L, 49252L},
-                            "address", "Akdağmadeni Mah. 456. Ave. No: 12",
-                            "location", new Double[]{39.6626502, 35.8820234},
+                            "ccd", new Long[]{223L, 4190L, 49138L},
+                            "address", "Boyabat Mah. 456. Ave. No: 12",
+                            "location", new Double[]{41.4689736, 34.7672274},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "advertType", 2L,
+                            "image", "static/apartment7.jpg",
                             "user", "sarpzahide@gmail.com"),
 
-                    Map.of("title", "Step into the Business World: Modern Office Space in Sorgun",
-                            "description", "Elevate your business with this modern office space in Sorgun. Offering superior comfort and functionality, this office provides the perfect environment for your business.",
+                    Map.of("title", "Step into the Business World: Modern Office Space in Gerze",
+                            "description", "Elevate your business with this modern office space in Gerze. Offering superior comfort and functionality, this office provides the perfect environment for your business.",
                             "price", 390000.0,
-                            "ccd", new Long[]{223L, 4200L, 49261L},
-                            "address", "Sorgun Mah. 7890. Ave. No: 5",
-                            "location", new Double[]{39.8098675, 35.1854305},
+                            "ccd", new Long[]{223L, 4190L, 49142L},
+                            "address", "Gerze Mah. 7890. Ave. No: 5",
+                            "location", new Double[]{41.8032697, 35.1996164},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "image", "static/office7.jpg",
                             "user", "sarpzahide@gmail.com"),
 
-                    Map.of("title", "Luxury Living in Nature's Heart: Villa Life in Sarıkaya",
-                            "description", "Experience luxury villa living in the tranquil atmosphere of Sarıkaya. With luxurious details, this villa offers a comfortable and relaxing lifestyle amidst nature's embrace.",
+                    Map.of("title", "Luxury Living in Nature's Heart: Villa Life in Ayancık",
+                            "description", "Experience luxury villa living in the tranquil atmosphere of Ayancık. With luxurious details, this villa offers a comfortable and relaxing lifestyle amidst nature's embrace.",
                             "price", 480000.0,
-                            "ccd", new Long[]{223L, 4200L, 49260L},
-                            "address", "Sarıkaya Mah. 1234. St. No: 6",
-                            "location", new Double[]{39.4935902, 35.3755098},
+                            "ccd", new Long[]{223L, 4190L, 49137L},
+                            "address", "Ayancık Mah. 1234. St. No: 6",
+                            "location", new Double[]{41.9465719, 34.5878729},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "advertType", 2L,
+                            "image", "static/villa7.jpg",
                             "user", "sarpzahide@gmail.com"),
 
-                    Map.of("title", "Investment Opportunity: Large Parcel of Land in Çayıralan",
-                            "description", "This expansive parcel of land in the developing area of Çayıralan offers an ideal investment opportunity. With its strategic location, this land could be a lucrative investment in Yozgat's growing real estate market.",
+                    Map.of("title", "Investment Opportunity: Large Parcel of Land in Erfelek",
+                            "description", "This expansive parcel of land in the developing area of Erfelek offers an ideal investment opportunity. With its strategic location, this land could be a lucrative investment in Yozgat's growing real estate market.",
                             "price", 560000.0,
-                            "ccd", new Long[]{223L, 4200L, 49256L},
-                            "address", "Çayıralan Mah. 101. St. No: 8",
-                            "location", new Double[]{39.3041026, 35.6459653},
+                            "ccd", new Long[]{223L, 4190L, 49141L},
+                            "address", "Erfelek Mah. 101. St. No: 8",
+                            "location", new Double[]{41.8793624, 34.9080508},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/land.jpg",
+                            "image", "static/land7.jpg",
                             "user", "sarpzahide@gmail.com"),
 
-                    Map.of("title", "Shopping Delight: Shop on Main Street in Yerköy",
-                            "description", "Located on the bustling main street of Yerköy, this shop offers the perfect location for shopping delight. With high visibility and heavy foot traffic, this shop is an ideal venue for your business.",
+                    Map.of("title", "Shopping Delight: Shop on Main Street in Türkeli",
+                            "description", "Located on the bustling main street of Türkeli, this shop offers the perfect location for shopping delight. With high visibility and heavy foot traffic, this shop is an ideal venue for your business.",
                             "price", 640000.0,
-                            "ccd", new Long[]{223L, 4200L, 49264L},
-                            "address", "Yerköy Mah. 7890. St. No: 10",
-                            "location", new Double[]{39.6413341, 34.4682658},
+                            "ccd", new Long[]{223L, 4190L, 49145L},
+                            "address", "Türkeli Mah. 7890. St. No: 10",
+                            "location", new Double[]{41.851414500000004, 34.3721368459243},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "advertType", 2L,
+                            "image", "static/shop7.jpg",
                             "user", "sarpzahide@gmail.com"),
 
                     //////////////////////////////////////////////////////
@@ -781,8 +765,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Uludağ Mahallesi, Bursa, Turkey, No: 12",
                             "location", new Double[]{40.1982203, 29.0612098},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "advertType", 2L,
+                            "image", "static/home8.jpg",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Central Location, Modern Design: Comfort in the Heart of the City",
@@ -793,7 +777,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.1982203, 29.0612098},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "image", "static/apartment8.jpg",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Creative Workspace: Modern Office in Nilüfer's Central Business Area",
@@ -804,7 +788,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.2129489, 28.9627863},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "image", "static/office8.jpg",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Tranquil Retreat in Gölyazı: Luxury Living in Nature's Embrace",
@@ -814,8 +798,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Gölyazı Mahallesi, Bursa, Turkey, No: 15",
                             "location", new Double[]{40.2129489, 28.9627863},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "advertType", 2L,
+                            "image", "static/villa8.jpg",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Opportunity for Investors: Land in Yıldırım's Developing Area",
@@ -826,7 +810,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.1877165, 29.0809205},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/land.jpg",
+                            "image", "static/land8.jpg",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Shopping Experience: Store in Gürsu's Busy Market",
@@ -836,22 +820,22 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Gürsu Mahallesi, Bursa, Turkey, No: 20",
                             "location", new Double[]{40.1877165, 29.0809205},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "advertType", 2L,
+                            "image", "static/shop5.jpg",
                             "user", "yasemin@gmail.com"),
 
                     //////////////////////////////////////////////////////
 
 
                     Map.of("title", "Sultan's Sanctuary: Exquisite Residence in Gaziantep's Historic Heart",
-                            "description", "Step into a realm of opulence with this exquisite residence nestled in the historic heart of Gaziantep. Boasting timeless architecture and luxurious amenities, this home offers a serene retreat amidst the vibrant energy of the city center.",
+                            "description", "It is 10 km away from Gaziantep and surrounded by nature. Boasting timeless architecture and luxurious amenities, this house offers a quiet retreat in contrast to the lively energy of the city center.",
                             "price", 500000.0,
                             "ccd", new Long[]{223L, 4153L, 48698L},
                             "address", "Gaziantep City Center Mah. 456. St. No: 7",
                             "location", new Double[]{37.0727587, 37.3949769},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "image", "static/home9.jpg",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "Urban Elegance: Modern Apartment Living in Şahinbey's Cultural District",
@@ -861,19 +845,19 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Şahinbey Mah. 789. Ave. No: 10",
                             "location", new Double[]{37.0575903, 37.3794008},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "advertType", 2L,
+                            "image", "static/apartment9.jpg",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "Innovative Workspace: State-of-the-Art Office in Şehitkamil's Business Center",
-                            "description", "Elevate your business in this state-of-the-art office space situated in Şehitkamil's bustling business center. Designed for productivity and collaboration, this workspace provides the perfect environment for driving success in today's competitive market.",
+                            "description", "Take your business to the next level in this office space located in the vibrant business center of Şehitkamil. Designed for productivity and collaboration, this workspace provides the perfect environment to fuel success in today's competitive marketplace.",
                             "price", 350000.0,
                             "ccd", new Long[]{223L, 4153L, 48698L},
                             "address", "Şehitkamil Mah. 123. Ave. No: 5",
                             "location", new Double[]{37.0727587, 37.3949769},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "image", "static/office9.jpg",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "Tranquil Oasis: Luxury Villa Retreat in Araban's Picturesque Countryside",
@@ -883,8 +867,8 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Araban Mah. 101. St. No: 3",
                             "location", new Double[]{37.4252863, 37.6894188},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "advertType", 2L,
+                            "image", "static/villa9.jpg",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "Land of Opportunity: Prime Parcel in Nizip's Growing Community",
@@ -895,7 +879,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.0108864, 37.7931734},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/land.jpg",
+                            "image", "static/land9.jpg",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "Retail Haven: Corner Shop in Karkamış's Bustling Marketplace",
@@ -905,22 +889,22 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Karkamış Mah. 4567. Ave. No: 20",
                             "location", new Double[]{36.82947115, 38.015398741406926},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "advertType", 2L,
+                            "image", "static/shop9.jpg",
                             "user", "zeynepnune@gmail.com"),
 
                     //////////////////////////////////////////////////////
 
 
                     Map.of("title", "Tranquil Retreat: Spacious Family Home in the Heart of Osmaniye",
-                            "description", "Discover tranquility in this spacious family home located in the bustling heart of Osmaniye. With its contemporary design and ample living space, this residence offers the perfect blend of comfort and convenience for modern family living.",
+                            "description", "Discover peace in this spacious family home located in the lively heart of Osmaniye. With its contemporary design, this home offers the perfect blend of comfort and convenience for modern family living.",
                             "price", 170000.0,
                             "ccd", new Long[]{223L, 4184L, 49082L},
                             "address", "Osmaniye City Center Mah. 456. St. No: 7",
                             "location", new Double[]{37.2517882, 36.2993502},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/house.jpg",
+                            "image", "static/home3.jpg",
                             "user", "abdrrahman@gmail.com"),
 
                     Map.of("title", "Urban Oasis: Modern Apartment Living in Düziçi's Thriving Community",
@@ -930,19 +914,19 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Düziçi Mah. 789. Ave. No: 10",
                             "location", new Double[]{37.2401223, 36.4534072},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/apartment.jpg",
+                            "advertType", 2L,
+                            "image", "static/apartment10.jpg",
                             "user", "abdrrahman@gmail.com"),
 
                     Map.of("title", "Dynamic Workspace: Contemporary Office in Kadirli's Business District",
-                            "description", "Elevate your business in this dynamic office space situated in Kadirli's bustling business district. With its state-of-the-art facilities and strategic location, this workspace is designed to inspire creativity and productivity.",
+                            "description", "Develop your business in this dynamic office space located in the vibrant business district of Kadirli.With its strategic location, this workspace is designed to inspire creativity and productivity.",
                             "price", 300000.0,
                             "ccd", new Long[]{223L, 4184L, 49081L},
                             "address", "Kadirli Mah. 123. Ave. No: 5",
                             "location", new Double[]{37.462024299999996, 36.17201485369948},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/office.jpg",
+                            "image", "static/office10.jpg",
                             "user", "abdrrahman@gmail.com"),
 
                     Map.of("title", "Luxurious Escape: Private Villa Retreat in the Scenic Countryside of Sumbas",
@@ -953,7 +937,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.4536229, 36.0247595},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/villa.jpg",
+                            "image", "static/villa10.jpg",
                             "user", "abdrrahman@gmail.com"),
 
                     Map.of("title", "Prime Investment Opportunity: Expansive Land Parcel in Bahçe",
@@ -963,19 +947,19 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "address", "Bahçe Mah. 7890. St. No: 12",
                             "location", new Double[]{37.2042113, 36.5820496},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/land.jpg",
+                            "advertType", 2L,
+                            "image", "static/land10.jpg",
                             "user", "abdrrahman@gmail.com"),
 
                     Map.of("title", "Retail Haven: Corner Shop in Toprakkale's Bustling Marketplace",
-                            "description", "Position your business for success in this corner shop located in the bustling marketplace of Toprakkale. With its high visibility and steady foot traffic, this retail space is ideal for establishing your brand and attracting customers.",
+                            "description", "Position your business for success at this corner shop located in Toprakkale's bustling market. With its high visibility and consistent foot traffic, this is ideal for retail space and attracting customers.",
                             "price", 600000.0,
                             "ccd", new Long[]{223L, 4184L,49084L},
                             "address", "Toprakkale Mah. 4567. Ave. No: 20",
                             "location", new Double[]{37.067132, 36.1460016},
                             "category", 1L,
-                            "advertType", 1L,
-                            "image", "static/shop.jpg",
+                            "advertType", 2L,
+                            "image", "static/shop10.jpg",
                             "user", "abdrrahman@gmail.com")
 
             ));
