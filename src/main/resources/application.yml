@@ -15,17 +15,15 @@ spring:
 #    locale: auto
 #  messages:
 #    basename: messages
-    encoding: UTF-8
-    cache-duration: -1
-    fallback-to-system-locale: true
+#    encoding: UTF-8
+#    cache-duration: -1
+#    fallback-to-system-locale: true
   profiles:
     include:
       - security
       - data
       - mail
       - scheduler
-  freemarker:
-    template-loader-path: file:C:\Users\Bilal\IdeaProjects\prettierHome-backend\src\main\resources\templates
 
 #ExportFilePath
 export:

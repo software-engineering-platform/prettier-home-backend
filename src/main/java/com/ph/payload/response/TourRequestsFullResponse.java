@@ -22,6 +22,6 @@ public class  TourRequestsFullResponse implements Serializable {
     private UserResponse ownerUser;
     private UserResponse guestUser;
     private Status status;
-    private List<ImageResponse> images;
+    private ImageResponse image;
 
 }

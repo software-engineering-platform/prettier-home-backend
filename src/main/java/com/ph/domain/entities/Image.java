@@ -19,7 +19,6 @@ public class Image implements Serializable {
     private Long id;
 
     @Lob
-
     private byte[] data;
     private String name;
     private String type;

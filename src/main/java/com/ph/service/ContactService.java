@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Service
@@ -47,33 +48,41 @@ public class ContactService {
      * @param type The sorting type (ascending or descending).
      * @return A ResponseEntity containing a Page of ContactResponse objects.
      */
-    public ResponseEntity<Page<ContactResponse>> getAllContact(String query, int page, int size, String sort, String type, boolean status) {
+    public ResponseEntity<Page<ContactResponse>> getAllContact(
+            String query, Boolean status, LocalDate startDate, LocalDate endDate,
+            int page, int size, String sort, String type
+    ) {
+
+        // Check if the start date is after the end date
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
+        }
+
         // Create a Pageable object with the provided page, size, and sort criteria
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
         // If the sorting type is "desc", create a new Pageable object with descending sort
-        if (Objects.equals(type, "desc")) {
+        if (Objects.equals(type, "DESC")) {
             pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         }
 
-        if (query != null) {
-            // Find users based on search query
-            Page<ContactResponse> contactMessagesBySearch = contactRepository
-                    .findContactsPageableBySearch(query, pageable).map(userMapper::toContactResponse);
-            return ResponseEntity.ok(contactMessagesBySearch);
+        LocalDateTime startDateTime = null;
+        LocalDateTime endDateTime = null;
+        if (startDate != null) {
+            startDateTime = startDate.atTime(LocalTime.MIN);
+        } else {
+            startDateTime = LocalDateTime.of(1900, 1, 1, 0, 0);
         }
-
-        if (status) {
-            // Find users based on status
-            Page<ContactResponse> contactMessagesByStatus = contactRepository
-                    .findContactsPageableByStatus(status, pageable).map(userMapper::toContactResponse);
-            return ResponseEntity.ok(contactMessagesByStatus);
+        if (endDate != null) {
+            endDateTime = endDate.atTime(LocalTime.MAX);
+        } else {
+            endDateTime = LocalDateTime.of(2400, 1, 1, 0, 0);
         }
-
-        // Find All ContactMessages
-        Page<ContactResponse> all = contactRepository.findAll(pageable).map(userMapper::toContactResponse);
 
         // Return a ResponseEntity containing the contact responses
-        return ResponseEntity.ok(all);
+        return ResponseEntity.ok(contactRepository
+                        .findContactsPageableBySearch(query, status, startDateTime, endDateTime, pageable)
+                        .map(userMapper::toContactResponse)
+        );
     }
 
     // Not :J03 - getById() *************************************************************************
@@ -88,7 +97,7 @@ public class ContactService {
     // Not :J04 - delete() *************************************************************************
     public ResponseEntity<?> delete(Long id) {
 
-        if(!contactRepository.existsById(id)) {
+        if (!contactRepository.existsById(id)) {
             throw new ResourceNotFoundException(messageUtil.getMessage("error.contact.not.found"));
         }
 
@@ -107,44 +116,18 @@ public class ContactService {
         return ResponseEntity.ok(messageUtil.getMessage("success.contact.deleted"));
     }
 
-    // Not :J06 - updateStatus() *************************************************************************
-    public ResponseEntity<ContactResponse> updateMessage(Long id) {
+    // Not :J06 - toggleMessageStatus() *************************************************************************
+    public ResponseEntity<ContactResponse> toggleMessageStatus(Long id) {
         Contact contact = contactRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(messageUtil.getMessage("error.contact.not.found")));
+
+        System.err.println(contact);
+        System.err.println("Ben çalıştım");
 
         contact.setStatus(!contact.isStatus());
 
         contactRepository.save(contact);
         return ResponseEntity.ok(userMapper.toContactResponse(contact));
-    }
-
-
-    // Not :J07 - getOlderMessages() *************************************************************************
-    public ResponseEntity<Page<ContactResponse>> getOlderMessages(int page, int size, String sort, String type, LocalDateTime startDate, LocalDateTime endDate) {
-
-        // Check if the start date is after the end date
-        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
-        }
-
-        // Set default start and end dates if they are not provided
-        LocalDateTime dateStart = startDate != null ? startDate : LocalDate.of(1900, 1, 1).atStartOfDay();
-        LocalDateTime dateEnd = endDate != null ? endDate : LocalDate.of(2400, 1, 1).atStartOfDay();
-
-        // Create a Pageable object with the provided page, size, and sort criteria
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
-
-        // If the sorting type is "desc", create a new Pageable object with descending sort
-        if (Objects.equals(type, "desc")) {
-            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
-        }
-
-        // Get messages that are older than a certain date range
-        Page<ContactResponse> olderMessages = contactRepository.findOlderMessages(dateStart, dateEnd, pageable)
-                .map(userMapper::toContactResponse);
-
-        return ResponseEntity.ok(olderMessages);
-
     }
 
 }

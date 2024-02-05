@@ -81,7 +81,7 @@ public class AdvertMapper {
                 .country(locationMapper.toCountryResponse(advert.getCountry()))
                 .city(locationMapper.toCityResponse(advert.getCity()))
                 .district(locationMapper.toDistrictResponse(advert.getDistrict()))
-//                .images(advert.getImages())
+//                .images(advert.getImages()) UNNECESSARY
                 .location(advert.getLocation())
                 .user(userMapper.toUserResponse(advert.getUser()))
                 .category(categoryMapper.mapToCategoryResponsewithPropertyKeys(advert.getCategory()))

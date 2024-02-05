@@ -1,10 +1,12 @@
 package com.ph.payload.mapper;
 
+import com.ph.domain.entities.Image;
 import com.ph.domain.entities.TourRequest;
 import com.ph.payload.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -23,7 +25,8 @@ public class TourRequestsMapper {
                 .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .status(tourRequest.getStatus())
-                .images(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).collect(Collectors.toList()))
+                .image(imageMapper.toImageResponse(getFeaturedImage(tourRequest.getAdvert().getImages())))
+//                .image(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).collect(Collectors.toList()))
                 .build();
     }
 
@@ -36,7 +39,8 @@ public class TourRequestsMapper {
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .guestUser(userMapper.toUserResponse(tourRequest.getGuestUser()))
                 .status(tourRequest.getStatus())
-                .images(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).collect(Collectors.toList()))
+                .image(imageMapper.toImageResponse(getFeaturedImage(tourRequest.getAdvert().getImages())))
+//                .image(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).collect(Collectors.toList()))
                 .build();
     }
 
@@ -55,7 +59,7 @@ public class TourRequestsMapper {
                 .id(tourRequest.getId())
                 .tourDate(tourRequest.getTourDate())
                 .tourTime(tourRequest.getTourTime())
-                .guestUserFullName( getFullName(tourRequest))
+                .guestUserFullName(getFullName(tourRequest))
                 .status(tourRequest.getStatus())
                 .build();
     }
@@ -64,4 +68,13 @@ public class TourRequestsMapper {
     private String getFullName(TourRequest tourRequest) {
         return tourRequest.getGuestUser().getFirstName() + " " + tourRequest.getGuestUser().getLastName();
     }
+
+    // Helper Method to get featured image
+    private Image getFeaturedImage(List<Image> images) {
+        return images.stream()
+                .filter(Image::isFeatured)
+                .findFirst()
+                .orElse(images.get(0));
     }
+}
+
