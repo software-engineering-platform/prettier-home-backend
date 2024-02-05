@@ -2,9 +2,11 @@ package com.ph.service;
 
 import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.Category;
+import com.ph.domain.entities.DailyReport;
 import com.ph.domain.entities.User;
 import com.ph.repository.AdvertRepository;
 import com.ph.repository.CategoryRepository;
+import com.ph.repository.DailyReportRepository;
 import com.ph.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
@@ -12,6 +14,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,6 +26,7 @@ public class ResetDatabaseService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final CacheManager cacheManager;
+    private final DailyReportRepository dailyReportRepository;
 
 
     public ResponseEntity<String> resetDatabase() {
@@ -40,8 +44,14 @@ public class ResetDatabaseService {
         List<Advert> adverts = advertRepository.findAllByBuiltIn(false);
         advertRepository.deleteAll(adverts);
 
+        // delete all DailyReport
+        List<DailyReport> dailyReports = dailyReportRepository.findAll();
+        dailyReportRepository.deleteAll(dailyReports);
+
+
         // clear all caches
         clearAllCaches();
+
 
         return ResponseEntity.ok("The database has been reset successfully.");
     }
