@@ -33,6 +33,7 @@ public class BuiltInInitializer implements CommandLineRunner {
     private final CountryRepository countriesRepository;
     private final AdvertRepository advertRepository;
     private final ImageRepository imageRepository;
+    private final CategoryPropertyValueRepository categoryPropertyValueRepository;
 
 
     @Override
@@ -277,6 +278,94 @@ public class BuiltInInitializer implements CommandLineRunner {
 
             propertyKeyRepository.saveAll(shopProperties);
         }
+    }
+
+
+    private void initializeDefaultCategoryPropertyValues(Long advertId, Long categoryId) {
+          if (categoryId == 1L) {
+            List<CategoryPropertyValue> houseValues
+                    = List.of(
+                    CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(1L).get()).value("120").build(),
+                    CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(2L).get()).value("2").build(),
+                    CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(3L).get()).value("1").build(),
+                    CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(4L).get()).value("NO").build(),
+                    CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(5L).get()).value("2010").build(),
+                    CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(6L).get()).value("YES").build(),
+                    CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(7L).get()).value("900").build(),
+                    CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(8L).get()).value("NO").build()
+            );
+            categoryPropertyValueRepository.saveAll(houseValues);
+
+        } else if (categoryId == 2L) {
+            List<CategoryPropertyValue> apartmentValues =
+                    List.of(
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(9L).get()).value("140").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(10L).get()).value("3").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(11L).get()).value("2").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(12L).get()).value("YES").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(13L).get()).value("2020").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(14L).get()).value("NO").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(15L).get()).value("1200").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(16L).get()).value("2").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(17L).get()).value("1").build()
+                    );
+            categoryPropertyValueRepository.saveAll(apartmentValues);
+
+
+        } else if (categoryId==3L) {
+            List<CategoryPropertyValue> officeValues=
+                    List.of(
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(18L).get()).value("220").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(19L).get()).value("NO").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(20L).get()).value("2022").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(21L).get()).value("YES").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(22L).get()).value("2200").build(),
+                            CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(23L).get()).value("YES").build()
+                    );
+            categoryPropertyValueRepository.saveAll(officeValues);
+
+
+        } else if (categoryId==4L) {
+             List<CategoryPropertyValue> villaValues=
+                     List.of(
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(24L).get()).value("440").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(25L).get()).value("3").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(26L).get()).value("2").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(27L).get()).value("YES").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(28L).get()).value("500").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(29L).get()).value("2023").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(30L).get()).value("YES").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(31L).get()).value("YES").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(32L).get()).value("Lakeside").build()
+
+                     );
+             categoryPropertyValueRepository.saveAll(villaValues);
+
+
+         } else if (categoryId==5L) {
+             List<CategoryPropertyValue> landValues=
+                     List.of(
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(33L).get()).value("1000").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(34L).get()).value("Suitable").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(35L).get()).value("Close to the road").build(),
+                             CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(36L).get()).value("Farmland").build()
+                     );
+             categoryPropertyValueRepository.saveAll(landValues);
+
+
+         } else if (categoryId==6L) {
+              List<CategoryPropertyValue> shopValues=
+                      List.of(
+                              CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(37L).get()).value("32000").build(),
+                              CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(38L).get()).value("YES").build(),
+                              CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(39L).get()).value("2015").build(),
+                              CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(40L).get()).value("YES").build(),
+                              CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(41L).get()).value("15000").build(),
+                              CategoryPropertyValue.builder().advert(advertRepository.findById(advertId).get()).categoryPropertyKey(propertyKeyRepository.findById(42L).get()).value("4").build()
+                      );
+              categoryPropertyValueRepository.saveAll(shopValues);
+
+          }
     }
 
     private void initializeDefaultAdvert() {
@@ -990,6 +1079,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                         .build();
 
                 Advert savedAdvert = advertRepository.save(builtInAdvert);
+                    initializeDefaultCategoryPropertyValues(savedAdvert.getId(), savedAdvert.getCategory().getId());
 
                 Image savedImage = savedAdvert.getImages().stream().findFirst().orElse(null);
                 if (savedImage != null) {
