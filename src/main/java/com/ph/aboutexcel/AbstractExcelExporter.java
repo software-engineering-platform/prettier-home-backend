@@ -7,8 +7,14 @@ import com.ph.exception.customs.DirectoryCreationException;
 import com.ph.exception.customs.MissingArgumentException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -19,25 +25,17 @@ import java.util.*;
 
 public abstract class AbstractExcelExporter {
 
-    protected abstract String prepareDirectoriesAndExcelFilePath(String fileName);
-
     protected abstract CellStyle buildHeaderStyle(Workbook workbook);
 
     protected abstract CellStyle buildDataCellStyle(Workbook workbook);
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractExcelExporter.class);
 
-    public <T> void writeToExcel(List<T> exportDataList, String fileName, String sheetName) {
+    public <T> ResponseEntity<Resource> writeToExcel(List<T> exportDataList, String fileName, String sheetName) {
 
         checkMethodParameters(exportDataList, fileName, sheetName);
 
-        String excelFilePath = prepareDirectoriesAndExcelFilePath(fileName);
-
-        try (
-                FileOutputStream fos = new FileOutputStream(excelFilePath);
-                Workbook workbook = new XSSFWorkbook();
-        ) {
-
+        try (Workbook workbook = new XSSFWorkbook()) {
 
             Sheet sheet = workbook.createSheet(sheetName);
             CellStyle headerStyle = buildHeaderStyle(workbook);
@@ -73,13 +71,31 @@ public abstract class AbstractExcelExporter {
                 }
             }
 
-            workbook.write(fos);
+            ByteArrayResource resource = writeWorkbookToByteArrayResource(workbook);
+
+            ContentDisposition contentDisposition = ContentDisposition.attachment().filename(fileName + ".xlsx").build();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentDisposition(contentDisposition);
+            headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(resource);
+
         } catch (IOException e) {
             log.error("Excel data export error : {}", e.getMessage());
             throw new DataExportException(e.getMessage());
         } catch (IllegalAccessException e) {
             log.error("Excel data export error : {}", e.getMessage());
             throw new RuntimeException(e);
+        }
+    }
+
+    private ByteArrayResource writeWorkbookToByteArrayResource(Workbook workbook) throws IOException {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            workbook.write(byteArrayOutputStream);
+            return new ByteArrayResource(byteArrayOutputStream.toByteArray());
         }
     }
 

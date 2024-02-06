@@ -2,10 +2,7 @@ package com.ph.service;
 
 import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.Category;
-import com.ph.exception.customs.ConflictException;
-import com.ph.exception.customs.NonDeletableException;
-import com.ph.exception.customs.NonUpdatableException;
-import com.ph.exception.customs.ResourceNotFoundException;
+import com.ph.exception.customs.*;
 import com.ph.payload.mapper.CategoryMapper;
 import com.ph.payload.request.CategoryRequest;
 import com.ph.payload.response.CategoryResponse;
@@ -17,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Service;
@@ -203,7 +199,8 @@ public class CategoryService {
         // if there is any advert related to the category then it cannot be deleted
         List<Advert> adverts = advertService.getAdvertsOfCategory(categoryId);
         if (!adverts.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageUtil.getMessage("error.category.delete.advert"));
+            throw new RelatedFieldException(messageUtil.getMessage("error.category.delete.advert"));
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(messageUtil.getMessage("error.category.delete.advert"));
         }
         // delete category
         categoryRepository.deleteById(categoryId);

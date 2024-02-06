@@ -1,6 +1,5 @@
 package com.ph.controller;
 
-import com.ph.domain.enums.Status;
 import com.ph.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +18,9 @@ public class ReportController {
     // Not: get most popular properties
     @GetMapping("/most-popular")
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER')")
-    public ResponseEntity<?> getProperties(@RequestParam(name = "amount") Integer amount
-    ) { //http://localhost:8080/report/most-popular?amount=10
-
+    public ResponseEntity<?> getProperties(@RequestParam(name = "amount") Integer amount) {
+        //http://localhost:8080/report/most-popular?amount=10
         return reportService.getMostPopularProperties(amount);
-
     }
 
     // Not: get  advert

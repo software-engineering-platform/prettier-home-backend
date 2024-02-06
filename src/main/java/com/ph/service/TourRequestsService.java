@@ -291,6 +291,21 @@ public class TourRequestsService {
         return ResponseEntity.ok(tourRequestsMapper.toTourRequestsFullResponse(tourRequest));
     }
 
+    @Transactional
+    public Page<TourRequestsResponseForOwner> getAllTourRequestByOwnerAsPage(UserDetails userDetails, int page, int size, String sort, String type) {
+        // Retrieve the user by email
+        User user = userService.getUserByEmail(userDetails.getUsername()).orElseThrow(() ->
+                new ResourceNotFoundException(messageUtil.getMessage("error.user.not-found.id")));
+        // Create a pageable object
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+        if (Objects.equals(type, "desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        }
+        // Retrieve tour requests by guest user ID
+        return tourRequestsRepository.findByOwnerUser_Id(user.getId(), pageable)
+                .map(tourRequestsMapper::toTourRequestsResponseForOwner);
+    }
+
     // Not :S04 - GetTourRequestByManagerAndAdminAsTourId() **************************************************
 
     /**
@@ -485,11 +500,6 @@ public class TourRequestsService {
             throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not.found"));
         }
 
-        // Check if the specified advertisement is in the user's list of advert
-//            if (!advertList.contains(advert)) {
-//                throw new ResourceNotFoundException(messageUtil.getMessage("error.advert.not-found"));
-//            }
-
         // Retrieve the count of tour requests for the specified advert and user
         Long tourRequestCount = tourRequestsRepository.countByAdvert_IdAndOwnerUser_Id(advertId, user.getId());
 
@@ -524,8 +534,6 @@ public class TourRequestsService {
 
 
     // Not: getTourRequestCount
-
-
     public List<TourRequestCountResponse> getTourRequestCounts() {
 
         return tourRequestsRepository.getCountsTourRequests();

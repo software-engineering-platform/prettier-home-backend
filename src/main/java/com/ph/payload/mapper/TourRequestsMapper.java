@@ -26,7 +26,18 @@ public class TourRequestsMapper {
                 .ownerUser(userMapper.toUserResponse(tourRequest.getOwnerUser()))
                 .status(tourRequest.getStatus())
                 .image(imageMapper.toImageResponse(getFeaturedImage(tourRequest.getAdvert().getImages())))
-//                .image(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).collect(Collectors.toList()))
+                .build();
+    }
+
+    public TourRequestsResponseForOwner toTourRequestsResponseForOwner(TourRequest tourRequest) {
+        return TourRequestsResponseForOwner.builder()
+                .id(tourRequest.getId())
+                .tourDate(tourRequest.getTourDate())
+                .tourTime(tourRequest.getTourTime())
+                .advert(advertMapper.toAdvertResponseForTourRequest(tourRequest.getAdvert()))
+                .guestUser(userMapper.toUserResponse(tourRequest.getGuestUser()))
+                .status(tourRequest.getStatus())
+                .image(imageMapper.toImageResponse(getFeaturedImage(tourRequest.getAdvert().getImages())))
                 .build();
     }
 
@@ -40,7 +51,6 @@ public class TourRequestsMapper {
                 .guestUser(userMapper.toUserResponse(tourRequest.getGuestUser()))
                 .status(tourRequest.getStatus())
                 .image(imageMapper.toImageResponse(getFeaturedImage(tourRequest.getAdvert().getImages())))
-//                .image(tourRequest.getAdvert().getImages().stream().map(imageMapper::toImageResponse).collect(Collectors.toList()))
                 .build();
     }
 

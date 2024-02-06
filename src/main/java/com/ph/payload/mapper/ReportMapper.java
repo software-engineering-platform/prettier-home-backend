@@ -68,7 +68,7 @@ public class ReportMapper {
                 .advertId(tourRequest.getAdvert().getId())
                 .advertTitle(tourRequest.getAdvert().getTitle())
                 .ownerFullName(tourRequest.getAdvert().getUser().getFirstName() + " " + tourRequest.getAdvert().getUser().getLastName())
-                .guestFullName(tourRequest.getGuestUser().getFirstName() + " " + tourRequest.getOwnerUser().getLastName())
+                .guestFullName(tourRequest.getGuestUser().getFirstName() + " " + tourRequest.getGuestUser().getLastName())
                 .build();
     }
 

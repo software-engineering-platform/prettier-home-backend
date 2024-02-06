@@ -53,7 +53,7 @@ public class TourRequestsController {
     // Not :S01 - GetAllTourRequestByCustomerAsPage() ***************************************************
     // http://localhost:8080/tour-requests/auth
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
-    @GetMapping("/auth")
+    @GetMapping("/auth/guest")
     public Page<TourRequestsStatusResponse> getAllTourRequestByCustomerAsPage(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(value = "page", defaultValue = "0", required = false) int page,
@@ -62,6 +62,20 @@ public class TourRequestsController {
             @RequestParam(value = "type", defaultValue = "asc", required = false) String type
     ) {
         return tourRequestsService.getAllTourRequestByCustomerAsPage(userDetails, page, size, sort, type);
+    }
+
+    // Not :S01 - GetAllTourRequestByOwnerAsPage() ***************************************************
+    // http://localhost:8080/tour-requests/auth
+    @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
+    @GetMapping("/auth/owner")
+    public Page<TourRequestsResponseForOwner> getAllTourRequestByOwnerAsPage(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "20", required = false) int size,
+            @RequestParam(value = "sort", defaultValue = "advert_id", required = false) String sort,
+            @RequestParam(value = "type", defaultValue = "asc", required = false) String type
+    ) {
+        return tourRequestsService.getAllTourRequestByOwnerAsPage(userDetails, page, size, sort, type);
     }
 
     // Not:S10 - deleteTourRequest() *******************************************************************
@@ -165,35 +179,29 @@ public class TourRequestsController {
     // Not: getAllTourRequestsByUserId
     @GetMapping("/getAll/{id}")
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
-    public ResponseEntity<Page<TourRequestsFullResponse>> getAllTourRequestsByUserId(@PathVariable Long id,
-                                                                              @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                                                                              @RequestParam(value = "size", defaultValue = "20", required = false) int size,
-                                                                              @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
-                                                                              @RequestParam(value = "type", defaultValue = "asc", required = false) String type
-
+    public ResponseEntity<Page<TourRequestsFullResponse>> getAllTourRequestsByUserId(
+            @PathVariable Long id,
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "20", required = false) int size,
+            @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+            @RequestParam(value = "type", defaultValue = "asc", required = false) String type
     ) {
 
-        return tourRequestsService.getAllTourRequestsByUserId(id,page,sort,size,type);
+        return tourRequestsService.getAllTourRequestsByUserId(id, page, sort, size, type);
     }
 
-
     // Not: getTourRequestCount for spesific advert
-
     @GetMapping("/admin/count")
     @PreAuthorize("hasAnyAuthority('MANAGER','ADMIN')")
     public List<TourRequestCountResponse> getTourRequestCountAdmin() {
         return tourRequestsService.getTourRequestCounts();
     }
+
     @GetMapping("/count")
     @PreAuthorize("hasAnyAuthority('CUSTOMER','MANAGER','ADMIN')")
     public List<TourRequestCountResponse> getTourRequestCountCustomer(@AuthenticationPrincipal UserDetails userDetails) {
         return tourRequestsService.getTourRequestCountsCustomer(userDetails);
     }
-
-
-
-
-
 
 
 }
