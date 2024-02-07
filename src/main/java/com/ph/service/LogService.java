@@ -3,7 +3,6 @@ package com.ph.service;
 import com.ph.domain.entities.Advert;
 import com.ph.domain.entities.Log;
 import com.ph.domain.entities.User;
-import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.payload.mapper.LogMapper;
 import com.ph.payload.response.LogResponse;
 import com.ph.repository.LogRepository;
@@ -22,7 +21,6 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 public class LogService {
-    private final UserService userService;
     private final LogMapper logMapper;
 
 

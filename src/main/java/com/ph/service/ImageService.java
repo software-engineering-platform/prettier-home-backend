@@ -53,7 +53,7 @@ public class ImageService {
     public List<ImageResponse> createImage(List<MultipartFile> request, Long advertId) {
 
         if (request.isEmpty()) {
-            throw new ImageException(String.format(messageUtil.getMessage("error.image.not.found")));
+            throw new ImageException(messageUtil.getMessage("error.image.not.found"));
         }
 
         Advert advert = advertRepository.findById(advertId)
@@ -62,7 +62,7 @@ public class ImageService {
         List<Image> images = advert.getImages();
 
         if (images != null && images.size() + request.size() > 10) {
-            throw new ImageException(String.format(messageUtil.getMessage("error.image.too.many")));
+            throw new ImageException(messageUtil.getMessage("error.image.too.many"));
         }
 
         List<Image> savedImage = request.stream().map(t -> saveImage(t, advertId)).toList();
@@ -86,7 +86,7 @@ public class ImageService {
 
 
         if (imageRepository.countByAdvert_Id(advert.getId()) == id.size()) {
-            throw new ImageException(String.format(messageUtil.getMessage("error.image.not.delete")));
+            throw new ImageException(messageUtil.getMessage("error.image.not.delete"));
         }
 
         imageRepository.deleteAllById(id);

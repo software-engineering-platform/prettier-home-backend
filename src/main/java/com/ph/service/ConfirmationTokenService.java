@@ -2,14 +2,13 @@ package com.ph.service;
 
 import com.ph.domain.entities.ConfirmationToken;
 import com.ph.repository.ConfirmationTokenRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ConfirmationTokenService {
 
     private final ConfirmationTokenRepository confirmationTokenRepository;

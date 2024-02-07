@@ -122,7 +122,7 @@ public class BuiltInInitializer implements CommandLineRunner {
 
             User managerDogan = User.builder()
                     .firstName("Dogan")
-                    .lastName("Merdan")
+                    .lastName("Merden")
                     .email("adamd.born@gmail.com")
                     .phone("(532) 789-7894")
                     .passwordHash(passwordEncoder.encode("managerDogan123!"))

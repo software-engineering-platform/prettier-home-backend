@@ -12,24 +12,17 @@ import com.ph.repository.TourRequestsRepository;
 import com.ph.utils.MessageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -144,10 +137,10 @@ public class TourRequestsService {
         }
         // Check if the tour request status is approved or canceled
         if ((Status.APPROVED.name()).equals(tourRequest.getStatus().name())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.cannot-approved"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", messageUtil.getMessage("error.tour-request.cannot-approved")));
         }
         if ((Status.CANCELED.name()).equals(tourRequest.getStatus().name())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(messageUtil.getMessage("error.tour-request.cannot-canceled"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", messageUtil.getMessage("error.tour-request.cannot-canceled")));
         }
         // Check if the tour time is valid
         if (!isValidTourTime(tourRequest.getTourTime())) {

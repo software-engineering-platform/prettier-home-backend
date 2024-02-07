@@ -3,12 +3,9 @@ package com.ph.service;
 import com.ph.domain.entities.ProfilePhoto;
 import com.ph.payload.mapper.ImageMapper;
 import com.ph.repository.ProfilePhotoRepository;
-import com.ph.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,11 +16,11 @@ public class ProfilePhotoService {
 
 
     public ProfilePhoto saveProfilePhoto(MultipartFile photo) {
-        return   profilePhotoRepository.save(imageMapper.toProfilePhoto(photo));
+        return profilePhotoRepository.save(imageMapper.toProfilePhoto(photo));
     }
 
     public ProfilePhoto updateProfilePhoto(ProfilePhoto profilePicture, MultipartFile photo) {
-        ProfilePhoto newProfilePhoto=imageMapper.toProfilePhoto(photo);
+        ProfilePhoto newProfilePhoto = imageMapper.toProfilePhoto(photo);
         profilePicture.setName(newProfilePhoto.getName());
         profilePicture.setType(newProfilePhoto.getType());
         profilePicture.setData(newProfilePhoto.getData());

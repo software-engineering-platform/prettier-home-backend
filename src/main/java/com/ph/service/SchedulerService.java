@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.*;
-
 
 @Service
 @RequiredArgsConstructor
@@ -42,20 +42,20 @@ public class SchedulerService {
     }
 
     @Scheduled(cron = "${scheduler.cron.daily-at-midnight-1}")
-    public void saveDailyReport(){
+    public void saveDailyReport() {
         if (dailyReportRepository.existsByDate(LocalDate.now())) {
             return;
         }
-     DailyReport dailyReport =   DailyReport.builder()
+        DailyReport dailyReport = DailyReport.builder()
                 .date(LocalDate.now())
-                .numberOfRentAdverts( advertRepository.countActivatedRentAdverts())
-                .numberOfSaleAdverts( advertRepository.countActivatedSaleAdverts())
-                  .numberOfContactMessage((int) contactRepository.count())
+                .numberOfRentAdverts(advertRepository.countActivatedRentAdverts())
+                .numberOfSaleAdverts(advertRepository.countActivatedSaleAdverts())
+                .numberOfContactMessage((int) contactRepository.count())
                 .numberOfTourRequests((int) tourRequestsRepository.count())
                 .numberOfFavorites((int) favoritesRepository.count())
                 .numberOfUsers((int) userRepository.count())
                 .build();
-     dailyReportRepository.save(dailyReport);
+        dailyReportRepository.save(dailyReport);
     }
 
 
@@ -94,9 +94,6 @@ public class SchedulerService {
         }
         return resultMap;
     }
-
-
-
 
 
 }

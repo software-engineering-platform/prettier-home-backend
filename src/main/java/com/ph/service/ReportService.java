@@ -60,7 +60,7 @@ public class ReportService {
     ) {
 
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
+            throw new ValuesNotMatchException(messageUtil.getMessage("error.report.date"));
         }
 
         LocalDateTime startDateTime;
@@ -127,7 +127,7 @@ public class ReportService {
     public ResponseEntity<?> getTourRequests(LocalDate startDate, LocalDate endDate, Integer status) {
 
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
+            throw new ValuesNotMatchException(messageUtil.getMessage("error.report.date"));
         }
 
         LocalDate dateStart;

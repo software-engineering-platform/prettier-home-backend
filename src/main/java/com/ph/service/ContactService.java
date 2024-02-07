@@ -55,7 +55,7 @@ public class ContactService {
 
         // Check if the start date is after the end date
         if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            throw new ValuesNotMatchException(String.format(messageUtil.getMessage("error.report.date")));
+            throw new ValuesNotMatchException(messageUtil.getMessage("error.report.date"));
         }
 
         // Create a Pageable object with the provided page, size, and sort criteria

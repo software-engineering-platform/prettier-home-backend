@@ -137,8 +137,7 @@ public class AdvertTypeService {
         // Retrieve the AdvertType by its ID
         AdvertType advertType = getById(id);
         if (advertType.isBuiltIn()) {
-//            throw new ConflictException(messageUtil.getMessage("error.advert.type.delete.builtin"));
-            throw new BuiltInFieldException("AdvertType cannot be deleted");
+            throw new BuiltInFieldException("Advert Type cannot be deleted");
         }
         if (!advertType.getAdverts().isEmpty()) {
             throw new NonDeletableException("AdvertType cannot be deleted because it has associated Adverts");
@@ -171,7 +170,6 @@ public class AdvertTypeService {
         // Get the advert type by its ID
       AdvertType found =  getById(id);
         if (found.isBuiltIn()) {
-//            throw new ConflictException(messageUtil.getMessage("error.advert.type.delete.builtin"));
             throw new BuiltInFieldException("AdvertType cannot be updated");
         }
 
