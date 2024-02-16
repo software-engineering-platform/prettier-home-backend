@@ -3,10 +3,12 @@ package com.ph.builtin;
 import com.ph.domain.entities.*;
 import com.ph.domain.enums.KeyType;
 import com.ph.domain.enums.StatusForAdvert;
+import com.ph.exception.customs.ResourceNotFoundException;
 import com.ph.repository.*;
 import com.ph.security.role.Role;
 import com.ph.utils.GeneralUtils;
 import com.ph.utils.ImageUtil;
+import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -14,8 +16,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
@@ -34,6 +39,8 @@ public class BuiltInInitializer implements CommandLineRunner {
     private final AdvertRepository advertRepository;
     private final ImageRepository imageRepository;
     private final CategoryPropertyValueRepository categoryPropertyValueRepository;
+    private final MessageUtil messageUtil;
+
 
 
     @Override
@@ -170,8 +177,8 @@ public class BuiltInInitializer implements CommandLineRunner {
 
             User managerAbdurrahman = User.builder()
                     .firstName("Abdurrahman")
-                    .lastName("Sahin")
-                    .email("abdrrahman@gmail.com")
+                    .lastName("Gocer")
+                    .email("swwaque@gmail.com")
                     .phone("(532) 789-7898")
                     .passwordHash(passwordEncoder.encode("managerAbdurrahman123!"))
                     .role(Role.MANAGER)
@@ -994,7 +1001,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 1L,
                             "advertType", 1L,
                             "image", "static/home3.jpg",
-                            "user", "abdrrahman@gmail.com"),
+                            "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Modern Apartment Living in Düzici s Thriving Community",
                             "description", "Experience urban living at its finest in this modern apartment nestled within Düziçi's thriving community. Offering sleek design and convenient amenities, this residence provides the ideal setting for a vibrant lifestyle.",
@@ -1005,7 +1012,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 2L,
                             "advertType", 2L,
                             "image", "static/apartment10.jpg",
-                            "user", "abdrrahman@gmail.com"),
+                            "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Contemporary Office in Kadirli s Business District",
                             "description", "Develop your business in this dynamic office space located in the vibrant business district of Kadirli.With its strategic location, this workspace is designed to inspire creativity and productivity.",
@@ -1016,7 +1023,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 3L,
                             "advertType", 1L,
                             "image", "static/office10.jpg",
-                            "user", "abdrrahman@gmail.com"),
+                            "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Private Villa Retreat in the Scenic Countryside of Sumbas",
                             "description", "Indulge in luxury living with this private villa retreat nestled in the scenic countryside of Sumbas. Surrounded by breathtaking natural beauty, this elegant villa offers the ultimate escape for relaxation and rejuvenation.",
@@ -1027,7 +1034,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 4L,
                             "advertType", 1L,
                             "image", "static/villa10.jpg",
-                            "user", "abdrrahman@gmail.com"),
+                            "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Expansive Land Parcel in Bahce",
                             "description", "Seize the opportunity to invest in this expansive land parcel located in the promising area of Bahçe. With its vast potential for development and growth, this land offers endless possibilities for residential or commercial projects.",
@@ -1038,7 +1045,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 5L,
                             "advertType", 2L,
                             "image", "static/land10.jpg",
-                            "user", "abdrrahman@gmail.com"),
+                            "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Corner Shop in Toprakkale s Bustling Marketplace",
                             "description", "Position your business for success at this corner shop located in Toprakkale's bustling market. With its high visibility and consistent foot traffic, this is ideal for retail space and attracting customers.",
@@ -1049,10 +1056,19 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 6L,
                             "advertType", 2L,
                             "image", "static/shop10.jpg",
-                            "user", "abdrrahman@gmail.com")
+                            "user", "swwaque@gmail.com")
 
             ));
 
+            Country defaultCountry = countriesRepository.findById(223L).orElseThrow(() ->
+                    new ResourceNotFoundException(String.format(messageUtil.getMessage("error.country.not-found"))));
+            City defaultCity = cityRepository.findById(4184L).orElseThrow(() ->
+                    new ResourceNotFoundException(String.format(messageUtil.getMessage("error.city.not-found"))));
+            District defaultDistrict = districtsRepository.findById(49079L).orElseThrow(() ->
+                    new ResourceNotFoundException(String.format(messageUtil.getMessage("error.district.not-found"))));
+
+            AdvertType defaultAdvertType = advertTypeRepository.findById(1L).orElseThrow(() ->
+                    new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.type.not.found"), 1L)));
             for (Map<String, Object> advert : adverts) {
 
                 String title = advert.get("title").toString();
@@ -1068,14 +1084,14 @@ public class BuiltInInitializer implements CommandLineRunner {
                         .isActive(true)
                         .viewCount(0)
                         .location(new Location(((Double[]) advert.get("location"))[0], ((Double[]) advert.get("location"))[1]))
-                        .advertType(advertTypeRepository.findById((Long) advert.get("advertType")).get())
+                        .advertType(advertTypeRepository.findById((Long) advert.get("advertType")).orElse(defaultAdvertType))
                         .category(categoryRepository.findById((Long) advert.get("category")).get())
-                        .country(countriesRepository.findById(((Long[]) advert.get("ccd"))[0]).get())
-                        .city(cityRepository.findById(((Long[]) advert.get("ccd"))[1]).get())
-                        .district(districtsRepository.findById(((Long[]) advert.get("ccd"))[2]).get())
+                        .country(countriesRepository.findById(((Long[]) advert.get("ccd"))[0]).orElse(defaultCountry))
+                        .city(cityRepository.findById(((Long[]) advert.get("ccd"))[1]).orElse(defaultCity))
+                        .district(districtsRepository.findById(((Long[]) advert.get("ccd"))[2]).orElse(defaultDistrict))
                         .address(advert.get("address").toString())
                         .images(List.of(image))
-                        .user(userRepository.findByEmail(advert.get("user").toString()).get())
+                        .user(userRepository.findByEmail(advert.get("user").toString()).orElse(null))
                         .build();
 
                 Advert savedAdvert = advertRepository.save(builtInAdvert);
@@ -1092,7 +1108,27 @@ public class BuiltInInitializer implements CommandLineRunner {
 
     private Image buildImage(String fileName, String title) {
         try {
-            byte[] data = Files.readAllBytes(Paths.get(new ClassPathResource(fileName).getURI()));
+            // Check 1: Ensure fileName and title are not null
+            if (fileName == null || title == null) {
+                throw new IllegalArgumentException("fileName or title cannot be null.");
+            }
+
+            // Check 2: Create the file path
+            Path filePath = Paths.get(new ClassPathResource(fileName).getURI());
+
+            // Check 3: Ensure the file exists
+            if (!Files.exists(filePath)) {
+                throw new FileNotFoundException("File not found: " + fileName);
+            }
+
+            // Read the file content
+            byte[] data = Files.readAllBytes(filePath);
+
+            // Check 4: Ensure data is not null after reading the file
+            if (data == null) {
+                throw new IOException("An error occurred while reading the file: " + fileName);
+            }
+
             return Image.builder()
                     .data(ImageUtil.compressImage(data))
                     .name(title)
