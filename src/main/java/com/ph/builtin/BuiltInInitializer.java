@@ -1059,16 +1059,6 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "user", "swwaque@gmail.com")
 
             ));
-
-            Country defaultCountry = countriesRepository.findById(223L).orElseThrow(() ->
-                    new ResourceNotFoundException(String.format(messageUtil.getMessage("error.country.not-found"))));
-            City defaultCity = cityRepository.findById(4184L).orElseThrow(() ->
-                    new ResourceNotFoundException(String.format(messageUtil.getMessage("error.city.not-found"))));
-            District defaultDistrict = districtsRepository.findById(49079L).orElseThrow(() ->
-                    new ResourceNotFoundException(String.format(messageUtil.getMessage("error.district.not-found"))));
-
-            AdvertType defaultAdvertType = advertTypeRepository.findById(1L).orElseThrow(() ->
-                    new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.type.not.found"), 1L)));
             for (Map<String, Object> advert : adverts) {
 
                 String title = advert.get("title").toString();
@@ -1084,18 +1074,18 @@ public class BuiltInInitializer implements CommandLineRunner {
                         .isActive(true)
                         .viewCount(0)
                         .location(new Location(((Double[]) advert.get("location"))[0], ((Double[]) advert.get("location"))[1]))
-                        .advertType(advertTypeRepository.findById((Long) advert.get("advertType")).orElse(defaultAdvertType))
+                        .advertType(advertTypeRepository.findById((Long) advert.get("advertType")).get())
                         .category(categoryRepository.findById((Long) advert.get("category")).get())
-                        .country(countriesRepository.findById(((Long[]) advert.get("ccd"))[0]).orElse(defaultCountry))
-                        .city(cityRepository.findById(((Long[]) advert.get("ccd"))[1]).orElse(defaultCity))
-                        .district(districtsRepository.findById(((Long[]) advert.get("ccd"))[2]).orElse(defaultDistrict))
+                        .country(countriesRepository.findById(((Long[]) advert.get("ccd"))[0]).get())
+                        .city(cityRepository.findById(((Long[]) advert.get("ccd"))[1]).get())
+                        .district(districtsRepository.findById(((Long[]) advert.get("ccd"))[2]).get())
                         .address(advert.get("address").toString())
                         .images(List.of(image))
                         .user(userRepository.findByEmail(advert.get("user").toString()).orElse(null))
                         .build();
 
                 Advert savedAdvert = advertRepository.save(builtInAdvert);
-                    initializeDefaultCategoryPropertyValues(savedAdvert.getId(), savedAdvert.getCategory().getId());
+                initializeDefaultCategoryPropertyValues(savedAdvert.getId(), savedAdvert.getCategory().getId());
 
                 Image savedImage = savedAdvert.getImages().stream().findFirst().orElse(null);
                 if (savedImage != null) {
@@ -1108,27 +1098,7 @@ public class BuiltInInitializer implements CommandLineRunner {
 
     private Image buildImage(String fileName, String title) {
         try {
-            // Check 1: Ensure fileName and title are not null
-            if (fileName == null || title == null) {
-                throw new IllegalArgumentException("fileName or title cannot be null.");
-            }
-
-            // Check 2: Create the file path
-            Path filePath = Paths.get(new ClassPathResource(fileName).getURI());
-
-            // Check 3: Ensure the file exists
-            if (!Files.exists(filePath)) {
-                throw new FileNotFoundException("File not found: " + fileName);
-            }
-
-            // Read the file content
-            byte[] data = Files.readAllBytes(filePath);
-
-            // Check 4: Ensure data is not null after reading the file
-            if (data == null) {
-                throw new IOException("An error occurred while reading the file: " + fileName);
-            }
-
+            byte[] data = Files.readAllBytes(Paths.get(new ClassPathResource(fileName).getURI()));
             return Image.builder()
                     .data(ImageUtil.compressImage(data))
                     .name(title)
@@ -1141,6 +1111,7 @@ public class BuiltInInitializer implements CommandLineRunner {
         }
         return null;
     }
+
 
 
 }
