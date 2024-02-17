@@ -39,7 +39,6 @@ public class BuiltInInitializer implements CommandLineRunner {
     private final AdvertRepository advertRepository;
     private final ImageRepository imageRepository;
     private final CategoryPropertyValueRepository categoryPropertyValueRepository;
-    private final MessageUtil messageUtil;
 
 
 
@@ -1080,7 +1079,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                         .city(cityRepository.findById(((Long[]) advert.get("ccd"))[1]).get())
                         .district(districtsRepository.findById(((Long[]) advert.get("ccd"))[2]).get())
                         .address(advert.get("address").toString())
-                        .images(List.of(image))
+                        .images(image != null ? List.of(image) : Collections.emptyList())
                         .user(userRepository.findByEmail(advert.get("user").toString()).orElse(null))
                         .build();
 
