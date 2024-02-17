@@ -1061,7 +1061,7 @@ public class BuiltInInitializer implements CommandLineRunner {
             for (Map<String, Object> advert : adverts) {
 
                 String title = advert.get("title").toString();
-                Image image = buildImage(advert.get("image").toString(), title);
+                Image image = buildImage(advert.get("image").toString(), title, "static/home1.jpg");
 
                 Advert builtInAdvert = Advert.builder()
                         .title(title)
@@ -1079,7 +1079,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                         .city(cityRepository.findById(((Long[]) advert.get("ccd"))[1]).get())
                         .district(districtsRepository.findById(((Long[]) advert.get("ccd"))[2]).get())
                         .address(advert.get("address").toString())
-                        .images(image != null ? List.of(image) : Collections.emptyList())
+                        .images( List.of(image))
                         .user(userRepository.findByEmail(advert.get("user").toString()).orElse(null))
                         .build();
 
@@ -1095,9 +1095,15 @@ public class BuiltInInitializer implements CommandLineRunner {
         }
     }
 
-    private Image buildImage(String fileName, String title) {
+    private Image buildImage(String fileName, String title, String defaultImagePath) {
         try {
-            byte[] data = Files.readAllBytes(Paths.get(new ClassPathResource(fileName).getURI()));
+            byte[] data;
+            if (fileName != null && !fileName.isEmpty()) {
+                data = Files.readAllBytes(Paths.get(new ClassPathResource(fileName).getURI()));
+            } else {
+                // If fileName is not provided or empty, use the default image
+                data = Files.readAllBytes(Paths.get(new ClassPathResource(defaultImagePath).getURI()));
+            }
             return Image.builder()
                     .data(ImageUtil.compressImage(data))
                     .name(title)
