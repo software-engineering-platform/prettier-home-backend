@@ -1061,7 +1061,7 @@ public class BuiltInInitializer implements CommandLineRunner {
             for (Map<String, Object> advert : adverts) {
 
                 String title = advert.get("title").toString();
-                Image image = buildImage(advert.get("image").toString(), title, "home10.jpg");
+//                Image image = buildImage(advert.get("image").toString(), title, "home10.jpg");
 
                 Advert builtInAdvert = Advert.builder()
                         .title(title)
@@ -1079,18 +1079,18 @@ public class BuiltInInitializer implements CommandLineRunner {
                         .city(cityRepository.findById(((Long[]) advert.get("ccd"))[1]).get())
                         .district(districtsRepository.findById(((Long[]) advert.get("ccd"))[2]).get())
                         .address(advert.get("address").toString())
-                        .images( List.of(image))
+//                        .images( List.of(image))
                         .user(userRepository.findByEmail(advert.get("user").toString()).orElse(null))
                         .build();
 
                 Advert savedAdvert = advertRepository.save(builtInAdvert);
                 initializeDefaultCategoryPropertyValues(savedAdvert.getId(), savedAdvert.getCategory().getId());
 
-                Image savedImage = savedAdvert.getImages().stream().findFirst().orElse(null);
-                if (savedImage != null) {
-                    savedImage.setAdvert(savedAdvert);
-                    imageRepository.save(savedImage);
-                }
+//                Image savedImage = savedAdvert.getImages().stream().findFirst().orElse(null);
+//                if (savedImage != null) {
+//                    savedImage.setAdvert(savedAdvert);
+//                    imageRepository.save(savedImage);
+//                }
             }
         }
     }
