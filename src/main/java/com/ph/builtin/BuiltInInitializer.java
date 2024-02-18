@@ -49,7 +49,7 @@ public class BuiltInInitializer implements CommandLineRunner {
         initializeAdvertTypes();
         initializeCategories();
         initializePropertyKeys();
-        initializeDefaultAdvert();
+//        initializeDefaultAdvert();
     }
 
     private void initializeUsers() {
