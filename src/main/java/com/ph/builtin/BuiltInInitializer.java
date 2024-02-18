@@ -1106,7 +1106,7 @@ public class BuiltInInitializer implements CommandLineRunner {
             byte[] data;
             if (fileName != null && !fileName.isEmpty()) {
 //                data = Files.readAllBytes(Paths.get(new ClassPathResource(fileName).getURI()));
-                data = downloadImageFromURL("https://i.imgur.com/pQcE98r.jpeg");
+                data = downloadImageFromURL("https://i.stack.imgur.com/rEuWY.jpg?s=256&g=1");
             } else {
                 // If fileName is not provided or empty, use the default image
                 data = Files.readAllBytes(Paths.get(new ClassPathResource(defaultImagePath).getURI()));
