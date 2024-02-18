@@ -1063,7 +1063,7 @@ public class BuiltInInitializer implements CommandLineRunner {
             for (Map<String, Object> advert : adverts) {
 
                 String title = advert.get("title").toString();
-                Image image = buildImage(advert.get("image").toString(), title, "home10.jpg");
+                Image image = buildImage(advert.get("image").toString(), title);
 
                 Advert builtInAdvert = Advert.builder()
                         .title(title)
@@ -1101,16 +1101,10 @@ public class BuiltInInitializer implements CommandLineRunner {
         URL url = new URL(urlString);
         return url.openStream().readAllBytes();
     }
-    private Image buildImage(String fileName, String title, String defaultImagePath) {
+    private Image buildImage(String fileName, String title) {
         try {
-            byte[] data;
-            if (fileName != null && !fileName.isEmpty()) {
-//                data = Files.readAllBytes(Paths.get(new ClassPathResource(fileName).getURI()));
-                data = downloadImageFromURL("https://i.stack.imgur.com/rEuWY.jpg?s=256&g=1");
-            } else {
-                // If fileName is not provided or empty, use the default image
-                data = Files.readAllBytes(Paths.get(new ClassPathResource(defaultImagePath).getURI()));
-            }
+            byte[] data = downloadImageFromURL("https://i.stack.imgur.com/rEuWY.jpg?s=256&g=1");
+
             return Image.builder()
                     .data(ImageUtil.compressImage(data))
                     .name(title)
