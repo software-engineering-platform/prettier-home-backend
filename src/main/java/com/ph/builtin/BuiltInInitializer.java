@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -1061,7 +1063,7 @@ public class BuiltInInitializer implements CommandLineRunner {
             for (Map<String, Object> advert : adverts) {
 
                 String title = advert.get("title").toString();
-//                Image image = buildImage(advert.get("image").toString(), title, "home10.jpg");
+                Image image = buildImage(advert.get("image").toString(), title, "home10.jpg");
 
                 Advert builtInAdvert = Advert.builder()
                         .title(title)
@@ -1079,27 +1081,32 @@ public class BuiltInInitializer implements CommandLineRunner {
                         .city(cityRepository.findById(((Long[]) advert.get("ccd"))[1]).get())
                         .district(districtsRepository.findById(((Long[]) advert.get("ccd"))[2]).get())
                         .address(advert.get("address").toString())
-//                        .images( List.of(image))
+                        .images( List.of(image))
                         .user(userRepository.findByEmail(advert.get("user").toString()).orElse(null))
                         .build();
 
                 Advert savedAdvert = advertRepository.save(builtInAdvert);
                 initializeDefaultCategoryPropertyValues(savedAdvert.getId(), savedAdvert.getCategory().getId());
 
-//                Image savedImage = savedAdvert.getImages().stream().findFirst().orElse(null);
-//                if (savedImage != null) {
-//                    savedImage.setAdvert(savedAdvert);
-//                    imageRepository.save(savedImage);
-//                }
+                Image savedImage = savedAdvert.getImages().stream().findFirst().orElse(null);
+                if (savedImage != null) {
+                    savedImage.setAdvert(savedAdvert);
+                    imageRepository.save(savedImage);
+                }
             }
         }
     }
 
+    private byte[] downloadImageFromURL(String urlString) throws IOException {
+        URL url = new URL(urlString);
+        return url.openStream().readAllBytes();
+    }
     private Image buildImage(String fileName, String title, String defaultImagePath) {
         try {
             byte[] data;
             if (fileName != null && !fileName.isEmpty()) {
-                data = Files.readAllBytes(Paths.get(new ClassPathResource(fileName).getURI()));
+//                data = Files.readAllBytes(Paths.get(new ClassPathResource(fileName).getURI()));
+                data = downloadImageFromURL("https://i.imgur.com/pQcE98r.jpeg");
             } else {
                 // If fileName is not provided or empty, use the default image
                 data = Files.readAllBytes(Paths.get(new ClassPathResource(defaultImagePath).getURI()));
