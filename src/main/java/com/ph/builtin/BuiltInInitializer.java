@@ -387,7 +387,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.8632398, 27.266873},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/home1.jpg",
+                            "image", "https://i.imgur.com/E490Bjl.jpeg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Safe location in the center of Kösk",
@@ -398,7 +398,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.91877855, 28.048488672658053},
                             "category", 2L,
                             "advertType", 1L,
-                            "image", "static/apartment1.jpg",
+                            "image", "https://i.imgur.com/9Mi0oIH.jpeg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Modern Office",
@@ -409,7 +409,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.8537655, 27.7235028},
                             "category", 3L,
                             "advertType", 2L,
-                            "image", "static/office1.jpg",
+                            "image", "https://i.imgur.com/7HpeEiF.jpeg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Villa with sea and forest views in Didim",
@@ -420,7 +420,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.3769167, 27.2668129},
                             "category", 4L,
                             "advertType", 2L,
-                            "image", "static/villa1.jpg",
+                            "image", "https://i.imgur.com/QF1d3L6.jpeg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Investment land close to the center",
@@ -431,7 +431,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.6739133, 28.3132041},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "static/land3.jpg",
+                            "image", "https://i.imgur.com/DDMKdrY.jpeg",
                             "user", "admin@gmail.com"),
 
                     Map.of("title", "Store in a busy location on the main road",
@@ -442,7 +442,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.7519762, 27.4056294},
                             "category", 6L,
                             "advertType", 2L,
-                            "image", "static/shop1.jpg",
+                            "image", "https://i.imgur.com/vBPPAOl.jpeg",
                             "user", "admin@gmail.com"),
 
                     /////////////////////////////////////////////////////
@@ -455,7 +455,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.874185, 32.674029},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/home2.jpg",
+                            "image", "https://i.imgur.com/p9Fq1JM.jpeg",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Modern Apartment in Central Location",
@@ -466,7 +466,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.919838, 32.852380},
                             "category", 2L,
                             "advertType", 2L,
-                            "image", "static/apartment2.jpg",
+                            "image", "https://i.imgur.com/ThoxS29.jpeg",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Modern Office Space",
@@ -477,7 +477,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.8853321, 32.8554966},
                             "category", 3L,
                             "advertType", 1L,
-                            "image", "static/office2.jpg",
+                            "image", "https://i.imgur.com/wCDRhxM.jpeg",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Luxury Villa With Pool",
@@ -488,7 +488,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.7925289, 32.8066652},
                             "category", 4L,
                             "advertType", 2L,
-                            "image", "static/villa2.jpg",
+                            "image", "https://i.imgur.com/WInnlp5.png",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Suitable Land for Investment",
@@ -499,7 +499,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.9489423, 32.6620792},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "static/land6.jpg",
+                            "image", "https://i.imgur.com/n8MYijU.jpeg",
                             "user", "kochisarufuk@gmail.com"),
 
                     Map.of("title", "Shop on the Main Street",
@@ -510,7 +510,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{39.9329813, 32.9082154},
                             "category", 6L,
                             "advertType", 2L,
-                            "image", "static/shop3.jpg",
+                            "image", "https://i.imgur.com/1dZT7nh.jpeg",
                             "user", "kochisarufuk@gmail.com"),
 
                     ///////////////////////////////////////////////////////
@@ -523,7 +523,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.7718611, 29.9498078},
                             "category", 1L,
                             "advertType", 2L,
-                            "image", "static/home6.jpg",
+                            "image", "https://i.imgur.com/PY3dKtz.jpeg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Urban Oasis Stylish Apartment in Gebze",
@@ -534,7 +534,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.8006696, 29.431767},
                             "category", 2L,
                             "advertType", 2L,
-                            "image", "static/apartment3.jpg",
+                            "image", "https://i.imgur.com/8dSA4CZ.jpeg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Prime Office Space in İzmit Center",
@@ -545,7 +545,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.7718611, 29.9498078},
                             "category", 3L,
                             "advertType", 1L,
-                            "image", "static/office3.jpg",
+                            "image", "https://i.imgur.com/9c7QhtL.jpeg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Seaview Villa in Basiskele",
@@ -556,7 +556,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.64592185, 29.951563320964866},
                             "category", 4L,
                             "advertType", 2L,
-                            "image", "static/villa3.jpg",
+                            "image", "https://i.imgur.com/URadXCD.png",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Investment opportunity Land in Darıca",
@@ -567,7 +567,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.7574799, 29.3840563},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "static/land1.jpg",
+                            "image", "https://imgur.com/a/j8FvdG9",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Shopping at Gulf commercial center",
@@ -578,7 +578,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.760756, 29.7839402},
                             "category", 6L,
                             "advertType", 2L,
-                            "image", "static/shop4.jpg",
+                            "image", "https://i.imgur.com/nAem3eS.jpeg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     /////////////////////////////////////////////////////////
@@ -591,7 +591,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.3339473, 41.4202341},
                             "category", 1L,
                             "advertType", 2L,
-                            "image", "static/home4.jpg",
+                            "image", "https://i.imgur.com/Lmprf7i.jpeg",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Stylish Apartment in Besiri",
@@ -602,7 +602,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.9162455, 41.2927679},
                             "category", 2L,
                             "advertType", 1L,
-                            "image", "static/apartment4.jpg",
+                            "image", "https://i.imgur.com/nAIsbhK.jpeg",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Modern Office in Batman Center",
@@ -613,7 +613,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.7874104, 41.2573924},
                             "category", 3L,
                             "advertType", 1L,
-                            "image", "static/office4.jpg",
+                            "image", "https://i.imgur.com/5Q1aOE2.jpeg",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Secluded Villa in Gercüs",
@@ -624,7 +624,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.5683088, 41.3852365},
                             "category", 4L,
                             "advertType", 2L,
-                            "image", "static/villa4.jpg",
+                            "image", "https://i.imgur.com/BeGkJXC.png",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Investment Opportunity Land in Hasankeyft",
@@ -635,7 +635,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.7304689, 41.4160863},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "static/land2.jpg",
+                            "image", "https://i.imgur.com/xvLyrOC.jpeg",
                             "user", "gulsum.satic@gmail.com"),
 
                     Map.of("title", "Shop on Main Street in Kozluk",
@@ -646,7 +646,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.1933398, 41.4886025},
                             "category", 6L,
                             "advertType", 1L,
-                            "image", "static/shop6.jpg",
+                            "image", "https://i.imgur.com/J2yIUbE.png",
                             "user", "gulsum.satic@gmail.com"),
 
                     //////////////////////////////////////////////////////
@@ -659,7 +659,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.3680217, 33.7619177},
                             "category", 1L,
                             "advertType", 2L,
-                            "image", "static/home5.jpg",
+                            "image", "https://i.imgur.com/F3mCqxQ.jpeg",
                             "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Modern Apartment in Scenic İnebolu",
@@ -670,7 +670,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.9785763, 33.7599031},
                             "category", 2L,
                             "advertType", 1L,
-                            "image", "static/apartment5.jpg",
+                            "image", "https://i.imgur.com/GBMoRqh.jpeg",
                             "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Contemporary Office Space in Vibrant Kastamonu",
@@ -681,7 +681,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.3680217, 33.7619177},
                             "category", 3L,
                             "advertType", 2L,
-                            "image", "static/office5.jpg",
+                            "image", "https://i.imgur.com/Z6WOLW4.jpeg",
                             "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Luxurious Villa Escape in Idyllic Cide",
@@ -692,7 +692,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.8915711, 33.003712},
                             "category", 4L,
                             "advertType", 1L,
-                            "image", "static/villa6.jpg",
+                            "image", "https://i.imgur.com/0B2rxVR.jpeg",
                             "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Vast Land in Tranquil Arac",
@@ -703,7 +703,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.2412014, 33.324933},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "static/land4.jpg",
+                            "image", "https://i.imgur.com/Iqyd3cV.jpeg",
                             "user", "ebubekirc442@gmail.com"),
 
                     Map.of("title", "Bustling Shop in Central Tosya",
@@ -714,7 +714,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.0164957, 34.0386079},
                             "category", 6L,
                             "advertType", 2L,
-                            "image", "static/shop8.jpg",
+                            "image", "https://i.imgur.com/HWPDj0a.png",
                             "user", "ebubekirc442@gmail.com"),
 
                     //////////////////////////////////////////////////////
@@ -727,7 +727,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.4185042, 27.1290835},
                             "category", 1L,
                             "advertType", 2L,
-                            "image", "static/home10.jpg",
+                            "image", "https://i.imgur.com/FUwAgsW.jpeg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Luxurious Coastal Apartment in Alsancak s Prestigious Enclave",
@@ -738,7 +738,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.4185042, 27.1290835},
                             "category", 2L,
                             "advertType", 1L,
-                            "image", "static/apartment6.jpg",
+                            "image", "https://i.imgur.com/lY1iI5h.jpeg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "State-of-the-Art Office Space in Konak s Business District",
@@ -749,7 +749,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.4185042, 27.1290835},
                             "category", 3L,
                             "advertType", 2L,
-                            "image", "static/office6.jpg",
+                            "image", "https://i.imgur.com/ZQzBrvf.jpeg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Secluded Villa Retreat in Urla s Idyllic Countryside",
@@ -760,7 +760,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.3228184, 26.7672998},
                             "category", 4L,
                             "advertType", 2L,
-                            "image", "static/villa5.jpg",
+                            "image", "https://i.imgur.com/IoCk5hA.jpeg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Expansive Land Parcel in Bornova s Flourishing Landscape",
@@ -771,7 +771,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.4660651, 27.2190721},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "static/land5.jpg",
+                            "image", "https://i.imgur.com/MudFP95.jpeg",
                             "user", "adamd.born@gmail.com"),
 
                     Map.of("title", "Prime Corner Shop in Karşıyakas Vibrant Retail Hub",
@@ -782,7 +782,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{38.503445150000005, 27.113455434284667},
                             "category", 6L,
                             "advertType", 2L,
-                            "image", "static/shop2.jpg",
+                            "image", "https://i.imgur.com/yxUrt3v.png",
                             "user", "adamd.born@gmail.com"),
 
                     //////////////////////////////////////////////////////
@@ -795,7 +795,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.6476377, 34.9560137},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/home7.jpg",
+                            "image", "https://i.imgur.com/jcLlENJ.jpeg",
                             "user", "sarpzahide@gmail.com"),
 
                     Map.of("title", "Modern Apartment Living in Boyabat",
@@ -806,7 +806,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.4689736, 34.7672274},
                             "category", 2L,
                             "advertType", 2L,
-                            "image", "static/apartment7.jpg",
+                            "image", "https://i.imgur.com/4MH5cEJ.jpeg",
                             "user", "sarpzahide@gmail.com"),
 
                     Map.of("title", "Modern Office Space in Gerze",
@@ -817,7 +817,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.8032697, 35.1996164},
                             "category", 3L,
                             "advertType", 1L,
-                            "image", "static/office7.jpg",
+                            "image", "https://i.imgur.com/t1h1N1h.jpeg",
                             "user", "sarpzahide@gmail.com"),
 
                     Map.of("title", "Villa Life in Ayancik",
@@ -828,7 +828,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.9465719, 34.5878729},
                             "category", 4L,
                             "advertType", 2L,
-                            "image", "static/villa7.jpg",
+                            "image", "https://i.imgur.com/lR7gUcm.png",
                             "user", "sarpzahide@gmail.com"),
 
                     Map.of("title", "Large Parcel of Land in Erfelek",
@@ -839,7 +839,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.8793624, 34.9080508},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "static/land7.jpg",
+                            "image", "https://i.imgur.com/awfEOBt.jpeg",
                             "user", "sarpzahide@gmail.com"),
 
                     Map.of("title", "Shop on Main Street in Türkeli",
@@ -850,7 +850,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{41.851414500000004, 34.3721368459243},
                             "category", 6L,
                             "advertType", 2L,
-                            "image", "static/shop7.jpg",
+                            "image", "https://i.imgur.com/lLpx3Fb.png",
                             "user", "sarpzahide@gmail.com"),
 
                     //////////////////////////////////////////////////////
@@ -863,7 +863,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.1982203, 29.0612098},
                             "category", 1L,
                             "advertType", 2L,
-                            "image", "static/home8.jpg",
+                            "image", "https://i.imgur.com/pGHEvI3.jpeg",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Comfort in the Heart of the City",
@@ -874,7 +874,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.1982203, 29.0612098},
                             "category", 2L,
                             "advertType", 1L,
-                            "image", "static/apartment8.jpg",
+                            "image", "https://i.imgur.com/MjyCJoo.jpeg",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Modern Office in Nilüfer s Central Business Area",
@@ -885,7 +885,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.2129489, 28.9627863},
                             "category", 3L,
                             "advertType", 1L,
-                            "image", "static/office8.jpg",
+                            "image", "https://i.imgur.com/jGOhCf5.jpeg",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Luxury Living in Nature s Embrace",
@@ -896,7 +896,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.2129489, 28.9627863},
                             "category", 4L,
                             "advertType", 2L,
-                            "image", "static/villa8.jpg",
+                            "image", "https://i.imgur.com/LktCYpN.png",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Land in Yildirim s Developing Area",
@@ -907,7 +907,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.1877165, 29.0809205},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "static/land8.jpg",
+                            "image", "https://i.imgur.com/vGMEH4e.jpeg",
                             "user", "yasemin@gmail.com"),
 
                     Map.of("title", "Store in Gürsu s Busy Market",
@@ -918,7 +918,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.1877165, 29.0809205},
                             "category", 6L,
                             "advertType", 2L,
-                            "image", "static/shop5.jpg",
+                            "image", "https://i.imgur.com/nh9c8QC.jpeg",
                             "user", "yasemin@gmail.com"),
 
                     //////////////////////////////////////////////////////
@@ -932,7 +932,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.0727587, 37.3949769},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/home9.jpg",
+                            "image", "https://i.imgur.com/7GVNiUN.jpeg",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "Modern Apartment Living in Şahinbey s Cultural District",
@@ -943,7 +943,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.0575903, 37.3794008},
                             "category", 2L,
                             "advertType", 2L,
-                            "image", "static/apartment9.jpg",
+                            "image", "https://i.imgur.com/ZoTHIMr.jpeg",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "State-of-the-Art Office in Sehitkamil s Business Center",
@@ -954,7 +954,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.0727587, 37.3949769},
                             "category", 3L,
                             "advertType", 1L,
-                            "image", "static/office9.jpg",
+                            "image", "https://i.imgur.com/Epyr2jc.jpeg",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "Luxury Villa Retreat in Araban s Picturesque Countryside",
@@ -965,7 +965,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.4252863, 37.6894188},
                             "category", 4L,
                             "advertType", 2L,
-                            "image", "static/villa9.jpg",
+                            "image", "https://i.imgur.com/otcXAvQ.png",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "Prime Parcel in Nizip s Growing Community",
@@ -976,7 +976,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.0108864, 37.7931734},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "static/land9.jpg",
+                            "image", "https://i.imgur.com/i2Yfmyh.jpeg",
                             "user", "zeynepnune@gmail.com"),
 
                     Map.of("title", "Corner Shop in Karkamıs s Bustling Marketplace",
@@ -987,7 +987,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{36.82947115, 38.015398741406926},
                             "category", 6L,
                             "advertType", 2L,
-                            "image", "static/shop9.jpg",
+                            "image", "https://i.imgur.com/zZeUPFL.jpeg",
                             "user", "zeynepnune@gmail.com"),
 
                     //////////////////////////////////////////////////////
@@ -1001,7 +1001,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.2517882, 36.2993502},
                             "category", 1L,
                             "advertType", 1L,
-                            "image", "static/home3.jpg",
+                            "image", "https://i.imgur.com/2ilQWMv.jpeg",
                             "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Modern Apartment Living in Düzici s Thriving Community",
@@ -1012,7 +1012,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.2401223, 36.4534072},
                             "category", 2L,
                             "advertType", 2L,
-                            "image", "static/apartment10.jpg",
+                            "image", "https://i.imgur.com/2COX1AD.jpeg",
                             "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Contemporary Office in Kadirli s Business District",
@@ -1023,7 +1023,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.462024299999996, 36.17201485369948},
                             "category", 3L,
                             "advertType", 1L,
-                            "image", "static/office10.jpg",
+                            "image", "https://i.imgur.com/OhjQjHS.jpeg",
                             "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Private Villa Retreat in the Scenic Countryside of Sumbas",
@@ -1034,7 +1034,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.4536229, 36.0247595},
                             "category", 4L,
                             "advertType", 1L,
-                            "image", "static/villa10.jpg",
+                            "image", "https://i.imgur.com/bf8JZ7A.png",
                             "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Expansive Land Parcel in Bahce",
@@ -1045,7 +1045,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.2042113, 36.5820496},
                             "category", 5L,
                             "advertType", 2L,
-                            "image", "static/land10.jpg",
+                            "image", "https://i.imgur.com/LyGtZCM.jpeg",
                             "user", "swwaque@gmail.com"),
 
                     Map.of("title", "Corner Shop in Toprakkale s Bustling Marketplace",
@@ -1056,7 +1056,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{37.067132, 36.1460016},
                             "category", 6L,
                             "advertType", 2L,
-                            "image", "static/shop10.jpg",
+                            "image", "https://i.imgur.com/hEocdQJ.png",
                             "user", "swwaque@gmail.com")
 
             ));
@@ -1096,14 +1096,9 @@ public class BuiltInInitializer implements CommandLineRunner {
             }
         }
     }
-
-    private byte[] downloadImageFromURL(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        return url.openStream().readAllBytes();
-    }
     private Image buildImage(String fileName, String title) {
         try {
-            byte[] data = downloadImageFromURL("https://i.stack.imgur.com/rEuWY.jpg?s=256&g=1");
+            byte[] data = downloadImageFromURL(fileName);
 
             return Image.builder()
                     .data(ImageUtil.compressImage(data))
@@ -1116,6 +1111,11 @@ public class BuiltInInitializer implements CommandLineRunner {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private byte[] downloadImageFromURL(String urlString) throws IOException {
+        URL url = new URL(urlString);
+        return url.openStream().readAllBytes();
     }
 
 
