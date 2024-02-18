@@ -49,7 +49,7 @@ public class BuiltInInitializer implements CommandLineRunner {
         initializeAdvertTypes();
         initializeCategories();
         initializePropertyKeys();
-//        initializeDefaultAdvert();
+        initializeDefaultAdvert();
     }
 
     private void initializeUsers() {
@@ -1061,7 +1061,7 @@ public class BuiltInInitializer implements CommandLineRunner {
             for (Map<String, Object> advert : adverts) {
 
                 String title = advert.get("title").toString();
-                Image image = buildImage(advert.get("image").toString(), title, "static/home1.jpg");
+                Image image = buildImage(advert.get("image").toString(), title, "home10.jpg");
 
                 Advert builtInAdvert = Advert.builder()
                         .title(title)
