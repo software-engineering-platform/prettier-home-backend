@@ -23,7 +23,7 @@ public class GeneralUtils {
 //                default -> cleanedTitle.append(c);
 //            }
 //        }
-        return    System.currentTimeMillis() + "-" + title;
+        return    System.currentTimeMillis() + "-" + cleanedTitle;
     }
 
     public static String capitalize(String str) {
