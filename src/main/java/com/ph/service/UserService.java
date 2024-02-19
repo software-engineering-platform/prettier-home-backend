@@ -62,7 +62,7 @@ public class UserService {
     public ResponseEntity<?> saveUser(UserSaveRequest userSaveRequest) {
         User user = userSaveRequest.get();
         // Check for duplicate fields
-        checkDuplicate(user.getPhone(), user.getEmail(), user);
+        checkDuplicate(user.getPhone(), user.getEmail(), user, false);
         // Set the built-in flag to false
         user.setBuiltIn(false);
         // Hash the user's password
@@ -284,6 +284,13 @@ public class UserService {
         }
         // Check if the found user has any built-in and related fields
         checkBuiltInAndRelatedFieldsBeforeDeletion(foundUser);
+
+        // if the user is not enabled, it means the user not confirmed,
+        // so we need to delete confirmation token related to the user
+        if(!foundUser.getEnabled()){
+            confirmationTokenService.deleteConfirmationTokenbyUserId(foundUser.getId());
+        }
+
         favoritesRepository.deleteAllById(foundUser.getFavorites().stream().map(Favorite::getId).collect(Collectors.toList()));
         // Delete the found user from the repository
         userRepository.delete(foundUser);
@@ -322,13 +329,13 @@ public class UserService {
      * @param phone The phone number to check.
      * @param email The email address to check.
      */
-    private void checkDuplicate(String phone, String email, User user) {
+    private void checkDuplicate(String phone, String email, User user, Boolean toUpdate) {
         // Check if phone number already exists
-        if (phone != null && !user.getPhone().equals(phone) && userRepository.existsByPhone(phone)) {
+        if ( phone != null && (toUpdate ? !user.getPhone().equals(phone) : true) && userRepository.existsByPhone(phone)) {
             throw new ConflictException(messageUtil.getMessage("error.phone.exists"));
         }
         // Check if email already exists
-        if (email != null && !user.getEmail().equals(email) && userRepository.existsByEmail(email)) {
+        if (email != null && ( toUpdate ? !user.getEmail().equals(email) : true) && userRepository.existsByEmail(email)) {
             throw new ConflictException(messageUtil.getMessage("error.email.exists"));
         }
     }
@@ -362,7 +369,7 @@ public class UserService {
             throw new BuiltInFieldException(messageUtil.getMessage("error.user.update.built-in"));
         }
         // Check for duplicate phone and email values
-        checkDuplicate(request.getPhone(), request.getEmail(), user);
+        checkDuplicate(request.getPhone(), request.getEmail(), user, true);
         // Update the user with the provided request
         request.accept(user);
         // Save the updated user

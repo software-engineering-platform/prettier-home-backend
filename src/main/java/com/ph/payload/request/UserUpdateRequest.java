@@ -27,7 +27,7 @@ public class UserUpdateRequest implements Consumer<User>, Serializable {
     private String phone;
 
     @Size(min = 8, max = 30, message = "{validation.password.size}")
-    @NotBlank(message = "{validation.password.notblank}")
+//    @NotBlank(message = "{validation.password.notblank}")
     @Pattern(
             regexp = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\",.<>/?]).*$",
             message = "{validation.password.pattern}"
