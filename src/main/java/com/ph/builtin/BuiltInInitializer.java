@@ -567,7 +567,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "location", new Double[]{40.7574799, 29.3840563},
                             "category", 5L,
                             "advertType", 1L,
-                            "image", "https://imgur.com/a/j8FvdG9",
+                            "image", "https://i.imgur.com/hW1rzCj.jpeg",
                             "user", "matematikcimbilal@gmail.com"),
 
                     Map.of("title", "Shopping at Gulf commercial center",
