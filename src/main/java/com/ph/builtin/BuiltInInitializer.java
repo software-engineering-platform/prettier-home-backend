@@ -864,7 +864,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 1L,
                             "advertType", 2L,
                             "image", "https://i.imgur.com/pGHEvI3.jpeg",
-                            "user", "yasemin@gmail.com"),
+                            "user", "yasemin.dn7@gmail.com"),
 
                     Map.of("title", "Comfort in the Heart of the City",
                             "description", "Experience modern living in the heart of the city. Feel the energy of the city and enjoy comfort in this apartment with innovative design and stylish details.",
@@ -875,7 +875,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 2L,
                             "advertType", 1L,
                             "image", "https://i.imgur.com/MjyCJoo.jpeg",
-                            "user", "yasemin@gmail.com"),
+                            "user", "yasemin.dn7@gmail.com"),
 
                     Map.of("title", "Modern Office in Nilüfer s Central Business Area",
                             "description", "Combine innovation and productivity. In this modern office space located in Nilüfer's bustling business center, experience working in an environment that triggers creativity and collaboration.",
@@ -886,7 +886,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 3L,
                             "advertType", 1L,
                             "image", "https://i.imgur.com/jGOhCf5.jpeg",
-                            "user", "yasemin@gmail.com"),
+                            "user", "yasemin.dn7@gmail.com"),
 
                     Map.of("title", "Luxury Living in Nature s Embrace",
                             "description", "Open the doors to a peaceful life nestled in the heart of nature. In this luxurious villa with the unique view of Gölyazı, forget the fatigue of the day and enjoy the tranquility.",
@@ -897,7 +897,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 4L,
                             "advertType", 2L,
                             "image", "https://i.imgur.com/LktCYpN.png",
-                            "user", "yasemin@gmail.com"),
+                            "user", "yasemin.dn7@gmail.com"),
 
                     Map.of("title", "Land in Yildirim s Developing Area",
                             "description", "Invest in a developing area. This land in Yıldırım's potential-filled region offers a vast opportunity for development and growth. An ideal choice to turn your vision into reality.",
@@ -908,7 +908,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 5L,
                             "advertType", 1L,
                             "image", "https://i.imgur.com/vGMEH4e.jpeg",
-                            "user", "yasemin@gmail.com"),
+                            "user", "yasemin.dn7@gmail.com"),
 
                     Map.of("title", "Store in Gürsu s Busy Market",
                             "description", "Position your brand at the center of shopping. This corner store located in Gürsu's bustling market offers the perfect environment to showcase your products and attract customers with its strategic location and high pedestrian traffic.",
@@ -919,7 +919,7 @@ public class BuiltInInitializer implements CommandLineRunner {
                             "category", 6L,
                             "advertType", 2L,
                             "image", "https://i.imgur.com/nh9c8QC.jpeg",
-                            "user", "yasemin@gmail.com"),
+                            "user", "yasemin.dn7@gmail.com"),
 
                     //////////////////////////////////////////////////////
 

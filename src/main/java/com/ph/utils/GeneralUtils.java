@@ -22,7 +22,7 @@ public class GeneralUtils {
                 default -> cleanedTitle.append(c);
             }
         }
-        return UriUtils.encode(cleanedTitle.toString(), StandardCharsets.UTF_8) + "_" + System.currentTimeMillis();
+        return System.currentTimeMillis() + "-" + cleanedTitle;
     }
 
     public static String capitalize(String str) {
