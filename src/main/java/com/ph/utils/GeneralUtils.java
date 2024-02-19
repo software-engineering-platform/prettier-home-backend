@@ -9,21 +9,24 @@ public class GeneralUtils {
 
     public static String generateSlug(String title) {
 
-        String cleanedTitle = title.replaceAll("[^a-zA-Z0-9 ]", "")
-                                    .replaceAll("\\s+", "-").toLowerCase();
-//        for (char c : title.toLowerCase().toCharArray()) {
-//            switch (c) {
-//                case 'ğ' -> cleanedTitle.append('g');
-//                case 'ü' -> cleanedTitle.append('u');
-//                case 'ş' -> cleanedTitle.append('s');
-//                case 'ı' -> cleanedTitle.append('i');
-//                case 'ö' -> cleanedTitle.append('o');
-//                case 'ç' -> cleanedTitle.append('c');
-//                case ' ' -> cleanedTitle.append('-');
-//                default -> cleanedTitle.append(c);
-//            }
-//        }
-        return    System.currentTimeMillis() + "-" + cleanedTitle;
+        StringBuilder cleanedTitle = new StringBuilder();
+        for (char c : title.toLowerCase().toCharArray()) {
+            switch (c) {
+                case 'ğ' -> cleanedTitle.append('g');
+                case 'ü' -> cleanedTitle.append('u');
+                case 'ş' -> cleanedTitle.append('s');
+                case 'ı' -> cleanedTitle.append('i');
+                case 'ö' -> cleanedTitle.append('o');
+                case 'ç' -> cleanedTitle.append('c');
+                case ' ' -> cleanedTitle.append('-');
+                default -> cleanedTitle.append(c);
+            }
+        }
+
+        String slug = cleanedTitle.toString().replaceAll("[^a-zA-Z0-9 ]", "")
+                                   .replaceAll("\\s+", "-").toLowerCase();
+
+        return    System.currentTimeMillis() + "-" + slug;
     }
 
     public static String capitalize(String str) {
