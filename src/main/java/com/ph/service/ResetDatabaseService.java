@@ -1,10 +1,7 @@
 package com.ph.service;
 
 import com.ph.domain.entities.*;
-import com.ph.repository.AdvertRepository;
-import com.ph.repository.CategoryRepository;
-import com.ph.repository.DailyReportRepository;
-import com.ph.repository.UserRepository;
+import com.ph.repository.*;
 import com.ph.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.Cache;
@@ -27,6 +24,7 @@ public class ResetDatabaseService {
     private final MessageUtil messageUtil;
     private final TourRequestRepository tourRequestRepository;
     private final FavoriteRepository favoriteRepository;
+    private final ContactRepository contactRepository;
 
 
     public ResponseEntity<String> resetDatabase() {
@@ -55,6 +53,10 @@ public class ResetDatabaseService {
         // delete all Favorite
         List<Favorite> favorites = favoriteRepository.findAll();
         favoriteRepository.deleteAll(favorites);
+
+        // delete all contact messages
+        List<Contact> contactMessages = contactRepository.findAll();
+        contactRepository.deleteAll(contactMessages);
 
         // clear all caches
         clearAllCaches();
