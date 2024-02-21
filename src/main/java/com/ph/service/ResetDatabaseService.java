@@ -1,9 +1,6 @@
 package com.ph.service;
 
-import com.ph.domain.entities.Advert;
-import com.ph.domain.entities.Category;
-import com.ph.domain.entities.DailyReport;
-import com.ph.domain.entities.User;
+import com.ph.domain.entities.*;
 import com.ph.repository.AdvertRepository;
 import com.ph.repository.CategoryRepository;
 import com.ph.repository.DailyReportRepository;
@@ -28,6 +25,8 @@ public class ResetDatabaseService {
     private final CacheManager cacheManager;
     private final DailyReportRepository dailyReportRepository;
     private final MessageUtil messageUtil;
+    private final TourRequestRepository tourRequestRepository;
+    private final FavoriteRepository favoriteRepository;
 
 
     public ResponseEntity<String> resetDatabase() {
@@ -49,6 +48,13 @@ public class ResetDatabaseService {
         List<DailyReport> dailyReports = dailyReportRepository.findAll();
         dailyReportRepository.deleteAll(dailyReports);
 
+        // delete all TourRequest
+        List<TourRequest> tourRequests = tourRequestRepository.findAll();
+        tourRequestRepository.deleteAll(tourRequests);
+
+        // delete all Favorite
+        List<Favorite> favorites = favoriteRepository.findAll();
+        favoriteRepository.deleteAll(favorites);
 
         // clear all caches
         clearAllCaches();

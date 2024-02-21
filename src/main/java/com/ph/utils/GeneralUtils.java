@@ -23,7 +23,7 @@ public class GeneralUtils {
             }
         }
 
-        String slug = cleanedTitle.toString().replaceAll("[^a-zA-Z0-9 ]", "")
+        String slug = cleanedTitle.toString().replaceAll("[^a-zA-Z0-9]", "")
                                    .replaceAll("\\s+", "-").toLowerCase();
 
         return    System.currentTimeMillis() + "-" + slug;
