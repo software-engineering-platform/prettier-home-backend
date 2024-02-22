@@ -21,8 +21,8 @@ import org.springframework.context.annotation.Configuration;
                         url = "https://www.apache.org/licenses/LICENSE-2.0"
                 ),
                 contact = @Contact(
-                        name = "TechPro_Group_II",
-                        url = "https://github.com/Real-Estate-Internship-Project/prettierHome-backend"
+                        name = "Prettier Homes",
+                        url = "https://github.com/PrettierHomes/prettierHome-frontend.git"
                 )
         ),
         servers = {
