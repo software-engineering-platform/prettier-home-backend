@@ -190,7 +190,7 @@ public class AdvertTypeService {
         }
 
         // Check if the updated title is already used by another AdvertType
-        if (!found.getTitle().equalsIgnoreCase(request.getTitle()) && repository.existsByTitleIgnoreCase(request.getTitle())) {
+        if (repository.existsByTitleIgnoreCase(request.getTitle())) {
             throw new ConflictException(messageUtil.getMessage("error.advert.type.exist"));
         }
         // Check if the title contains only letters, spaces, and hyphens
