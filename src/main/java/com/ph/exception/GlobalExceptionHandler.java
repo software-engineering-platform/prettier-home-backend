@@ -18,6 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.naming.InvalidNameException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -129,6 +130,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DisabledException.class)
     public ResponseEntity<?> handleDisabledException(DisabledException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("message", messageUtil.getMessage("error.user.disabled")));
+    }
+
+    @ExceptionHandler(InvalidTitleException.class)
+    public ResponseEntity<?> handleInvalidTitleException(InvalidTitleException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(Map.of("message", ex.getMessage()));
     }
 
 

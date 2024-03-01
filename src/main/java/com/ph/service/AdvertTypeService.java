@@ -2,9 +2,7 @@ package com.ph.service;
 
 
 import com.ph.domain.entities.AdvertType;
-import com.ph.exception.customs.BuiltInFieldException;
-import com.ph.exception.customs.NonDeletableException;
-import com.ph.exception.customs.ResourceNotFoundException;
+import com.ph.exception.customs.*;
 import com.ph.payload.mapper.AdvertMapper;
 import com.ph.payload.request.AdvertTypeRequest;
 import com.ph.payload.response.AdvertTypeResponse;
@@ -39,6 +37,19 @@ public class AdvertTypeService {
      * @return The ResponseEntity with the AdvertTypeResponse for the created AdvertType.
      */
     public ResponseEntity<AdvertTypeResponse> create(AdvertTypeRequest request) {
+
+        // Check if an AdvertType with the same name already exists
+        if (repository.existsByTitle(request.getTitle())) {
+            // If it exists, throw an exception or handle the error as needed
+            throw new ConflictException(messageUtil.getMessage("error.advert.type.exist"));
+        }
+
+        // Check if the title contains only letters  spaces and hyphens
+        if (!isAlpha(request.getTitle())) {
+            // If it contains non-alphabetic characters, throw an exception or handle the error as needed
+            throw new InvalidTitleException(messageUtil.getMessage("error.advert.type.invalid.title"));
+        }
+
         // Convert the request object to an AdvertType entity
         AdvertType advertType = mapper.toEntity(request);
 
@@ -70,6 +81,10 @@ public class AdvertTypeService {
     public AdvertType getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(String.format(messageUtil.getMessage("error.advert.type.not.found"), id)));
+    }
+
+    private boolean isAlpha(String str) {
+        return str.matches("^[a-zA-Z -]+$");
     }
       /*
     !!! HELPER METHOD END .
@@ -137,10 +152,11 @@ public class AdvertTypeService {
         // Retrieve the AdvertType by its ID
         AdvertType advertType = getById(id);
         if (advertType.isBuiltIn()) {
-            throw new BuiltInFieldException("Advert Type cannot be deleted");
+            throw new BuiltInFieldException(messageUtil.getMessage("error.advert.type.not.delete"));
         }
+        // Check if the AdvertType has any related Adverts
         if (!advertType.getAdverts().isEmpty()) {
-            throw new NonDeletableException("AdvertType cannot be deleted because it has associated Adverts");
+            throw new NonDeletableException(messageUtil.getMessage("error.advert.type.related"));
         }
 
         // Delete the AdvertType from the repository
@@ -170,7 +186,16 @@ public class AdvertTypeService {
         // Get the advert type by its ID
       AdvertType found =  getById(id);
         if (found.isBuiltIn()) {
-            throw new BuiltInFieldException("AdvertType cannot be updated");
+            throw new BuiltInFieldException(messageUtil.getMessage("error.advert.type.not.update"));
+        }
+
+        // Check if the updated title is already used by another AdvertType
+        if (!found.getTitle().equalsIgnoreCase(request.getTitle()) && repository.existsByTitle(request.getTitle())) {
+            throw new ConflictException(messageUtil.getMessage("error.advert.type.exist"));
+        }
+        // Check if the title contains only letters, spaces, and hyphens
+        if (!isAlpha(request.getTitle())) {
+            throw new InvalidTitleException(messageUtil.getMessage("error.advert.type.invalid.title"));
         }
 
         // Map the request data to an advert type entity
