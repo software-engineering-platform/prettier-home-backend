@@ -90,7 +90,8 @@ public class SecurityFilterConfiguration {
             "/swagger*/**",
             "/adverts/details/**",
             "/sign-up/**",
-            "/sign-in/**"
+            "/sign-in/**",
+            "/contact-messages/save"
     };
 
 
