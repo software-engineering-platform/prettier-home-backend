@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface AdvertTypeRepository extends JpaRepository<AdvertType, Long> {
     boolean existsBy();
 
-    boolean existsByTitle(String title);
+    boolean existsByTitleIgnoreCase(String title);
 }

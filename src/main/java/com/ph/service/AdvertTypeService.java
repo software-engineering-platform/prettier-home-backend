@@ -39,7 +39,7 @@ public class AdvertTypeService {
     public ResponseEntity<AdvertTypeResponse> create(AdvertTypeRequest request) {
 
         // Check if an AdvertType with the same name already exists
-        if (repository.existsByTitle(request.getTitle())) {
+        if (repository.existsByTitleIgnoreCase(request.getTitle())) {
             // If it exists, throw an exception or handle the error as needed
             throw new ConflictException(messageUtil.getMessage("error.advert.type.exist"));
         }
@@ -190,7 +190,7 @@ public class AdvertTypeService {
         }
 
         // Check if the updated title is already used by another AdvertType
-        if (!found.getTitle().equalsIgnoreCase(request.getTitle()) && repository.existsByTitle(request.getTitle())) {
+        if (!found.getTitle().equalsIgnoreCase(request.getTitle()) && repository.existsByTitleIgnoreCase(request.getTitle())) {
             throw new ConflictException(messageUtil.getMessage("error.advert.type.exist"));
         }
         // Check if the title contains only letters, spaces, and hyphens
