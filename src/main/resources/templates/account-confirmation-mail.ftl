@@ -66,7 +66,7 @@
     </div>
     <div class="content">
         <p>Thank you for registering. Please click on the below link to activate your account.</p>
-        <a href='https://pretierhomes-g1-t2.vercel.app//confirm/${token}' class="token">Confirm Email</a>
+        <a href='https://www.pretierhomes.com/confirm/${token}' class="token">Confirm Email</a>
         <p>For the security of your account, avoid sharing this link with others.</p>
         <p>Please note that if you do not activate your account, you may not have access to certain features.</p>
         <p>Regards.</p>
