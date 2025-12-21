@@ -14,8 +14,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/prettierhomes
     driverClassName: org.postgresql.Driver
-    username: username
-    password: password
+    username: db_admin
+    password: OOoqm+cQm+ilPOJfIpu/ROmZOVB8AnTMOHtsakzL9VA=
 
 
 
