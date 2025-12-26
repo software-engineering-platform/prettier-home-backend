@@ -10,11 +10,13 @@
 	</parent>
 	<groupId>com.ph</groupId>
 	<artifactId>prettierhome</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>prettierhome</name>
 	<description>PrettierHomes real estate app</description>
 	<properties>
 		<java.version>17</java.version>
+		<docker-maven-plugin.version>0.44.0</docker-maven-plugin.version>
+		<docker.image.name>prettierhome-backend</docker.image.name>
 	</properties>
 	<dependencies>
 
@@ -141,6 +143,33 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+
+			<!-- Docker Maven Plugin -->
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>${docker-maven-plugin.version}</version>
+				<configuration>
+					<images>
+						<image>
+							<name>${docker.image.name}:${project.version}</name>
+							<build>
+								<dockerFile>${project.basedir}/Dockerfile</dockerFile>
+								<contextDir>${project.basedir}</contextDir>
+							</build>
+						</image>
+					</images>
+				</configuration>
+				<executions>
+					<execution>
+						<id>docker-build</id>
+						<phase>install</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
