@@ -5,17 +5,14 @@ spring:
   jpa:
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create
-    showSql: true
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:create}
+    showSql: ${SPRING_JPA_SHOW_SQL:true}
     properties:
       hibernate:
-        format_sql: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: ${SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL:true}
+    database-platform: ${SPRING_JPA_DATABASE_PLATFORM:org.hibernate.dialect.PostgreSQLDialect}
   datasource:
-    url: jdbc:postgresql://localhost:5432/prettierhomes
-    driverClassName: org.postgresql.Driver
-    username: db_admin
-    password: OOoqm+cQm+ilPOJfIpu/ROmZOVB8AnTMOHtsakzL9VA=
-
-
-
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/prettierhomes}
+    driverClassName: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
+    username: ${SPRING_DATASOURCE_USERNAME:db_admin}
+    password: ${SPRING_DATASOURCE_PASSWORD}

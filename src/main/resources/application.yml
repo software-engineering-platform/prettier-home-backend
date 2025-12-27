@@ -1,5 +1,5 @@
 server:
-  port: 1010
+  port: ${SERVER_PORT:1010}
   error:
     #    include-stacktrace: never
     include-binding-errors: always
