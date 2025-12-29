@@ -16,3 +16,8 @@ spring:
       - data
       - mail
       - scheduler
+
+app:
+  seed:
+    enabled: false
+    sql-path: ""
