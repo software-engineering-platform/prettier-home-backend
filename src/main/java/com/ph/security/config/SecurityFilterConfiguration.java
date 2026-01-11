@@ -4,6 +4,8 @@ import com.ph.security.service.AuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +21,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -30,11 +33,14 @@ public class SecurityFilterConfiguration {
     private final AuthenticationFilter authenticationFilter;
     private final LogoutHandler logoutHandler;
     private final AuthEntryPoint unauthorizedHandler;
+    private final Environment environment;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
+                "https://prettierhome.deployedprojects.xyz",
+                "http://prettierhome.deployedprojects.xyz",
                 "https://www.pretierhomes.com",
                 "http://localhost:3000",
                 "http://prettierhomeapp.duckdns.org:3000"
