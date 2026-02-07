@@ -77,6 +77,7 @@ public class SecurityFilterConfiguration {
 
     private static final String[] AUTH_WHITE_LIST = {
             "/",
+            "/actuator/health/**",
             "/users/login",
             "/users/register/**",
             "/users/forgot-password",
